@@ -1,22 +1,49 @@
 # PROJECT: p05 <PROJNAME>
 ### TEAM: brunes
 ### ROSTER: Maya Berchin (PM), Megan Kwok, Christine Chen
-### TARGET SHIP DATE: {yyyy-mm-dd}  
+### TARGET SHIP DATE: {yyyy-mm-dd} 
+
 ---
 
-## PROJECT DESCRIPTION: 
+## PROJECT DESCRIPTION:
+> Description here...
 
 ---
 
 ## PROGRAM COMPONENTS + EXPLANATION:
 
+### Python Files
+- `__init__.py`: the main file; serves app
+- `data.py`: handles SQLite3 database 
+- <TBA>:
+
+### Templates
+- `login.html`: the user will be directed onto the login page first. They will be redirected to the homepage once they are logged in (automatic if they are already logged in). If they don’t have an account, they can be redirected to register.
+- `register.html`: the user will be able to register. They will be redirected to the homepage once they do this.
+- `home.html`: the homepage, which <...>
+- <TBA>:
+
+### JS Files
+- <TBA>:
 ---
 
 ## DATABASE ORGANIZATION:
+
 ### Database Type: Relational
-Explanation...
+> Explanation...
+
+<br>
 
 ### Tables:  
+_tablename_
+| Variable Type | Variable Name | Variable Attribute(s) |
+|---------------|---------------|-----------------------|
+|               |               |                       |
+|               |               |                       |
+|               |               |                       |
+
+<br>
+
 _tablename_
 | Variable Type | Variable Name | Variable Attribute(s) |
 |---------------|---------------|-----------------------|
@@ -32,7 +59,7 @@ _tablename_
 
 ## FRONT-END-FRAMEWORK:
 ### Bootstrap:
-Explanation...  
+> Explanation...  
 
 ---
 
