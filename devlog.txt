@@ -12,3 +12,8 @@ christineC -- 2026-05-01 11:27
 SETUP:
 - Update readme
 - Add flag
+
+christineC -- 2026-05-05 11:40
+DESIGN DOC:
+- Moved current design doc to design.md
+- Set up basic template (subject to change)
