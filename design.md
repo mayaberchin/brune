@@ -13,10 +13,10 @@
 ---
 
 ## DATABASE ORGANIZATION:
-**Database Type**: Relational
+### Database Type: Relational
 Explanation...
 
-**Tables**:  
+### Tables:  
 _tablename_
 | Variable Type | Variable Name | Variable Attribute(s) |
 |---------------|---------------|-----------------------|
@@ -31,7 +31,7 @@ _tablename_
 ---
 
 ## FRONT-END-FRAMEWORK:
-**Bootstrap**:
+### Bootstrap:
 Explanation...  
 
 ---
@@ -45,6 +45,11 @@ Explanation...
 ---
 
 ## TASK DELEGATION:
+| Task                         |  Devo(s)                  | Deadline | Status |
+|------------------------------|---------------------------|----------|--------|
+|                              |                           |          | NS     |
+|                              |                           |          | NS     |
+|                              |                           |          |        |
 
 
 
