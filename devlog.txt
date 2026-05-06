@@ -9,11 +9,16 @@ TASK ZETA
 * Has any team member provisioned SSL certificates to facilitate httpS traffic? | YES
 
 christineC -- 2026-05-01 11:27
-SETUP:
+SETUP
 - Update readme
 - Add flag
 
 christineC -- 2026-05-05 11:40
-DESIGN DOC:
+DESIGN DOC
 - Moved current design doc to design.md
 - Set up basic template (subject to change)
+
+christineC -- 2026-05-06 16:53
+DESIGN DOC
+- Add users table
+- HTML tags for basic formatting
