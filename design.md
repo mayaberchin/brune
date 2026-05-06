@@ -29,18 +29,22 @@
 
 ## DATABASE ORGANIZATION:
 
-### Database Type: Relational
+### Database Type:
+**Relational**
 > Explanation...
 
 <br>
 
-### Tables:  
-_tablename_
-| Variable Type | Variable Name | Variable Attribute(s) |
-|---------------|---------------|-----------------------|
-|               |               |                       |
-|               |               |                       |
-|               |               |                       |
+### Tables:
+
+_users_
+| Variable Name | Variable Type | Variable Attribute(s)      |
+|---------------|---------------|----------------------------|
+| user_id       | INTEGER       | PRIMARY KEY AUTOINCREMENT  |
+| email         | TEXT          | UNIQUE NOT NULL            |
+| name          | TEXT          | NOT NULL                   |
+| password_hash | TEXT          | NOT NULL                   |
+| role          | TEXT          | NOT NULL DEFAULT 'student' |
 
 <br>
 
