@@ -37,6 +37,8 @@
 
 ### Tables:
 
+<div align="center">
+  
 _users_
 | Variable Name | Variable Type | Variable Attribute(s)      |
 |---------------|---------------|----------------------------|
@@ -54,6 +56,8 @@ _tablename_
 |               |               |                       |
 |               |               |                       |
 |               |               |                       |
+
+</div>
 
 ---
 
@@ -76,11 +80,16 @@ _tablename_
 ---
 
 ## TASK DELEGATION:
+
+<div align="center">
+
 | Task                         |  Devo(s)                  | Deadline | Status |
 |------------------------------|---------------------------|----------|--------|
 |                              |                           |          | NS     |
 |                              |                           |          | NS     |
 |                              |                           |          |        |
+
+</div>
 
 
 
