@@ -132,13 +132,28 @@ As a __________, I want to __________ so that...
 <div align="center">
   
 _users_
-| Variable Name | Variable Type | Variable Attribute(s)      |
+| Variable Type | Variable Name | Variable Attribute(s)      |
 |---------------|---------------|----------------------------|
-| user_id       | INTEGER       | PRIMARY KEY AUTOINCREMENT  |
-| email         | TEXT          | UNIQUE NOT NULL            |
-| name          | TEXT          | NOT NULL                   |
-| password_hash | TEXT          | NOT NULL                   |
-| role          | TEXT          | NOT NULL DEFAULT 'student' |
+| INTEGER       | user_id       | PRIMARY KEY AUTOINCREMENT  |
+| TEXT          | email         | UNIQUE NOT NULL            |
+| TEXT          | name          | NOT NULL                   |
+| TEXT          | password_hash | NOT NULL                   |
+| TEXT          | role          | NOT NULL DEFAULT 'student' |
+
+<br>
+
+_posts_
+| Variable Type | Variable Name | Variable Attribute(s)                  |
+|---------------|---------------|----------------------------------------|
+| INTEGER       | post_id       | PRIMARY KEY AUTOINCREMENT              |
+| INTEGER       | poster_id     | FOREIGN KEY references user_id         |
+| INTEGER       | class_id      | FOREIGN KEY references class_id        |
+| TEXT          | title         | NOT NULL                               |
+| TEXT          | body          | NOT NULL                               |
+| TEXT          | category      | NOT NULL (e.g. announcement, question) |
+| TEXT          | status        | (e.g. open, closed)                    |
+| TEXT          | created_at    | CURRENT_TIMESTAMP                      |
+| TEXT          | updated_at    | CURRENT_TIMESTAMP                      |
 
 <br>
 
