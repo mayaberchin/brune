@@ -15,10 +15,15 @@ SETUP
 
 christineC -- 2026-05-05 11:40
 DESIGN DOC
-- Moved current design doc to design.md
+- Moved current design doc (template by Maya!) to design.md
 - Set up basic template (subject to change)
 
 christineC -- 2026-05-06 16:53
 DESIGN DOC
 - Add users table
 - HTML tags for basic formatting
+
+christineC -- 2026-05-07 11:45
+DESIGN DOC
+- Add new formatting to design.md
+- Add posts table and reformat tables
