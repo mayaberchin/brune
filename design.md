@@ -1,41 +1,133 @@
-# PROJECT: p05 <PROJNAME>
-### TEAM: brunes
-### ROSTER: Maya Berchin (PM), Megan Kwok, Christine Chen
-### TARGET SHIP DATE: {yyyy-mm-dd} 
+# System Blueprint
+## TNPG: brunes
+## Project: 
+## TARGET SHIP DATE: {yyyy-mm-dd} 
+
+---
+<div align="center">
+
+## Roster
+
+| Name           | Email                         | Primary Role    | Secondary Role |
+|----------------|-------------------------------|-----------------|----------------|
+| Maya Berchin   | mayab97@nycstudents.net       | Project Manager | Developer      |
+| Megan Kwok     | megank21@nycstudents.net      | Developer       |                |
+| Christine Chen | christinec109@nycstudents.net | Developer       |                |
+
+</div>
 
 ---
 
-## PROJECT DESCRIPTION:
+## Summary
 > Description here...
 
+### Problem Being Solved
+Text here...
+
+### Target Users
+- _________
+- _________
+
+### Why This Project Matters
+Text here...
+
 ---
 
-## PROGRAM COMPONENTS + EXPLANATION:
+## Minimum Viable Product (MVP) Scope
 
-### Python Files
-- `__init__.py`: the main file; serves app
-- `data.py`: handles SQLite3 database 
-- <TBA>:
+### Core Features (Required for Final Submission)
+Features that **must** be completed:
+1. a
+2. b
+3. c
 
-### Templates
-- `login.html`: the user will be directed onto the login page first. They will be redirected to the homepage once they are logged in (automatic if they are already logged in). If they don’t have an account, they can be redirected to register.
-- `register.html`: the user will be able to register. They will be redirected to the homepage once they do this.
-- `home.html`: the homepage, which <...>
-- <TBA>:
+### Stretch Features (Only if MVP is Complete)
+1. a
+2. b
+3. c
 
-### JS Files
-- <TBA>:
+### Eplicit Non-Goals
+Features intentionally **excluded**:
+1. a
+2. b
+3. c
+
 ---
 
-## DATABASE ORGANIZATION:
+## Technology Stack
 
-### Database Type:
+<div align="center>
+
+| Layer              | Selected Tool  |
+|--------------------|----------------|
+| Backend Framework  | Flask          |
+| Frontend Framework | Bootstrap      |
+| Database           | SQLite         |
+| Authentication     | Flask Sessions |
+| ORM / DB Library   | SQLAlchemy (?) |
+
+</div>
+
+### Why This Stack Was Chosen
+> Recap/summary here...
+
+---
+
+## Team Ownership Plan
+
+<div align="center">
+  
+Each members meaningful deliverables
+| Team Member    | Primary Ownership | Secondary Ownership | Specific Deliverables |
+|----------------|-------------------|---------------------|-----------------------|
+| Maya Berchin   |                   |                     |                       |
+| Megan Kwok     |                   |                     |                       |
+| Christine Chen |                   |                     |                       |
+
+</div>
+
+---
+
+## Component Map
+
+{Insert your mermaid(or equivalent)-generated diagram here}
+
+## Site Map
+
+{Insert your mermaid(or equivalent)-generated diagram here}
+eg...
+```
+Landing Page
+   ↓
+Login / Register
+   ↓
+Dashboard
+   ├── Feature A
+   ├── Feature B
+   └── Profile
+```
+
+---
+
+## Key User Stories
+### eg0
+As a __________, I want to __________ so that...
+
+### eg1
+As a __________, I want to __________ so that...
+
+### eg2
+As a __________, I want to __________ so that...
+
+---
+
+## Database Design
+
+### Database Type
 **Relational**
-> Explanation...
+> Explanation here...
 
-<br>
-
-### Tables:
+### Tables
 
 <div align="center">
   
@@ -61,35 +153,72 @@ _tablename_
 
 ---
 
-## APIs:
+## Testing Plan
+
+{Delineate here your plan for testing each component}
 
 ---
 
-## FRONT-END-FRAMEWORK:
-### Bootstrap:
-> Explanation...  
+## Timeline
+
+### Week 1 Goals:
+
+### Week 2 Goals:
+
+### Week 3 Goals:
+
+### Internal Deadlines:
+{List milestones your team has identified, in the order they must be completed. Set a target completion date for each.}
 
 ---
 
-## COMPONENT MAP:
+## Completion Criteria (Definition of Done)
+Project is considered **complete** when all of the following are true:
+1. a
+2. b
+3. c
 
 ---
 
-## FRONT END DIAGRAM:
+## Open Questions
+{Delineate anything undecided here}
+
+## Appendix
+{Any relevant info that is useful but would have interrupted narrative flow above, or cluttered the information portrayed}
+
+## Other
+{Put here anything that did not sensibly fit under above headings. This section will inform evolution of SoftDev.}
 
 ---
 
-## TASK DELEGATION:
 
-<div align="center">
 
-| Task                         |  Devo(s)                  | Deadline | Status |
-|------------------------------|---------------------------|----------|--------|
-|                              |                           |          | NS     |
-|                              |                           |          | NS     |
-|                              |                           |          |        |
 
-</div>
+
+
+
+
+
+
+
+# (OLD STUFF, MAYBE NEED, DELETE LATER!)
+
+## PROGRAM COMPONENTS + EXPLANATION:
+
+### Python Files
+- `__init__.py`: the main file; serves app
+- `data.py`: handles SQLite3 database 
+- <TBA>:
+
+### Templates
+- `login.html`: the user will be directed onto the login page first. They will be redirected to the homepage once they are logged in (automatic if they are already logged in). If they don’t have an account, they can be redirected to register.
+- `register.html`: the user will be able to register. They will be redirected to the homepage once they do this.
+- `home.html`: the homepage, which <...>
+- <TBA>:
+
+### JS Files
+- <TBA>:
+---
 
 
 
