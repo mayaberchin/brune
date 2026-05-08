@@ -28,16 +28,11 @@ DESIGN DOC
 - Add new formatting to design.md
 - Add posts table and reformat tables
 
-meganK -- 2026-05-07 11:30
-TASK ZETA
-* VM
-  - IP Address: 165.227.100.37
-  - Domain: bruney.me
-* Wipe box clean (re-image)? | NO
-* Serve multiple apps concurrently? | NO
-* Flask|Node? | Flask
-* Has any team member provisioned SSL certificates to facilitate httpS traffic? | YES
-
 meganK -- 2026-05-08 10:15
 FORM DESIGN
 - streamlined questions
+
+christineC -- 2026-05-08 11:28
+DESIGN DOC
+- Add project name
+- Add project summary, target users, and why this project matters
