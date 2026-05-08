@@ -19,7 +19,7 @@
 ---
 
 ## Summary
-> Stuy Overflow is a Stuy-CS tailored discussion platform inspired by Piazza (and Stack Overflow?).
+Stuy Overflow is a Stuy-CS tailored discussion platform inspired by Piazza (and Stack Overflow?).
 It provides a centralized space for communication, academic support, and easier access to resources within the StuyCS community.
 Users will be able to create and repond to posts, {other core features to be enumerated here}.
 
@@ -32,7 +32,8 @@ Text here...
 - CS Dojo
 
 ### Why This Project Matters
-Text here...
+This project matters because students are more likely to ask for help and stay updated when class information is easy to access.
+A centralized discussion platform can reduce repeated questions, ensure that important teacher posts are seen, and make it easier for students to find support from classmates, teachers, or Dojo staff.
 
 ---
 
