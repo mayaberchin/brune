@@ -1,6 +1,6 @@
 # System Blueprint
 ## TNPG: brunes
-## Project: 
+## Project: Stuy Overflow
 ## TARGET SHIP DATE: {yyyy-mm-dd} 
 
 ---
@@ -19,14 +19,17 @@
 ---
 
 ## Summary
-> Description here...
+> Stuy Overflow is a Stuy-CS tailored discussion platform inspired by Piazza (and Stack Overflow?).
+It provides a centralized space for communication, academic support, and easier access to resources within the StuyCS community.
+Users will be able to create and repond to posts, {other core features to be enumerated here}.
 
 ### Problem Being Solved
 Text here...
 
 ### Target Users
-- _________
-- _________
+- StuyCS students
+- StuyCS teachers
+- CS Dojo
 
 ### Why This Project Matters
 Text here...
@@ -46,7 +49,7 @@ Features that **must** be completed:
 2. b
 3. c
 
-### Eplicit Non-Goals
+### Explicit Non-Goals
 Features intentionally **excluded**:
 1. a
 2. b
@@ -56,7 +59,7 @@ Features intentionally **excluded**:
 
 ## Technology Stack
 
-<div align="center>
+<div align="center">
 
 | Layer              | Selected Tool  |
 |--------------------|----------------|
@@ -77,7 +80,7 @@ Features intentionally **excluded**:
 
 <div align="center">
   
-Each members meaningful deliverables
+Each member's meaningful deliverables
 | Team Member    | Primary Ownership | Secondary Ownership | Specific Deliverables |
 |----------------|-------------------|---------------------|-----------------------|
 | Maya Berchin   |                   |                     |                       |
