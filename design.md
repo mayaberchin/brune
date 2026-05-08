@@ -114,14 +114,14 @@ Each member's meaningful deliverables
 <br>
 
 ## Key User Stories
-### eg0
-As a __________, I want to __________ so that...
+### StuyCS Student
+As a StuyCS student, I want to __________ so that...
 
-### eg1
-As a __________, I want to __________ so that...
+### StuyCS Teacher
+As a StuyCS teacher, I want to __________ so that...
 
-### eg2
-As a __________, I want to __________ so that...
+### CS Dojo Staff
+As a CS Dojo staff member, I want to __________ so that...
 
 ---
 
@@ -157,7 +157,7 @@ _posts_
 | TEXT          | title         | NOT NULL                               |
 | TEXT          | body          | NOT NULL                               |
 | TEXT          | category      | NOT NULL (e.g. announcement, question) |
-| TEXT          | status        | (e.g. open, closed)                    |
+| TEXT          | status        | NOT NULL (e.g. open, closed)           |
 | TEXT          | created_at    | CURRENT_TIMESTAMP                      |
 | TEXT          | updated_at    | CURRENT_TIMESTAMP                      |
 
