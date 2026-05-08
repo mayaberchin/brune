@@ -1,7 +1,6 @@
 # System Blueprint
 ## TNPG: brunes
 ## Project: Stuy Overflow
-## TARGET SHIP DATE: {yyyy-mm-dd} 
 
 ---
 <div align="center">
@@ -19,12 +18,12 @@
 ---
 
 ## Summary
-Stuy Overflow is a Stuy-CS tailored discussion platform inspired by Piazza (and Stack Overflow?).
+Stuy Overflow is a StuyCS tailored discussion platform inspired by Piazza (and Stack Overflow?).
 It provides a centralized space for communication, academic support, and easier access to resources within the StuyCS community.
-Users will be able to create and repond to posts, {other core features to be enumerated here}.
+Users will be able to create and repond to questions and share resources; teachers will be able to create assignments and announcements as well as respond to student questions.
 
 ### Problem Being Solved
-Text here...
+StuyCS students aren't using Piazza as much as they could be. Because of this, questions can go unanswered and teacher announcements missed. Students might not know where to turn if they have an issue, or they might not know how to communicate the issue with enough context for it to be resolved. With this product, we aim to make a Piazza that is easier and more convenient to use, with more guidance and structure specific to our students' needs.
 
 ### Target Users
 - StuyCS students
@@ -33,7 +32,7 @@ Text here...
 
 ### Why This Project Matters
 This project matters because students are more likely to ask for help and stay updated when class information is easy to access.
-A centralized discussion platform can reduce repeated questions, ensure that important teacher posts are seen, and make it easier for students to find support from classmates, teachers, or Dojo staff.
+A centralized discussion platform can reduce repeated questions, ensure that important teacher posts are seen, and make it easier for students to find support from classmates, teachers, or Dojo staff. This site will be more tailored for StuyCS than Piazza in the hopes that this will encourage more community engagement.
 
 ---
 
