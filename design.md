@@ -28,13 +28,15 @@ StuyCS students aren't using Piazza as much as they could be. Because of this, q
 ### Target Users
 - StuyCS students
 - StuyCS teachers
-- CS Dojo
+- CS Dojo Staff
 
 ### Why This Project Matters
 This project matters because students are more likely to ask for help and stay updated when class information is easy to access.
 A centralized discussion platform can reduce repeated questions, ensure that important teacher posts are seen, and make it easier for students to find support from classmates, teachers, or Dojo staff. This site will be more tailored for StuyCS than Piazza in the hopes that this will encourage more community engagement.
 
 ---
+
+<br>
 
 ## Minimum Viable Product (MVP) Scope
 
@@ -57,6 +59,8 @@ Features intentionally **excluded**:
 
 ---
 
+<br>
+
 ## Technology Stack
 
 <div align="center">
@@ -76,6 +80,8 @@ Features intentionally **excluded**:
 
 ---
 
+<br>
+
 ## Team Ownership Plan
 
 <div align="center">
@@ -91,9 +97,13 @@ Each member's meaningful deliverables
 
 ---
 
+<br>
+
 ## Component Map
 
 {Insert your mermaid(or equivalent)-generated diagram here}
+
+<br>
 
 ## Site Map
 
@@ -112,6 +122,8 @@ Dashboard
 
 ---
 
+<br>
+
 ## Key User Stories
 ### eg0
 As a __________, I want to __________ so that...
@@ -123,6 +135,8 @@ As a __________, I want to __________ so that...
 As a __________, I want to __________ so that...
 
 ---
+
+<br>
 
 ## Database Design
 
@@ -171,11 +185,15 @@ _tablename_
 
 ---
 
+<br>
+
 ## Testing Plan
 
 {Delineate here your plan for testing each component}
 
 ---
+
+<br>
 
 ## Timeline
 
@@ -190,6 +208,8 @@ _tablename_
 
 ---
 
+<br>
+
 ## Completion Criteria (Definition of Done)
 Project is considered **complete** when all of the following are true:
 1. a
@@ -197,6 +217,8 @@ Project is considered **complete** when all of the following are true:
 3. c
 
 ---
+
+<br>
 
 ## Open Questions
 {Delineate anything undecided here}
