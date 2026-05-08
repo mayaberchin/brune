@@ -108,17 +108,6 @@ Each member's meaningful deliverables
 ## Site Map
 
 {Insert your mermaid(or equivalent)-generated diagram here}
-eg...
-```
-Landing Page
-   ↓
-Login / Register
-   ↓
-Dashboard
-   ├── Feature A
-   ├── Feature B
-   └── Profile
-```
 
 ---
 
