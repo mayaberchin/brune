@@ -10,8 +10,8 @@
 | Name           | Email                         | Primary Role    | Secondary Role |
 |----------------|-------------------------------|-----------------|----------------|
 | Maya Berchin   | mayab97@nycstudents.net       | Project Manager | Developer      |
-| Megan Kwok     | megank21@nycstudents.net      | Developer       |                |
-| Christine Chen | christinec109@nycstudents.net | Developer       |                |
+| Megan Kwok     | megank21@nycstudents.net      | Developer       | N/A            |
+| Christine Chen | christinec109@nycstudents.net | Developer       | N/A            |
 
 </div>
 
@@ -288,46 +288,12 @@ Project is considered **complete** when all of the following are true:
 - Should teachers be able to decide whether students can open their questions to Dojo staff?
 - Should there be a delay before students get to open their questions to Dojo staff?
 - Should there be any kind of reward/point system for being online or reading posts?
+- Are we going to implement "related posts"?
 
 ## Appendix
-{Any relevant info that is useful but would have interrupted narrative flow above, or cluttered the information portrayed}
+- We're not sure to what extent we'll be able to integrate with GitHub and teacher websites, so we'll just do that as much as we're able
+- We want to make our site a convenient central hub for StuyCS students, as we've heard from a lot that they have too many places to check for work and might ignore Piazza as a result
+- We don't want to force students to post: according to a teacher, making posting on Piazza a requirement one year just led to performative-sounding posts and didn't actually help at all
 
 ## Other
-{Put here anything that did not sensibly fit under above headings. This section will inform evolution of SoftDev.}
-
----
-
-
-
-
-
-
-
-
-
-
-
-# (OLD STUFF, MAYBE NEED, DELETE LATER!)
-
-## PROGRAM COMPONENTS + EXPLANATION:
-
-### Python Files
-- `__init__.py`: the main file; serves app
-- `data.py`: handles SQLite3 database 
-- <TBA>:
-
-### Templates
-- `login.html`: the user will be directed onto the login page first. They will be redirected to the homepage once they are logged in (automatic if they are already logged in). If they don’t have an account, they can be redirected to register.
-- `register.html`: the user will be able to register. They will be redirected to the homepage once they do this.
-- `home.html`: the homepage, which <...>
-- <TBA>:
-
-### JS Files
-- <TBA>:
----
-
-
-
-
-
-
+- N/A
