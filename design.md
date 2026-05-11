@@ -145,8 +145,10 @@ As a CS Dojo staff member, I want to use this platform to communicate with StuyC
 ## Database Design
 
 ### Database Type
-**Relational**
+**Relational**  
+
 > Our team is the most experienced with using SQL databases, which are relational. 
+
 
 ### Tables
 
