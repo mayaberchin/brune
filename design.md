@@ -123,13 +123,13 @@ Each member's meaningful deliverables
 ## Key User Stories
 
 ### StuyCS Student
-As a StuyCS student, I want to __________ so that...
+As a StuyCS student, I want to be able to post questions and notes on this site so that my classmates can understand what I'm getting at and/or help me out.
 
 ### StuyCS Teacher
-As a StuyCS teacher, I want to __________ so that...
+As a StuyCS teacher, I want to be able to see and respond to student posts, as well as make my own posts, so that I can communicate deadlines with students and see which topics they're confused about.
 
 ### CS Dojo Staff
-As a CS Dojo staff member, I want to __________ so that...
+As a CS Dojo staff member, I want to use this platform to communicate with StuyCS so that we have a centralized place to gather information, help confused students, and convene with the whole StuyCS community.
 
 ---
 
@@ -197,7 +197,7 @@ _followups_
 | TEXT          | updated_at    | CURRENT_TIMESTAMP                                                      |
 | INTEGER       | upvotes       | NOT NULL                                                               |
 | TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
-| TEXT          | involves      | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | ping          | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 
 </div>
 
@@ -207,7 +207,17 @@ _followups_
 
 ## Testing Plan
 
-{Delineate here your plan for testing each component}
+- Test database and middleware first: test each function and helper-function separately from the main program
+- Test account creation (student/teacher/dojo) and class creation
+- Test switching tabs (before posts are made)
+- Test post creation and editing
+- Ensure switching tabs and classes works properly now that posts have been made
+- Test post moderation from a teacher account
+- Test dojo access to questions
+- Test tagging system (post content, other users/posts)
+- Test posting as anonymous
+- Test that posts/classes can only be viewed by whoever is supposed to have access to them
+- For any stretch-goal feature we impement, test one by one (stretch goal features enumerated above)
 
 ---
 
