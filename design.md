@@ -94,11 +94,11 @@ Features intentionally **excluded**:
 <div align="center">
   
 Each member's meaningful deliverables
-| Team Member    | Primary Ownership | Secondary Ownership | Specific Deliverables |
-|----------------|-------------------|---------------------|-----------------------|
-| Maya Berchin   |                   |                     |                       |
-| Megan Kwok     |                   |                     |                       |
-| Christine Chen |                   |                     |                       |
+| Team Member    | Primary Ownership              | Secondary Ownership                   | Specific Deliverables                                                                                       |
+|----------------|--------------------------------|---------------------------------------|-------------------------------------------------------------------------------------------------------------|
+| Maya Berchin   | Database interactions          | Main view/list of posts in each tab   | File handling middleware, functional UI for each tab when viewing a list of posts                           |
+| Megan Kwok     | UI for interacting with a post | Login/Register                        | Ways to create a post or follow-up, delete, upvote; login and register page                                 |
+| Christine Chen | Textbox/inputs for posts       | Switching tabs/classes/posts          | Functional textbox with formatting options and templates for users, UI to switch between tabs/classes/posts |
 
 </div>
 
