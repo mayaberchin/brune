@@ -42,14 +42,14 @@ A centralized discussion platform can reduce repeated questions, ensure that imp
 ## Minimum Viable Product (MVP) Scope
 
 ### Core Features (Required for Final Submission)
-Features that **must** be completed:
+Features that **must** be completed:  
 1. Ability to post and respond to questions and notes. Should support formatting (as code, for example)
 2. Ability to create, join, and switch between classes
 3. Teacher and student accounts with different capabilities
 4. Ability to post as anonymous
 5. "Dojo" role, and the ability to make a question public to dojo members in addition to classmates 
 
-### Stretch Features (Only if MVP is Complete)
+### Stretch Features (Only if MVP is Complete) 
 1. Supporting image embedding in posts
 2. Separate tabs for different types of posts: for example, one for announcements from teachers and one for quick questions
 3. Providing templates to guide students in providing good context for their posts
@@ -60,7 +60,7 @@ Features that **must** be completed:
 8. Better integration with other teacher resources: rendering teacher websites from a tab in our app, for example
 
 ### Explicit Non-Goals
-Features intentionally **excluded**:
+Features intentionally **excluded**:  
 1. Built-in/automated moderation or filtering. People on Piazza seem to behave well enough knowing the teachers can see their posts
 2. Student ability to delete posts (Piazza excludes this too). We don't want people to delete questions when they get the answer
 3. Any sort of grading/participation evaluation system to artificially encourage people to post
@@ -94,7 +94,8 @@ Features intentionally **excluded**:
 
 <div align="center">
   
-Each member's meaningful deliverables
+Each member's meaningful deliverables  
+
 | Team Member    | Primary Ownership              | Secondary Ownership                   | Specific Deliverables                                                                                       |
 |----------------|--------------------------------|---------------------------------------|-------------------------------------------------------------------------------------------------------------|
 | Maya Berchin   | Database interactions          | Main view/list of posts in each tab   | File handling middleware, functional UI for each tab when viewing a list of posts                           |
@@ -146,7 +147,8 @@ As a CS Dojo staff member, I want to use this platform to communicate with StuyC
 
 <div align="center">
   
-_users_
+_users_  
+
 | Variable Type | Variable Name | Variable Attribute(s)                       |
 |---------------|---------------|---------------------------------------------|
 | INTEGER       | user_id       | PRIMARY KEY AUTOINCREMENT                   |
@@ -159,7 +161,8 @@ _users_
 
 <br>
 
-_classes_
+_classes_  
+
 | Variable Type | Variable Name | Variable Attribute(s)                                                  |
 |---------------|---------------|------------------------------------------------------------------------|
 | INTEGER       | class_id      | PRIMARY KEY AUTOINCREMENT                                              |
@@ -168,7 +171,8 @@ _classes_
 
 <br>
 
-_posts_
+_posts_  
+
 | Variable Type | Variable Name | Variable Attribute(s)                                                  |
 |---------------|---------------|------------------------------------------------------------------------|
 | INTEGER       | post_id       | PRIMARY KEY AUTOINCREMENT                                              |
@@ -186,7 +190,8 @@ _posts_
 
 <br>
 
-_followups_
+_followups_  
+
 | Variable Type | Variable Name | Variable Attribute(s)                                                  |
 |---------------|---------------|------------------------------------------------------------------------|
 | INTEGER       | followup_id   | PRIMARY KEY AUTOINCREMENT                                              |
