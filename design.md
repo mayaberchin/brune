@@ -1,5 +1,5 @@
 # System Blueprint
-## TNPG: brunes
+## TNPG: brune
 ## Project: Stuy Overflow
 
 ---
