@@ -150,6 +150,7 @@ _users_
 |---------------|---------------|---------------------------------------------|
 | INTEGER       | user_id       | PRIMARY KEY AUTOINCREMENT                   |
 | TEXT          | email         | UNIQUE NOT NULL                             |
+| TEXT          | github        | UNIQUE                                      |
 | TEXT          | name          | NOT NULL                                    |
 | TEXT          | password_hash | NOT NULL                                    |
 | TEXT          | role          | NOT NULL DEFAULT 'student'                  |
@@ -226,13 +227,47 @@ _followups_
 ## Timeline
 
 ### Week 1 Goals:
+- Get most database functions working and tested; those to do with stretch features can wait
+- Get account creation, authentication, and class creation working
+- Get basic post creation working (no edits, no formatting)
+- Get posting as anonymous working
 
 ### Week 2 Goals:
+- Get post deletion from teacher account working
+- Get basic followups working (no edits, no formatting, but do include status resolution)
+- Get formatted posts working
+- Get images in posts working 
+- Get post editing working
+- Get tagging system working
 
 ### Week 3 Goals:
+- Get different tabs for different post types working
+- Get dojo role working as intended: allow dojo staff to see and respond to posts from confused students
+- Get marking followups as containing answers working 
+- Get upvoting working
+- Work to integrate with teacher websites and GitHub as much as possible
+- Make the website theming more consistent and less ugly
+- Implement as many stretch goals as possible!
 
 ### Internal Deadlines:
-{List milestones your team has identified, in the order they must be completed. Set a target completion date for each.}
+| Task                                             | Deadline          |
+|--------------------------------------------------|-------------------|
+| Account creation, authentication                 | 05-13-26w         |
+| Class creation                                   | 05-14-26r         |
+| Basic posts                                      | 05-15-26f         |
+| Post deletion                                    | 05-18-26m         |
+| Followups                                        | 05-19-26t         |
+| Changing the status of a post or follow-up       | 05-19-26t         |
+| Editing posts and followups                      | 05-20-26w         |
+| Formatted posts                                  | 05-21-26r         |
+| Tagging system                                   | 05-22-26f         |
+| Images in posts                                  | 05-22-26f         |
+| Dojo role seeing questions                       | 05-26-26t         |
+| Tabs for different types of posts                | 05-26-26t         |
+| Upvotes                                          | 05-28-26r         |
+| Mark follow-ups as containing answers            | 05-28-26r         |
+| Consistent theming                               | 05-29-26f         |
+| Integration with teacher websites                | 05-29-26f         |
 
 ---
 
@@ -240,16 +275,19 @@ _followups_
 
 ## Completion Criteria (Definition of Done)
 Project is considered **complete** when all of the following are true:
-1. a
-2. b
-3. c
+1. We have a functional MV-plus-some-stretch-goals-P that also isn't ugly
+2. Our site has some value to StuyCS because it's functional and tailored: that is, we added some features useful to StuyCS that Piazza doesn't have AND our app doesn't break
+3. We are forcibly removed/unable to update it (it can always be better) OR we give up and decide it's good enough
 
 ---
 
 <br>
 
 ## Open Questions
-{Delineate anything undecided here}
+- Will we be using React? If so, where?
+- Should teachers be able to decide whether students can open their questions to Dojo staff?
+- Should there be a delay before students get to open their questions to Dojo staff?
+- Should there be any kind of reward/point system for being online or reading posts?
 
 ## Appendix
 {Any relevant info that is useful but would have interrupted narrative flow above, or cluttered the information portrayed}
