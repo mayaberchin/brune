@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Added by Maya
+# Script that makes the pdf for me bc I will forget the command
+pdf.sh
