@@ -43,13 +43,16 @@ A centralized discussion platform can reduce repeated questions, ensure that imp
 
 ### Core Features (Required for Final Submission)
 Features that **must** be completed:  
+
 1. Ability to post and respond to questions and notes. Should support formatting (as code, for example)
 2. Ability to create, join, and switch between classes
 3. Teacher and student accounts with different capabilities
 4. Ability to post as anonymous
 5. "Dojo" role, and the ability to make a question public to dojo members in addition to classmates 
 
+
 ### Stretch Features (Only if MVP is Complete) 
+
 1. Supporting image embedding in posts
 2. Separate tabs for different types of posts: for example, one for announcements from teachers and one for quick questions
 3. Providing templates to guide students in providing good context for their posts
@@ -59,8 +62,10 @@ Features that **must** be completed:
 7. Ability to tag other students and related posts
 8. Better integration with other teacher resources: rendering teacher websites from a tab in our app, for example
 
+
 ### Explicit Non-Goals
 Features intentionally **excluded**:  
+
 1. Built-in/automated moderation or filtering. People on Piazza seem to behave well enough knowing the teachers can see their posts
 2. Student ability to delete posts (Piazza excludes this too). We don't want people to delete questions when they get the answer
 3. Any sort of grading/participation evaluation system to artificially encourage people to post
