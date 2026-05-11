@@ -108,13 +108,13 @@ Each member's meaningful deliverables
 
 ## Component Map
 
-{Insert your mermaid(or equivalent)-generated diagram here}
+![Component Map](./component_map.png "Component Map")
 
 <br>
 
 ## Site Map
 
-{Insert your mermaid(or equivalent)-generated diagram here}
+![Site Map](./site_map.png "Site Map")
 
 ---
 
