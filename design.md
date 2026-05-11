@@ -114,7 +114,7 @@ Each member's meaningful deliverables
 
 ## Site Map
 
-![Site Map](./site_map.png "Site Map")
+![Site Map](./frontend_map.png "Site Map")
 
 ---
 
