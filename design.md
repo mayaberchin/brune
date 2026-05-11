@@ -250,6 +250,9 @@ _followups_
 - Implement as many stretch goals as possible!
 
 ### Internal Deadlines:
+
+<div align="center">
+
 | Task                                             | Deadline          |
 |--------------------------------------------------|-------------------|
 | Account creation, authentication                 | 05-13-26w         |
@@ -268,6 +271,8 @@ _followups_
 | Mark follow-ups as containing answers            | 05-28-26r         |
 | Consistent theming                               | 05-29-26f         |
 | Integration with teacher websites                | 05-29-26f         |
+
+</div>
 
 ---
 
@@ -297,3 +302,5 @@ Project is considered **complete** when all of the following are true:
 
 ## Other
 - N/A
+
+---
