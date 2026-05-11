@@ -42,20 +42,27 @@ A centralized discussion platform can reduce repeated questions, ensure that imp
 
 ### Core Features (Required for Final Submission)
 Features that **must** be completed:
-1. a
-2. b
-3. c
+1. Ability to post and respond to questions and notes. Should support formatting (as code, for example)
+2. Ability to create, join, and switch between classes
+3. Teacher and student accounts with different capabilities
+4. Ability to post as anonymous
+5. "Dojo" role, and the ability to make a question public to dojo members in addition to classmates 
 
 ### Stretch Features (Only if MVP is Complete)
-1. a
-2. b
-3. c
+1. Supporting image embedding in posts
+2. Separate tabs for different types of posts: for example, one for announcements from teachers and one for quick questions
+3. Providing templates to guide students in providing good context for their posts
+4. Upvoting for questions and follow-ups
+5. Ability to mark a follow-up as containing an answer/resolution to the original post, as opposed to follow-up questions or unsuccessful suggestions
+6. Tagging system for post content similar to social media sites
+7. Ability to tag other students and related posts
+8. Better integration with other teacher resources: rendering teacher websites from a tab in our app, for example
 
 ### Explicit Non-Goals
 Features intentionally **excluded**:
-1. a
-2. b
-3. c
+1. Built-in/automated moderation or filtering. People on Piazza seem to behave well enough knowing the teachers can see their posts
+2. Student ability to delete posts (Piazza excludes this too). We don't want people to delete questions when they get the answer
+3. Any sort of grading/participation evaluation system to artificially encourage people to post
 
 ---
 
@@ -71,12 +78,12 @@ Features intentionally **excluded**:
 | Frontend Framework | Bootstrap      |
 | Database           | SQLite         |
 | Authentication     | Flask Sessions |
-| ORM / DB Library   | SQLAlchemy (?) |
+| ORM / DB Library   | None           |
 
 </div>
 
 ### Why This Stack Was Chosen
-> Recap/summary here...
+> Everyone on our team has been using Flask for all SoftDev projects up until now, so it was a natural decision to make that a part of our tech stack. Additionally, out of the databases and front-end frameworks we've used, we're most familiar with SQLite and Bootstrap respectively. We chose not to use a DB Library because we're used to using SQL without one.
 
 ---
 
