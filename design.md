@@ -121,6 +121,7 @@ Each member's meaningful deliverables
 <br>
 
 ## Key User Stories
+
 ### StuyCS Student
 As a StuyCS student, I want to __________ so that...
 
@@ -138,44 +139,65 @@ As a CS Dojo staff member, I want to __________ so that...
 
 ### Database Type
 **Relational**
-> Explanation here...
+> Our team is the most experienced with using SQL databases, which are relational. 
 
 ### Tables
 
 <div align="center">
   
 _users_
-| Variable Type | Variable Name | Variable Attribute(s)      |
-|---------------|---------------|----------------------------|
-| INTEGER       | user_id       | PRIMARY KEY AUTOINCREMENT  |
-| TEXT          | email         | UNIQUE NOT NULL            |
-| TEXT          | name          | NOT NULL                   |
-| TEXT          | password_hash | NOT NULL                   |
-| TEXT          | role          | NOT NULL DEFAULT 'student' |
+| Variable Type | Variable Name | Variable Attribute(s)                       |
+|---------------|---------------|---------------------------------------------|
+| INTEGER       | user_id       | PRIMARY KEY AUTOINCREMENT                   |
+| TEXT          | email         | UNIQUE NOT NULL                             |
+| TEXT          | name          | NOT NULL                                    |
+| TEXT          | password_hash | NOT NULL                                    |
+| TEXT          | role          | NOT NULL DEFAULT 'student'                  |
+| TEXT          | class_id      | (can have multiple, comma-separated)        |
+
+<br>
+
+_classes_
+| Variable Type | Variable Name | Variable Attribute(s)                                                  |
+|---------------|---------------|------------------------------------------------------------------------|
+| INTEGER       | class_id      | PRIMARY KEY AUTOINCREMENT                                              |
+| TEXT          | name          | NOT NULL                                                               |
+| TEXT          | instructor_id | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 
 <br>
 
 _posts_
-| Variable Type | Variable Name | Variable Attribute(s)                  |
-|---------------|---------------|----------------------------------------|
-| INTEGER       | post_id       | PRIMARY KEY AUTOINCREMENT              |
-| INTEGER       | poster_id     | FOREIGN KEY references user_id         |
-| INTEGER       | class_id      | FOREIGN KEY references class_id        |
-| TEXT          | title         | NOT NULL                               |
-| TEXT          | body          | NOT NULL                               |
-| TEXT          | category      | NOT NULL (e.g. announcement, question) |
-| TEXT          | status        | NOT NULL (e.g. open, closed)           |
-| TEXT          | created_at    | CURRENT_TIMESTAMP                      |
-| TEXT          | updated_at    | CURRENT_TIMESTAMP                      |
+| Variable Type | Variable Name | Variable Attribute(s)                                                  |
+|---------------|---------------|------------------------------------------------------------------------|
+| INTEGER       | post_id       | PRIMARY KEY AUTOINCREMENT                                              |
+| INTEGER       | poster_id     | FOREIGN KEY references user_id                                         |
+| INTEGER       | class_id      | FOREIGN KEY references class_id                                        |
+| TEXT          | title         | NOT NULL                                                               |
+| TEXT          | body          | NOT NULL                                                               |
+| TEXT          | category      | NOT NULL (e.g. announcement, question)                                 |
+| TEXT          | status        | NOT NULL (e.g. open, closed)                                           |
+| TEXT          | created_at    | CURRENT_TIMESTAMP                                                      |
+| TEXT          | updated_at    | CURRENT_TIMESTAMP                                                      |
+| INTEGER       | upvotes       | NOT NULL                                                               |
+| TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | involves      | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 
 <br>
 
-_tablename_
-| Variable Type | Variable Name | Variable Attribute(s) |
-|---------------|---------------|-----------------------|
-|               |               |                       |
-|               |               |                       |
-|               |               |                       |
+_followups_
+| Variable Type | Variable Name | Variable Attribute(s)                                                  |
+|---------------|---------------|------------------------------------------------------------------------|
+| INTEGER       | followup_id   | PRIMARY KEY AUTOINCREMENT                                              |
+| INTEGER       | poster_id     | FOREIGN KEY references user_id                                         |
+| INTEGER       | post_id       | FOREIGN KEY references post_id                                         |
+| TEXT          | body          | NOT NULL                                                               |
+| TEXT          | status        | NOT NULL (e.g. open, closed)                                           |
+| TEXT          | is_answer     | NOT NULL DEFAULT 'no'                                                  |
+| TEXT          | created_at    | CURRENT_TIMESTAMP                                                      |
+| TEXT          | updated_at    | CURRENT_TIMESTAMP                                                      |
+| INTEGER       | upvotes       | NOT NULL                                                               |
+| TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | involves      | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 
 </div>
 
