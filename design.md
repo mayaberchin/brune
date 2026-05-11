@@ -3,6 +3,7 @@
 ## Project: Stuy Overflow
 
 ---
+
 <div align="center">
 
 ## Roster
