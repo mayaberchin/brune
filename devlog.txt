@@ -71,13 +71,24 @@ PYTHON STYLE GUIDE
 
 christineC -- 2026-05-12 11:45
 JAVASCRIPT STYLE
+-----------------------------------------------------------------------------
 * Which aspects of the style guide were most applicable to your codebase?
   * COMMENTS
+    - Should explain the intent/purpose of code, rather than restating what the code does.
     - Comments should be single line "//" rather than multi-line comments "/* */".
       This makes comments easier to notice and multi-line comment notation may be used to comment-out code for debugging purposes.
   * LOOPS/CONDITIONALS
-    - Prefer `for...of` or `forEach` loops 
-    - Should use brackets regardless of whether they are necessary or not!
+    - Prefer `for...of` or `forEach()` loops when iterating through a collection.
+    - Should use braces regardless of whether they are necessary or not! This makes code safer to edit later.
+  * VARIABLE DECLARATIONS
+    - `const` for values that are not reassigned.
+    - `let` for values that change.
+-----------------------------------------------------------------------------
 * Which aspects of the style guide were most useful/appreciated by your Devos?
-  - ARROW NOTATION and implicit returns!
+  - ARROW NOTATION and implicit returns (for short callback functions)!
+  - Use asynchronous methods such as `async` and `await` for more complex asynchronous logic.
+  - Use clearer array methods such as `find()`, `map()`, `includes()`, or `filter()` when they work.
+  - Strict Equality (ensures types are also be the same): Use `===` and `!==` rather than `==` and `!=`.
+  - Use `fetch()` instead of `XMLHttpRequest`!
+-----------------------------------------------------------------------------
 * Shall include at least one (1) file+line reference.
