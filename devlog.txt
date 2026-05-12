@@ -42,3 +42,12 @@ DESIGN DOC
 - finish it
 - i don't remember it was a lot lmao. wait lemme check the commit history
 - features, stack, key users, testing delineation, timeline and internal deadline, ownership, sections; bottom "other" questions and maps
+
+mayaB -- 2026-05-12 07:10
+NOTABLE DESIGN REVISIONS
+------------------------------------------------------------------------------------------------------------
+change working in various places for clarity  
+add profile page to site map  
+modify site map to more accurately display all paths/connections  
+add a few more details up-front in some sections in addition to later in the doc due to reviewer confusion
+============================================================================================================
