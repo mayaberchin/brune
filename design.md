@@ -24,9 +24,9 @@ It provides a centralized space for communication, academic support, and easier 
 Users will be able to create and repond to questions and share resources; teachers will be able to create assignments and announcements as well as respond to student questions.
 
 ### Problem Being Solved
-StuyCS students aren't using Piazza as much as they could be. 
-Because of this, questions can go unanswered and teacher announcements missed. 
-Students might not know where to turn if they have an issue, or they might not know how to communicate the issue with enough context for it to be resolved. 
+StuyCS students aren't using Piazza as much as they could be.
+Because of this, questions can go unanswered and teacher announcements missed.
+Students might not know where to turn if they have an issue, or they might not know how to communicate the issue with enough context for it to be resolved.
 With this product, we aim to make a Piazza that is easier and more convenient to use, acting as a central hub for resources and including structure specific to our students' needs.
 
 ### Target Users
@@ -36,7 +36,7 @@ With this product, we aim to make a Piazza that is easier and more convenient to
 
 ### Why This Project Matters
 This project matters because students are more likely to ask for help and stay updated when class information is easy to access.
-A centralized discussion platform can reduce repeated questions, ensure that important teacher posts are seen, and make it easier for students to find support from classmates, 
+A centralized discussion platform can reduce repeated questions, ensure that important teacher posts are seen, and make it easier for students to find support from classmates,
 teachers, or Dojo staff. This site will be more tailored for StuyCS than Piazza in the hopes that this will encourage more community engagement.
 
 ---
@@ -52,10 +52,10 @@ Features that **must** be completed:
 2. Ability to create, join, and switch between classes
 3. Ability to give certain accounts a teacher role for a class, and permissions for teacher accounts that students don't have (such as posting assignments or removing posts)
 4. Ability for a student or dojo member to post as anonymous
-5. "Dojo" role, and the ability to make a question public to dojo members in addition to classmates 
+5. "Dojo" role, and the ability to make a question public to dojo members in addition to classmates
 
 
-### Stretch Features (Only if MVP is Complete) 
+### Stretch Features (Only if MVP is Complete)
 
 1. Supporting the ability to upload images from your filesystem or from the web in posts
 2. Separate tabs for different types of posts: for example, one for announcements from teachers and one for quick questions
@@ -102,7 +102,7 @@ Features intentionally **excluded**:
 ## Team Ownership Plan
 
 <div align="center">
-  
+
 Each member's meaningful deliverables  
 
 | Team Member    | Primary Ownership              | Secondary Ownership                   | Specific Deliverables                                                                                       |
@@ -134,8 +134,8 @@ Each member's meaningful deliverables
 ## Key User Stories
 
 ### StuyCS Student
-As a StuyCS student, I want to be able to post well-structured questions and notes on this site so that my classmates can understand what I'm getting at and help me out. 
-I want to find announcements my teacher made easily and be able to understand the context behind my classmates' questions. 
+As a StuyCS student, I want to be able to post well-structured questions and notes on this site so that my classmates can understand what I'm getting at and help me out.
+I want to find announcements my teacher made easily and be able to understand the context behind my classmates' questions.
 
 ### StuyCS Teacher
 As a StuyCS teacher, I want to be able to see and respond to student posts, as well as make my own posts, so that I can communicate deadlines with students and see which topics they're confused about.  
@@ -153,13 +153,13 @@ As a CS Dojo staff member, I want to use this platform to communicate with StuyC
 ### Database Type
 **Relational**  
 
-> Our team is the most experienced with using SQL databases, which are relational. 
+> Our team is the most experienced with using SQL databases, which are relational.
 
 
 ### Tables
 
 <div align="center">
-  
+
 _users_  
 
 | Variable Type | Variable Name | Variable Attribute(s)                       |
@@ -255,14 +255,14 @@ _followups_
 - Get post deletion from teacher account working
 - Get basic followups working (no edits, no formatting, but do include status resolution)
 - Get formatted posts working
-- Get images in posts working 
+- Get images in posts working
 - Get post editing working
 - Get tagging system working
 
 ### Week 3 Goals:
 - Get different tabs for different post types working
 - Get dojo role working as intended: allow dojo staff to see and respond to posts from confused students
-- Get marking followups as containing answers working 
+- Get marking followups as containing answers working
 - Get upvoting working
 - Work to integrate with teacher websites and GitHub as much as possible
 - Make the website theming more consistent and less ugly
@@ -284,7 +284,7 @@ _followups_
 | Formatted posts                                  | 05-21-26r         |
 | Tagging system                                   | 05-22-26f         |
 | Images in posts                                  | 05-22-26f         |
-| Dojo role seeing questions                       | 05-26-26t         |
+| Dojo role seeing questions                       | 05-25-26m         |
 | Tabs for different types of posts                | 05-26-26t         |
 | Upvotes                                          | 05-28-26r         |
 | Mark follow-ups as containing answers            | 05-28-26r         |
