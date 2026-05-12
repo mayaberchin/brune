@@ -54,7 +54,7 @@ FORM DESIGN
 
 meganK -- 2026-05-12 11:36
 PYTHON STYLE GUIDE
-- read it
+- read it & discussion w team
 - Which aspects of the style guide were most applicable to your codebase?
   - Naming conventions
   - Use of inline comments (use sparingly)
