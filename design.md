@@ -19,12 +19,15 @@
 ---
 
 ## Summary
-Stuy Overflow is a StuyCS tailored discussion platform inspired by Piazza (and Stack Overflow?).
+Stuy Overflow is a StuyCS tailored discussion platform inspired by Piazza (and Stack Overflow).
 It provides a centralized space for communication, academic support, and easier access to resources within the StuyCS community.
 Users will be able to create and repond to questions and share resources; teachers will be able to create assignments and announcements as well as respond to student questions.
 
 ### Problem Being Solved
-StuyCS students aren't using Piazza as much as they could be. Because of this, questions can go unanswered and teacher announcements missed. Students might not know where to turn if they have an issue, or they might not know how to communicate the issue with enough context for it to be resolved. With this product, we aim to make a Piazza that is easier and more convenient to use, with more guidance and structure specific to our students' needs.
+StuyCS students aren't using Piazza as much as they could be. 
+Because of this, questions can go unanswered and teacher announcements missed. 
+Students might not know where to turn if they have an issue, or they might not know how to communicate the issue with enough context for it to be resolved. 
+With this product, we aim to make a Piazza that is easier and more convenient to use, acting as a central hub for resources and including structure specific to our students' needs.
 
 ### Target Users
 - StuyCS students
@@ -33,7 +36,8 @@ StuyCS students aren't using Piazza as much as they could be. Because of this, q
 
 ### Why This Project Matters
 This project matters because students are more likely to ask for help and stay updated when class information is easy to access.
-A centralized discussion platform can reduce repeated questions, ensure that important teacher posts are seen, and make it easier for students to find support from classmates, teachers, or Dojo staff. This site will be more tailored for StuyCS than Piazza in the hopes that this will encourage more community engagement.
+A centralized discussion platform can reduce repeated questions, ensure that important teacher posts are seen, and make it easier for students to find support from classmates, 
+teachers, or Dojo staff. This site will be more tailored for StuyCS than Piazza in the hopes that this will encourage more community engagement.
 
 ---
 
@@ -44,21 +48,21 @@ A centralized discussion platform can reduce repeated questions, ensure that imp
 ### Core Features (Required for Final Submission)
 Features that **must** be completed:  
 
-1. Ability to post and respond to questions and notes. Should support formatting (as code, for example)
+1. Ability to post, edit, and respond to questions and notes. Should support formatting (as code, for example)
 2. Ability to create, join, and switch between classes
-3. Teacher and student accounts with different capabilities
-4. Ability to post as anonymous
+3. Ability to give certain accounts a teacher role for a class, and permissions for teacher accounts that students don't have (such as posting assignments or removing posts)
+4. Ability for a student or dojo member to post as anonymous
 5. "Dojo" role, and the ability to make a question public to dojo members in addition to classmates 
 
 
 ### Stretch Features (Only if MVP is Complete) 
 
-1. Supporting image embedding in posts
+1. Supporting the ability to upload images from your filesystem or from the web in posts
 2. Separate tabs for different types of posts: for example, one for announcements from teachers and one for quick questions
 3. Providing templates to guide students in providing good context for their posts
 4. Upvoting for questions and follow-ups
 5. Ability to mark a follow-up as containing an answer/resolution to the original post, as opposed to follow-up questions or unsuccessful suggestions
-6. Tagging system for post content similar to social media sites
+6. Tagging system for post content similar to social media sites (tags are optional and can be anything, and once students start typing they'll see suggestions for similar, previously used tags)
 7. Ability to tag other students and related posts
 8. Better integration with other teacher resources: rendering teacher websites from a tab in our app, for example
 
@@ -130,10 +134,12 @@ Each member's meaningful deliverables
 ## Key User Stories
 
 ### StuyCS Student
-As a StuyCS student, I want to be able to post questions and notes on this site so that my classmates can understand what I'm getting at and/or help me out.
+As a StuyCS student, I want to be able to post well-structured questions and notes on this site so that my classmates can understand what I'm getting at and help me out. 
+I want to find announcements my teacher made easily and be able to understand the context behind my classmates' questions. 
 
 ### StuyCS Teacher
-As a StuyCS teacher, I want to be able to see and respond to student posts, as well as make my own posts, so that I can communicate deadlines with students and see which topics they're confused about.
+As a StuyCS teacher, I want to be able to see and respond to student posts, as well as make my own posts, so that I can communicate deadlines with students and see which topics they're confused about.  
+I want to give students a place to ask each other questions to help build a community and reduce the time I spend on answering repeated questions.
 
 ### CS Dojo Staff
 As a CS Dojo staff member, I want to use this platform to communicate with StuyCS so that we have a centralized place to gather information, help confused students, and convene with the whole StuyCS community.
@@ -163,7 +169,7 @@ _users_
 | TEXT          | github        | UNIQUE                                      |
 | TEXT          | name          | NOT NULL                                    |
 | TEXT          | password_hash | NOT NULL                                    |
-| TEXT          | role          | NOT NULL DEFAULT 'student'                  |
+| TEXT          | is_dojo       | NOT NULL                                    |
 | TEXT          | class_id      | (can have multiple, comma-separated)        |
 
 <br>
@@ -174,7 +180,7 @@ _classes_
 |---------------|---------------|------------------------------------------------------------------------|
 | INTEGER       | class_id      | PRIMARY KEY AUTOINCREMENT                                              |
 | TEXT          | name          | NOT NULL                                                               |
-| TEXT          | instructor_id | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | teacher_id    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 
 <br>
 
@@ -292,10 +298,11 @@ _followups_
 <br>
 
 ## Completion Criteria (Definition of Done)
-Project is considered **complete** when all of the following are true:
+Project is considered **complete** when all of the following are true:  
+
 1. We have a functional MV-plus-some-stretch-goals-P that also isn't ugly
 2. Our site has some value to StuyCS because it's functional and tailored: that is, we added some features useful to StuyCS that Piazza doesn't have AND our app doesn't break
-3. We are forcibly removed/unable to update it (it can always be better) OR we give up and decide it's good enough
+3. We are forcibly removed from the repo when the deadline comes/unable to update it (it can always be better) OR we give up and decide it's good enough
 
 ---
 
