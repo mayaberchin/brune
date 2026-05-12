@@ -45,6 +45,24 @@ DESIGN DOC
 
 mayaB -- 2026-05-12 07:10
 NOTABLE DESIGN REVISIONS
+
+meganK -- 2026-05-12 11:20
+FORM DESIGN
+- add questions
+- add choices
+- edited question and choice wording to be simpler so responders don't have to read as much
+
+meganK -- 2026-05-12 11:36
+PYTHON STYLE GUIDE
+- read it
+- Which aspects of the style guide were most applicable to your codebase?
+  - Naming conventions
+  - Use of inline comments (use sparingly)
+- Which aspects of the style guide were most useful/appreciated by your Devos?
+  - Comment conventions
+    - we all tend to write useless comments in our code, and we will work on streamlining our comments to include the reasons why we wrote certain lines of code
+    - Ex: instead of `x = x + 1 # Increment x`, this is more useful `x = x + 1  # Compensate for border `
+
 ------------------------------------------------------------------------------------------------------------
 change working in various places for clarity  
 add profile page to site map  
