@@ -45,6 +45,12 @@ DESIGN DOC
 
 mayaB -- 2026-05-12 07:10
 NOTABLE DESIGN REVISIONS
+------------------------------------------------------------------------------------------------------------
+change working in various places for clarity  
+add profile page to site map  
+modify site map to more accurately display all paths/connections  
+add a few more details up-front in some sections in addition to later in the doc due to reviewer confusion
+============================================================================================================
 
 meganK -- 2026-05-12 11:20
 FORM DESIGN
@@ -63,9 +69,15 @@ PYTHON STYLE GUIDE
     - we all tend to write useless comments in our code, and we will work on streamlining our comments to include the reasons why we wrote certain lines of code
     - Ex: instead of `x = x + 1 # Increment x`, this is more useful `x = x + 1  # Compensate for border `
 
-------------------------------------------------------------------------------------------------------------
-change working in various places for clarity  
-add profile page to site map  
-modify site map to more accurately display all paths/connections  
-add a few more details up-front in some sections in addition to later in the doc due to reviewer confusion
-============================================================================================================
+christineC -- 2026-05-12 11:45
+JAVASCRIPT STYLE
+* Which aspects of the style guide were most applicable to your codebase?
+  * COMMENTS
+    - Comments should be single line "//" rather than multi-line comments "/* */".
+      This makes comments easier to notice and multi-line comment notation may be used to comment-out code for debugging purposes.
+  * LOOPS/CONDITIONALS
+    - Prefer `for...of` or `forEach` loops 
+    - Should use brackets regardless of whether they are necessary or not!
+* Which aspects of the style guide were most useful/appreciated by your Devos?
+  - ARROW NOTATION and implicit returns!
+* Shall include at least one (1) file+line reference.
