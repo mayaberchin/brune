@@ -104,3 +104,9 @@ christineC -- 2026-05-13 02:40
 POST EDITOR
 - Added post editor template for creating posts
 - Included fields for title, type, body, anonymous, sharing, probably forgot a ton of stuff...
+
+megaNK -- 2026-05-13 11:40
+LOGIN & ACCOUNT
+- created login.html + code
+- created createaccount.html + code
+- added the python necessary for login and createaccount to work into __init__.py
