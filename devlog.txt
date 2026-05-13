@@ -110,3 +110,7 @@ LOGIN & ACCOUNT
 - created login.html + code
 - created createaccount.html + code
 - added the python necessary for login and createaccount to work into __init__.py
+
+
+=======================================================
+MK will be starting the GUI design (announcements, questions, quick q's (groupchat style), notes) in that order
