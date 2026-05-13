@@ -46,9 +46,9 @@ DESIGN DOC
 mayaB -- 2026-05-12 07:10
 NOTABLE DESIGN REVISIONS
 ------------------------------------------------------------------------------------------------------------
-change working in various places for clarity  
-add profile page to site map  
-modify site map to more accurately display all paths/connections  
+change working in various places for clarity
+add profile page to site map
+modify site map to more accurately display all paths/connections
 add a few more details up-front in some sections in addition to later in the doc due to reviewer confusion
 ============================================================================================================
 
@@ -99,3 +99,8 @@ MIDDLEWARE
 - Bunch of helper functions, table making, some functions to add users and for authentication
 - Haven't tested yet
 - Also edited DD to fix lack of secondary roles, deadlines, and missing NOT NULL for some columns in our DB tables
+
+christineC -- 2026-05-13 02:40
+POST EDITOR
+- Added post editor template for creating posts
+- Included fields for title, type, body, anonymous, sharing, probably forgot a ton of stuff...
