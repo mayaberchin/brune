@@ -7,6 +7,66 @@ DB_FILE="data.db"
 
 #=============================[MAKE=TABLES]=============================#
 
+# users
+def create_users_table():
+    command =  """
+                CREATE TABLE IF NOT EXISTS users (
+                    user_id         INTEGER     NOT NULL    PRIMARY KEY     AUTOINCREMENT,
+                    email           TEXT        NOT NULL                    UNIQUE,
+                    github          TEXT                                    UNIQUE,
+                    name            TEXT        NOT NULL,
+                    password_hash   TEXT        NOT NULL,
+                    is_dojo         TEXT        NOT NULL                                            DEFAULT 'no',
+                    class_id        TEXT
+                )"""
+    sqlite(command)
+
+# classes
+def create_classes_table():
+    command =  """
+                CREATE TABLE IF NOT EXISTS classes (
+                    class_id        INTEGER     NOT NULL    PRIMARY KEY     AUTOINCREMENT,
+                    name            TEXT        NOT NULL,
+                    teacher_id      TEXT        NOT NULL
+                )"""
+    sqlite(command)
+
+# posts
+def create_posts_table():
+    command =  """
+                CREATE TABLE IF NOT EXISTS posts (
+                    post_id         INTEGER     NOT NULL    PRIMARY KEY     AUTOINCREMENT,
+                    poster_id       INTEGER     NOT NULL,
+                    class_id        INTEGER     NOT NULL,
+                    title           TEXT        NOT NULL,
+                    body            TEXT        NOT NULL,
+                    category        TEXT        NOT NULL,
+                    status          TEXT        NOT NULL,
+                    created_at      TEXT        NOT NULL                                            DEFAULT CURRENT_TIMESTAMP,
+                    updated_at      TEXT        NOT NULL                                            DEFAULT CURRENT_TIMESTAMP,
+                    upvotes         INTEGER     NOT NULL,
+                    upvoted_by      TEXT,
+                    ping            TEXT
+                )"""
+    sqlite(command)
+
+# followups
+def create_followups_table():
+    command =  """
+                CREATE TABLE IF NOT EXISTS posts (
+                    followup_id     INTEGER     NOT NULL    PRIMARY KEY     AUTOINCREMENT,
+                    poster_id       INTEGER     NOT NULL,
+                    post_id         INTEGER     NOT NULL,
+                    body            TEXT        NOT NULL,
+                    status          TEXT        NOT NULL,
+                    is_answer       TEXT        NOT NULL                                            DEFAULT 'no',
+                    created_at      TEXT        NOT NULL                                            DEFAULT CURRENT_TIMESTAMP,
+                    updated_at      TEXT        NOT NULL                                            DEFAULT CURRENT_TIMESTAMP,
+                    upvotes         INTEGER     NOT NULL,
+                    upvoted_by      TEXT,
+                    ping            TEXT
+                )"""
+    sqlite(command)
 
 
 #=============================[USERS]=============================#
