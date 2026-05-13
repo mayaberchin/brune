@@ -166,7 +166,7 @@ _users_
 |---------------|---------------|---------------------------------------------|
 | INTEGER       | user_id       | PRIMARY KEY AUTOINCREMENT                   |
 | TEXT          | email         | UNIQUE NOT NULL                             |
-| TEXT          | github        | UNIQUE                                      |
+| TEXT          | github        |                                             |
 | TEXT          | name          | NOT NULL                                    |
 | TEXT          | password_hash | NOT NULL                                    |
 | TEXT          | is_dojo       | NOT NULL                                    |

@@ -13,7 +13,7 @@ def create_users_table():
                 CREATE TABLE IF NOT EXISTS users (
                     user_id         INTEGER     NOT NULL    PRIMARY KEY     AUTOINCREMENT,
                     email           TEXT        NOT NULL                    UNIQUE,
-                    github          TEXT                                    UNIQUE,
+                    github          TEXT,
                     name            TEXT        NOT NULL,
                     password_hash   TEXT        NOT NULL,
                     is_dojo         TEXT        NOT NULL                                            DEFAULT 'no',
@@ -83,28 +83,36 @@ def create_tables():
 
 # returns a list of usernames
 def get_all_users():
-    data = sqlite_fetchall('SELECT username FROM users')
+    data = sqlite_fetchall('SELECT email FROM users')
     return clean_list(data)
 
 
 # returns whether or not a user exists
-def user_exists(username):
+def user_exists(email):
     all_users = get_all_users()
+    print(all_users)
     for user in all_users:
-        if (user == username):
+        print(user + " " + email)
+        if (user == email):
+            print("user exists")
             return True
     return False
 
 
 # checks if provided password in login attempt matches user password
-def auth(username, password):
+def auth(email, password):
 
-    if not user_exists(username):
+    print("auth")
+
+    if not user_exists(email):
         return False
 
+    print("past user exists")
     # use ? for unsafe/user provided variables
-    real_pass = sqlite_fetchone('SELECT password FROM users WHERE username = ?', (username,))
+    real_pass = sqlite_fetchone('SELECT password_hash FROM users WHERE email = ?', (email,))
+    print(real_pass)
     password = password.encode('utf-8')
+    print(password)
 
     # hash password here
     if real_pass != str(hashlib.sha256(password).hexdigest()):
@@ -114,10 +122,10 @@ def auth(username, password):
 
 
 # adds a new user's data to user table
-def add_user(username, password, email, github, name, is_dojo, classes):
+def add_user(email, password, name, github=''):
 
-    if user_exists(username):
-        return "Username already exists"
+    if user_exists(email):
+        return "There is already a user with this email"
 
     if password == "":
         return "Password cannot be empty"
@@ -125,11 +133,9 @@ def add_user(username, password, email, github, name, is_dojo, classes):
     # hash password here
     password = password.encode('utf-8')
     password = str(hashlib.sha256(password).hexdigest())
-    
-    class_id = merge_list(classes)
 
     # use ? for unsafe/user provided variables
-    sqlite('INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)', (username, email, github, name, password, is_dojo, class_id,))
+    sqlite('INSERT INTO users(email, github, name, password_hash, is_dojo, class_id) VALUES (?, ?, ?, ?, ?, ?)', (email, github, name, password, 'no', '',))
 
     return "success"
 
@@ -244,7 +250,7 @@ def get_col_list(table, col_name):
     # no unsafe/user-provided vars here, safe to use f-strings
     data = sqlite_fetchall(f'SELECT {col_name} FROM {table}')
     return clean_list(data)
-    
+
 
 
 #---------[modify]---------#
@@ -264,10 +270,27 @@ def gen_id():
     # use secrets module to generate a random 32-byte string
     return secrets.token_hex(32)
 
-# merge a list into a comma-separated (or some other delimeter) string 
+# merge a list into a comma-separated (or some other delimeter) string
 def merge_list(lst, delim=","):
     return delim.join(lst)
 
 # return a list from a string of comma-separated items (or some other delimeter)
 def make_list(str, delim=","):
     return str.split(delim)
+
+
+
+#=============================[TESTING]=============================#
+
+if (__name__ == "__main__"):
+    create_tables()
+    print(get_all_users())
+    print(add_user("mayaberchin@gmail.com", "hello", "Maya Berchin"))
+    print(get_all_users())
+    print(auth("mayaberchin@gmail.com", "wrong"))
+    print(auth("mayaberchin@gmail.com", "hello"))
+    print(auth("maya@gmail.com", "wrong"))
+    print(add_user("mayaberchin@gmail.com", "hello", "Maya Berchin"))
+    print(get_all_users())
+    add_user("b@b.com", "h", "bob b")
+    print(get_all_users())
