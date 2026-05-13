@@ -1,0 +1,71 @@
+<section id="postEditor" class="post-editor-card d-none">
+  <h2 class="mb-2">New Post</h2>
+  <p class="text-muted mb-4">
+    Write a question, note, or announcement for your class.
+  </p>
+
+  <div id="postErrorBox" class="alert alert-danger d-none"></div>
+
+  <form id="postForm">
+    <div class="mb-3">
+      <label for="postTitle" class="form-label"> Title </label>
+      <input
+        id="postTitle"
+        name="title"
+        type="text"
+        class="form-control"
+        maxlength="120"
+        placeholder="What is this post about?"
+      >
+    </div>
+
+    <div class="mb-3">
+      <label for="postType" class="form-label"> Post Type </label>
+      <select id="postType" name="postType" class="form-select">
+        <option value="question"> Question </option>
+        <option value="note"> Note </option>
+        <option value="announcement"> Announcement </option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="postBody" class="form-label"> Post Body </label>
+      <textarea
+        id="postBody"
+        name="postBody"
+        class="form-control post-body-input"
+        placeholder="Type your post here..."
+      ></textarea>
+    </div>
+
+    <div class="form-check mb-2">
+      <input
+        id="isAnonymous"
+        type="checkbox"
+        class="form-check-input"
+      >
+      <label for="isAnonymous" class="form-check-label"> Post Anonymously </label>
+    </div>
+
+    <div class="form-check mb-4">
+      <input
+        id="shareWithDojo"
+        type="checkbox"
+        class="form-check-input"
+      >
+      <label for="shareWithDojo" class="form-check-label"> Share with Dojo </label>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2">
+      <button
+        id="cancelPostButton"
+        type="button"
+        class="btn btn-outline-secondary"
+      >
+        Cancel
+      </button>
+
+      <button type="submit" class="btn btn-primary"> Post </button>
+    </div>
+  </form>
+</section>
