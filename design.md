@@ -8,11 +8,11 @@
 
 ## Roster
 
-| Name           | Email                         | Primary Role    | Secondary Role |
-|----------------|-------------------------------|-----------------|----------------|
-| Maya Berchin   | mayab97@nycstudents.net       | Project Manager | Developer      |
-| Megan Kwok     | megank21@nycstudents.net      | Developer       | N/A            |
-| Christine Chen | christinec109@nycstudents.net | Developer       | N/A            |
+| Name           | Email                         | Primary Role                | Secondary Role  |
+|----------------|-------------------------------|-----------------------------|-----------------|
+| Maya Berchin   | mayab97@nycstudents.net       | Developer, DB focus         | Project Manager |
+| Megan Kwok     | megank21@nycstudents.net      | Developer, main UI focus    | Devlog Checker  |
+| Christine Chen | christinec109@nycstudents.net | Developer, textbox focus    | Style Warden    |
 
 </div>
 
@@ -278,18 +278,18 @@ _followups_
 | Class creation                                   | 05-14-26r         |
 | Basic posts                                      | 05-15-26f         |
 | Post deletion                                    | 05-18-26m         |
-| Followups                                        | 05-19-26t         |
-| Changing the status of a post or follow-up       | 05-19-26t         |
-| Editing posts and followups                      | 05-20-26w         |
-| Formatted posts                                  | 05-21-26r         |
-| Tagging system                                   | 05-22-26f         |
-| Images in posts                                  | 05-22-26f         |
-| Dojo role seeing questions                       | 05-25-26m         |
-| Tabs for different types of posts                | 05-26-26t         |
-| Upvotes                                          | 05-28-26r         |
-| Mark follow-ups as containing answers            | 05-28-26r         |
-| Consistent theming                               | 05-29-26f         |
-| Integration with teacher websites                | 05-29-26f         |
+| Followups                                        | 05-18-26m         |
+| Changing the status of a post or follow-up       | 05-18-26m         |
+| Editing posts and followups                      | 05-19-26t         |
+| Formatted posts                                  | 05-20-26w         |
+| Tagging system                                   | 05-20-26w         |
+| Images in posts                                  | 05-21-26r         |
+| Dojo role seeing questions                       | 05-21-26r         |
+| Tabs for different types of posts                | 05-22-26f         |
+| Upvotes                                          | 05-22-26f         |
+| Mark follow-ups as containing answers            | 05-22-26f         |
+| Consistent theming                               | 05-25-26m         |
+| Integration with teacher websites                | 05-25-26m         |
 
 </div>
 
