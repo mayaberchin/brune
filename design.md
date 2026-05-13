@@ -176,11 +176,11 @@ _users_
 
 _classes_  
 
-| Variable Type | Variable Name | Variable Attribute(s)                                                  |
-|---------------|---------------|------------------------------------------------------------------------|
-| INTEGER       | class_id      | PRIMARY KEY AUTOINCREMENT                                              |
-| TEXT          | name          | NOT NULL                                                               |
-| TEXT          | teacher_id    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| Variable Type | Variable Name | Variable Attribute(s)                                                           |
+|---------------|---------------|---------------------------------------------------------------------------------|
+| INTEGER       | class_id      | PRIMARY KEY AUTOINCREMENT                                                       |
+| TEXT          | name          | NOT NULL                                                                        |
+| TEXT          | teacher_id    | NOT NULL FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 
 <br>
 
@@ -189,17 +189,17 @@ _posts_
 | Variable Type | Variable Name | Variable Attribute(s)                                                  |
 |---------------|---------------|------------------------------------------------------------------------|
 | INTEGER       | post_id       | PRIMARY KEY AUTOINCREMENT                                              |
-| INTEGER       | poster_id     | FOREIGN KEY references user_id                                         |
-| INTEGER       | class_id      | FOREIGN KEY references class_id                                        |
+| INTEGER       | poster_id     | NOT NULL FOREIGN KEY references user_id                                |
+| INTEGER       | class_id      | NOT NULL FOREIGN KEY references class_id                               |
 | TEXT          | title         | NOT NULL                                                               |
 | TEXT          | body          | NOT NULL                                                               |
 | TEXT          | category      | NOT NULL (e.g. announcement, question)                                 |
 | TEXT          | status        | NOT NULL (e.g. open, closed)                                           |
-| TEXT          | created_at    | CURRENT_TIMESTAMP                                                      |
-| TEXT          | updated_at    | CURRENT_TIMESTAMP                                                      |
+| TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
+| TEXT          | updated_at    | NOT NULL CURRENT_TIMESTAMP                                             |
 | INTEGER       | upvotes       | NOT NULL                                                               |
 | TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
-| TEXT          | involves      | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | ping          | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 
 <br>
 
@@ -208,13 +208,13 @@ _followups_
 | Variable Type | Variable Name | Variable Attribute(s)                                                  |
 |---------------|---------------|------------------------------------------------------------------------|
 | INTEGER       | followup_id   | PRIMARY KEY AUTOINCREMENT                                              |
-| INTEGER       | poster_id     | FOREIGN KEY references user_id                                         |
-| INTEGER       | post_id       | FOREIGN KEY references post_id                                         |
+| INTEGER       | poster_id     | NOT NULL FOREIGN KEY references user_id                                |
+| INTEGER       | post_id       | NOT NULL FOREIGN KEY references post_id                                |
 | TEXT          | body          | NOT NULL                                                               |
 | TEXT          | status        | NOT NULL (e.g. open, closed)                                           |
 | TEXT          | is_answer     | NOT NULL DEFAULT 'no'                                                  |
-| TEXT          | created_at    | CURRENT_TIMESTAMP                                                      |
-| TEXT          | updated_at    | CURRENT_TIMESTAMP                                                      |
+| TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
+| TEXT          | updated_at    | NOT NULL CURRENT_TIMESTAMP                                             |
 | INTEGER       | upvotes       | NOT NULL                                                               |
 | TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 | TEXT          | ping          | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
