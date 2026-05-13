@@ -92,3 +92,10 @@ JAVASCRIPT STYLE
   - Use `fetch()` instead of `XMLHttpRequest`!
 -----------------------------------------------------------------------------
 * Shall include at least one (1) file+line reference.
+
+mayaB -- 2026-05-13 00:52
+MIDDLEWARE
+- Begin work on the great data.py file
+- Bunch of helper functions, table making, some functions to add users and for authentication
+- Haven't tested yet
+- Also edited DD to fix lack of secondary roles, deadlines, and missing NOT NULL for some columns in our DB tables
