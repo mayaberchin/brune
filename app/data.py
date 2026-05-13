@@ -69,20 +69,21 @@ def create_followups_table():
     sqlite(command)
 
 
+# all
+def create_tables():
+    create_users_table()
+    create_classes_table()
+    create_posts_table()
+    create_followups_table()
+
+
+
 #=============================[USERS]=============================#
 
 
 # returns a list of usernames
 def get_all_users():
-
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-
-    data = c.execute('SELECT username FROM users').fetchall()
-
-    db.commit()
-    db.close()
-
+    data = sqlite_fetchall('SELECT username FROM users')
     return clean_list(data)
 
 
@@ -98,56 +99,37 @@ def user_exists(username):
 # checks if provided password in login attempt matches user password
 def auth(username, password):
 
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-
     if not user_exists(username):
-        db.commit()
-        db.close()
-
-        #raise ValueError("Username does not exist")
         return False
 
     # use ? for unsafe/user provided variables
-    passpointer = c.execute('SELECT password FROM users WHERE username = ?', (username,))
-    real_pass = passpointer.fetchone()[0]
-
-    db.commit()
-    db.close()
-
+    real_pass = sqlite_fetchone('SELECT password FROM users WHERE username = ?', (username,))
     password = password.encode('utf-8')
 
     # hash password here
     if real_pass != str(hashlib.sha256(password).hexdigest()):
-        #raise ValueError("Incorrect password")
         return False
 
     return True
 
 
 # adds a new user's data to user table
-def add_user(username, password):
+def add_user(username, password, email, github, name, is_dojo, classes):
 
     if user_exists(username):
-        #raise ValueError("Username already exists")
         return "Username already exists"
 
     if password == "":
-        #raise ValueError("You must enter a non-empty password")
         return "Password cannot be empty"
-
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
 
     # hash password here
     password = password.encode('utf-8')
     password = str(hashlib.sha256(password).hexdigest())
+    
+    class_id = merge_list(classes)
 
     # use ? for unsafe/user provided variables
-    c.execute('INSERT INTO users VALUES (?, ?)', (username, password,))
-
-    db.commit()
-    db.close()
+    sqlite('INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)', (username, email, github, name, password, is_dojo, class_id,))
 
     return "success"
 
@@ -281,3 +263,11 @@ def delete_row(table, ID_fieldname, id):
 def gen_id():
     # use secrets module to generate a random 32-byte string
     return secrets.token_hex(32)
+
+# merge a list into a comma-separated (or some other delimeter) string 
+def merge_list(lst, delim=","):
+    return delim.join(lst)
+
+# return a list from a string of comma-separated items (or some other delimeter)
+def make_list(str, delim=","):
+    return str.split(delim)
