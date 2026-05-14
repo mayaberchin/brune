@@ -62,6 +62,24 @@
     newPostButton.addEventListener("click", showPostEditor);
     cancelPostButton.addEventListener("click", hidePostEditor);
 
+    postForm.addEventListener("submit", function(event) {
+      const postData = {
+        title: postTitle.value.trim(),
+        postType: postType.value,
+        body: postBody.value.trim(),
+        isAnonymous: isAnonymous.checked,
+        shareWithDojo: shareWithDojo.checked
+      };
+
+      if (postData.title === "" || postData.body === "") {
+        showError("Please fill out the title and post body.");
+        return;
+      }
+
+      console.log(postData);
+      hidePostEditor();
+    });
+
   </script>
 
 </html>
