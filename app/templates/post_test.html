@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title> Posts Test! </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="container py-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1> Posts </h1>
+
+        <button id="newPostButton" class="btn btn-primary">
+          + New Post
+        </button>
+      </div>
+
+      {% include "post_editor.html" %}
+
+      <section id="postsList" class="mt-4">
+        <p class="text-muted">
+          Posts will show up here later.
+        </p>
+      </section>
+    </div>
+  </body>
+
+  <script>
+
+    const newPostButton = document.getElementById("newPostButton");
+    const postEditor = document.getElementById("postEditor");
+    const cancelPostButton = document.getElementById("cancelPostButton");
+    const postForm = document.getElementById("postForm");
+    const postErrorBox = document.getElementById("postErrorBox");
+    const postTitle = document.getElementById("postTitle");
+    const postType = document.getElementById("postType");
+    const postBody = document.getElementById("postBody");
+    const isAnonymous = document.getElementById("isAnonymous");
+    const shareWithDojo = document.getElementById("shareWithDojo");
+
+    function showPostEditor() {
+      postEditor.classList.remove("d-none");
+    }
+
+    function hidePostEditor() {
+      postEditor.classList.add("d-none");
+      postForm.reset();
+      hideError();
+    }
+
+    function showError(message) {
+      postErrorBox.textContent = message;
+      postErrorBox.classList.remove("d-none");
+    }
+
+    function hideError() {
+      postErrorBox.textContent = "";
+      postErrorBox.classList.add("d-none");
+    }
+
+    newPostButton.addEventListener("click", showPostEditor);
+    cancelPostButton.addEventListener("click", hidePostEditor);
+
+  </script>
+
+</html>

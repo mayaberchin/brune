@@ -58,6 +58,11 @@ def index():
         return redirect(url_for('login'))
     return render_template("index.html")
 
+# TEST
+@app.route("/post_test")
+def posts():
+    return render_template("post_test.html")
+
 #handling data
 #@app.route('/data')
 
