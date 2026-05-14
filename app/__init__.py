@@ -41,7 +41,7 @@ def set_user():
         name = request.form['name']
         is_dojo = request.form['is_dojo']
         classes = request.form['classes']
-        add_user(password, email, github, name, is_dojo, classes)
+        add_user(email, password, name, github, name)
         session['username'] = username
         return redirect(url_for('index'))
     return render_template('createaccount.html')
