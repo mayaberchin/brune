@@ -121,7 +121,6 @@ UI/UX DESIGN
 - drafted homepage design
 - drafted announcements page design
 - read research papers on UI/UX design for forums and implemented findings into design
-
 =======================================================
 MK will be doing the UX design (announcements, questions, quick q's (groupchat style), notes) in that order
 
@@ -142,3 +141,13 @@ LOGIN/DATABASE TESTING
 - got login/register related functions working in data.py, tested
 - began testing actual login/register, have some inconsistencies with __init__.py
 - fixed some inconsistencies but need to coordinate more with team to understand some of what they're going for in __init__
+
+christineC -- 2026-05-14 8:00
+POST EDITOR
+- Create post_test template and included post_editor template inside!
+- Add basic inline JS to post_test + basic BS :D styling
+- Add Flask route to post_test for testing
+---------------------------------------------------------------------
+TO DO
+* VITE...
+* Add templates to post_editor for different types of responses!
