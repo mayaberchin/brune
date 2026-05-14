@@ -4,6 +4,7 @@ import data
 
 app = Flask(__name__)
 app.secret_key = "vsecretandsecurekeyforstuyoverflow"
+data.create_tables()
 
 #login
 @app.route("/", methods=["GET", "POST"])
