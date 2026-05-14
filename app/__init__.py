@@ -10,12 +10,13 @@ data.create_tables()
 @app.route("/", methods=["GET", "POST"])
 def login():
     if 'email' in session:
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     if request.method == 'POST':
         email = request.form.get("email")
         password = request.form.get("password")
         if data.auth(email, password):
-            return redirect(url_for('index'))
+            session['email'] = email
+            return redirect(url_for('home'))
         else:
             flash("Email or password incorrect. Try again.")
             return redirect(url_for('login'))
@@ -26,18 +27,18 @@ def login():
 @app.route("/register", methods = ['GET', "POST"])
 def set_user():
     if 'username' in session:
-        return redirect(url_for('index'))
+        return redirect(url_for('home'))
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form.get('email')
+        password = request.form.get('password')
         if data.user_exists(email):
             flash("User already exists!")
             return redirect(url_for('set_user'))
-        github = request.form['github']
-        name = request.form['name']
+        github = request.form.get('github')
+        name = request.form.get('name')
         data.add_user(email, password, name, github)
-        session['email'] = email
-        return redirect(url_for('index'))
+        session['email'] = email;
+        return redirect(url_for('home'))
     return render_template('register.html')
 
 @app.route("/logout")
@@ -46,11 +47,11 @@ def logout():
     return redirect(url_for('login'))
 
 #main
-@app.route('/index', methods=['GET', 'POST'])
-def index():
+@app.route('/home', methods=['GET', 'POST'])
+def home():
     if 'email' not in session:
         return redirect(url_for('login'))
-    return render_template("index.html")
+    return render_template("home.html")
 
 # TEST
 @app.route("/post_test")
