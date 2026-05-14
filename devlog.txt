@@ -115,6 +115,7 @@ meganK -- 2026-05-13 20:21
 UI/UX DESIGN
 - drafted homepage design
 - drafted announcements page design
+- read research papers on UI/UX design for forums and implemented findings into design
 
 =======================================================
 MK will be doing the UX design (announcements, questions, quick q's (groupchat style), notes) in that order
