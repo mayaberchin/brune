@@ -1,7 +1,6 @@
-<!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Sign Up</title>
 </head>
     <style>
         body {
@@ -107,6 +106,13 @@
             font-size: 0.9rem;
         }
 
+        .password-rules {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: -0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
         @media (max-width: 480px) {
             .auth-container {
                 margin: 1rem;
@@ -120,15 +126,15 @@
     </style>
 <body>
     <div class="auth-container">
-        <h1>Login</h1>
+        <h1>Create Account</h1>
 
-        <form action="/" method="post">
+        <form action="/createaccount" method="post">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
-            <input type="submit" value="Login">
+            <input type="submit" value="Sign Up">
         </form>
 
-      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
                     <p class="flashes {{ category }}">{{ message }}</p>
@@ -136,13 +142,8 @@
             {% endif %}
         {% endwith %}
 
-        <main class="content">
-        {% block content %}
-        {% endblock %}
-      </main>
-
         <div class="auth-footer">
-            <p>Don't have an account? <a href="/createaccount" style="color: #333; text-decoration: underline;">Sign up</a></p>
+            <p>Already have an account? <a href="/" style="color: #333; text-decoration: underline;">Login</a></p>
         </div>
     </div>
 </body>

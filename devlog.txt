@@ -104,3 +104,30 @@ christineC -- 2026-05-13 02:40
 POST EDITOR
 - Added post editor template for creating posts
 - Included fields for title, type, body, anonymous, sharing, probably forgot a ton of stuff...
+
+meganK -- 2026-05-13 11:40
+LOGIN & ACCOUNT
+- created login.html + code
+- created createaccount.html + code
+- added the python necessary for login and createaccount to work into __init__.py
+
+christineC -- 2026-05-13 11:40
+REACT
+- Convert post editor template into JSX
+- Seeking clearance for Vite on Piazza...
+
+meganK -- 2026-05-13 20:21
+UI/UX DESIGN
+- drafted homepage design
+- drafted announcements page design
+- read research papers on UI/UX design for forums and implemented findings into design
+
+=======================================================
+MK will be doing the UX design (announcements, questions, quick q's (groupchat style), notes) in that order
+
+christineC -- 2026-05-13 23:09
+VITE
+- Completed Piazza post seeking clearance and created pull request for howto_vite.md!
+- Setup Vite on branch for now (may be nuked!)
+REQ
+- Add requirements.txt (Flask)
