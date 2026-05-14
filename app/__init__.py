@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
+
+import data
 
 app = Flask(__name__)
+app.secret_key = "vsecretandsecurekeyforstuyoverflow"
 
 #login
 @app.route("/", methods=["GET", "POST"])
@@ -8,9 +11,9 @@ def login():
     if 'email' in session:
         return redirect(url_for('index'))
     if request.method == 'POST':
-        email = request.form["email"]
-        password = request.form["password"]
-        userData = auth(email, password)
+        email = request.form.get("email")
+        password = request.form.get("password")
+        userData = data.auth(email, password)
         if userData:
             if password == userData["password"]:
                 session["email"] = email
@@ -56,7 +59,7 @@ def index():
     return render_template("index.html")
 
 #handling data
-@app.route('/data')
+#@app.route('/data')
 
 if __name__ == "__main__":
   app.debug = True

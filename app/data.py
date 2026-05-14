@@ -273,6 +273,3 @@ def make_list(str, delim=","):
 
 
 #=============================[TESTING]=============================#
-
-if (__name__ == "__main__"):
-    # test code here
