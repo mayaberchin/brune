@@ -151,3 +151,8 @@ POST EDITOR
 TO DO
 * VITE...
 * Add templates to post_editor for different types of responses!
+
+mayaB -- 2026-05-14 15:59
+LOGIN/REGISTER WORKING
+- Bugs killed
+- DB, backend working together in harmony (hooray)
