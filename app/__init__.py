@@ -30,14 +30,12 @@ def set_user():
         email = request.form['email']
         password = request.form['password']
         if data.user_exists(email):
-            flash("User exists!")
+            flash("User already exists!")
             return redirect(url_for('set_user'))
         github = request.form['github']
         name = request.form['name']
-        is_dojo = request.form['is_dojo']
-        classes = request.form['classes']
-        add_user(password, email, github, name, is_dojo, classes)
-        session['username'] = username
+        data.add_user(email, password, name, github)
+        session['email'] = email
         return redirect(url_for('index'))
     return render_template('createaccount.html')
 
@@ -49,7 +47,7 @@ def logout():
 #main
 @app.route('/index', methods=['GET', 'POST'])
 def index():
-    if 'username' not in session:
+    if 'email' not in session:
         return redirect(url_for('login'))
     return render_template("index.html")
 
