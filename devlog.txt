@@ -114,7 +114,7 @@ LOGIN & ACCOUNT
 meganK -- 2026-05-13 20:21
 UI/UX DESIGN
 - drafted homepage design
-- started design on announcements page
+- drafted announcements page design
 
 =======================================================
 MK will be doing the UX design (announcements, questions, quick q's (groupchat style), notes) in that order
