@@ -90,11 +90,8 @@ def get_all_users():
 # returns whether or not a user exists
 def user_exists(email):
     all_users = get_all_users()
-    print(all_users)
     for user in all_users:
-        print(user + " " + email)
         if (user == email):
-            print("user exists")
             return True
     return False
 
@@ -102,18 +99,13 @@ def user_exists(email):
 # checks if provided password in login attempt matches user password
 def auth(email, password):
 
-    print("auth")
-
     if not user_exists(email):
         return False
 
-    print("past user exists")
     # use ? for unsafe/user provided variables
-    real_pass = sqlite_fetchone('SELECT password_hash FROM users WHERE email = ?', (email,))
-    print(real_pass)
+    real_pass = sqlite_fetchone('SELECT password_hash FROM users WHERE email = ?', (email,))[0]
     password = password.encode('utf-8')
-    print(password)
-
+    
     # hash password here
     if real_pass != str(hashlib.sha256(password).hexdigest()):
         return False
@@ -283,14 +275,4 @@ def make_list(str, delim=","):
 #=============================[TESTING]=============================#
 
 if (__name__ == "__main__"):
-    create_tables()
-    print(get_all_users())
-    print(add_user("mayaberchin@gmail.com", "hello", "Maya Berchin"))
-    print(get_all_users())
-    print(auth("mayaberchin@gmail.com", "wrong"))
-    print(auth("mayaberchin@gmail.com", "hello"))
-    print(auth("maya@gmail.com", "wrong"))
-    print(add_user("mayaberchin@gmail.com", "hello", "Maya Berchin"))
-    print(get_all_users())
-    add_user("b@b.com", "h", "bob b")
-    print(get_all_users())
+    # test code here
