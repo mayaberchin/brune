@@ -131,3 +131,14 @@ VITE
 - Setup Vite on branch for now (may be nuked!)
 REQ
 - Add requirements.txt (Flask)
+
+mayaB -- 2026-05-14 07:06
+------------------------------------------------------------------------------------------------------------
+UPDATE ON GOAL FROM STANDUPS
+Team was meant to be working on login/register.
+So far we have database code working, good templates, and some python code that needs to be debugged.
+============================================================================================================
+LOGIN/DATABASE TESTING
+- got login/register related functions working in data.py, tested
+- began testing actual login/register, have some inconsistencies with __init__.py
+- fixed some inconsistencies but need to coordinate more with team to understand some of what they're going for in __init__
