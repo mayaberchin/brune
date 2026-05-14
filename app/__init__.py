@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 import data
 
@@ -13,16 +13,11 @@ def login():
     if request.method == 'POST':
         email = request.form.get("email")
         password = request.form.get("password")
-        userData = data.auth(email, password)
-        if userData:
-            if password == userData["password"]:
-                session["email"] = email
-                return redirect(url_for('index'))
-            else:
-                flash("Incorrect password. Try again.")
+        if data.auth(email, password):
+            return redirect(url_for('index'))
         else:
-            flash("Email incorrect or not found. Try again.")
-        return redirect(url_for('login'))
+            flash("Email or password incorrect. Try again.")
+            return redirect(url_for('login'))
     return render_template('login.html')
 
 
@@ -41,7 +36,7 @@ def set_user():
         name = request.form['name']
         is_dojo = request.form['is_dojo']
         classes = request.form['classes']
-        add_user(email, password, name, github, name)
+        add_user(password, email, github, name, is_dojo, classes)
         session['username'] = username
         return redirect(url_for('index'))
     return render_template('createaccount.html')

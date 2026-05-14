@@ -105,7 +105,7 @@ def auth(email, password):
     # use ? for unsafe/user provided variables
     real_pass = sqlite_fetchone('SELECT password_hash FROM users WHERE email = ?', (email,))[0]
     password = password.encode('utf-8')
-    
+
     # hash password here
     if real_pass != str(hashlib.sha256(password).hexdigest()):
         return False
@@ -273,3 +273,7 @@ def make_list(str, delim=","):
 
 
 #=============================[TESTING]=============================#
+
+if __name__ == "__main__":
+    create_tables()
+    add_user("mayaberchin@gmail.com", "hello", "Maya Berchin")
