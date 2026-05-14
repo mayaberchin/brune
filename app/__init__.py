@@ -29,7 +29,7 @@ def set_user():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        if user_exists(email):
+        if data.user_exists(email):
             flash("User exists!")
             return redirect(url_for('set_user'))
         github = request.form['github']
