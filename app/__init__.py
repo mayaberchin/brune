@@ -21,8 +21,8 @@ def login():
     return render_template('login.html')
 
 
-#createaccount
-@app.route("/createaccount", methods = ['GET', "POST"])
+#register
+@app.route("/register", methods = ['GET', "POST"])
 def set_user():
     if 'username' in session:
         return redirect(url_for('index'))
@@ -37,7 +37,7 @@ def set_user():
         data.add_user(email, password, name, github)
         session['email'] = email
         return redirect(url_for('index'))
-    return render_template('createaccount.html')
+    return render_template('register.html')
 
 @app.route("/logout")
 def logout():
