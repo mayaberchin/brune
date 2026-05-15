@@ -171,10 +171,26 @@ TO DO
 - Replace placeholder template text!
 - Get Droplet working
 
-mayaB -- 2025-05-15
+mayaB -- 2026-05-15
 CHANGES TO TIMELINE SECTION
 -----------------------------------------------------------------------------------------------------------------------------------
 Over the past few days, a few changes have been made to the timeline section of our DD/SB.
 We had to squish some deadlines closer together/make a tighter schedule when we first saw the due date (earlier than anticipated).
 We also had to move some tasks to be due later because we're doing a lot of research/designing this week rather than coding.
+===================================================================================================================================
+
+mayaB -- 2026-05-15
+THE VISION
+-----------------------------------------------------------------------------------------------------------------------------------
+This entry in the log serves to provide a snapshot of our current goals/vision for the app.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+TIMELINE
+The following should be done by MONDAY:
+-
+
+The following should be done by next FRIDAY:
+-
+
+PRODUCT
 ===================================================================================================================================
