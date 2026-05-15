@@ -39,11 +39,13 @@ Incredible:`
 
 function showPostEditor() {
   postEditor.classList.remove("d-none");
+  resizePostBody();
 }
 
 function hidePostEditor() {
   postEditor.classList.add("d-none");
   postForm.reset();
+  postBody.style.height = "";
   hideError();
 }
 
@@ -57,8 +59,14 @@ function hideError() {
   postErrorBox.classList.add("d-none");
 }
 
+function resizePostBody() {
+  postBody.style.height = "auto";
+  postBody.style.height = postBody.scrollHeight + "px";
+}
+
 newPostButton.addEventListener("click", showPostEditor);
 cancelPostButton.addEventListener("click", hidePostEditor);
+postBody.addEventListener("input", resizePostBody);
 
 postTemplate.addEventListener("change", function() {
   const selectedTemplate = postTemplate.value;
@@ -70,10 +78,12 @@ postTemplate.addEventListener("change", function() {
 
   if (selectedTemplate === "") {
     postBody.value = "";
+    resizePostBody();
     return;
   }
 
   postBody.value = postTemplates[selectedTemplate];
+  resizePostBody();
 });
 
 postForm.addEventListener("submit", function(event) {
