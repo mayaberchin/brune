@@ -12,6 +12,11 @@ const postBody = document.getElementById("postBody");
 const isAnonymous = document.getElementById("isAnonymous");
 const shareWithDojo = document.getElementById("shareWithDojo");
 
+const templateConfirmModalElement = document.getElementById("templateConfirmModal");
+const templateConfirmModal = new bootstrap.Modal(templateConfirmModalElement);
+const applyTemplateButton = document.getElementById("applyTemplateButton");
+let maybeTemplate = "";
+
 const postTemplates = {
   question:
 `QWonderful:
@@ -64,6 +69,18 @@ function resizePostBody() {
   postBody.style.height = postBody.scrollHeight + "px";
 }
 
+function applyTemplate(template) {
+  if (template === "") {
+    postBody.value = "";
+  }
+  else {
+    postBody.value = postTemplates[template];
+  }
+  resizePostBody();
+  postTemplate.value = "";
+  maybeTemplate = "";
+}
+
 newPostButton.addEventListener("click", showPostEditor);
 cancelPostButton.addEventListener("click", hidePostEditor);
 postBody.addEventListener("input", resizePostBody);
@@ -71,19 +88,29 @@ postBody.addEventListener("input", resizePostBody);
 postTemplate.addEventListener("change", function() {
   const selectedTemplate = postTemplate.value;
 
-  if (postBody.value.trim() !== "") {
-    showError("Please clear the post body before applying a template.");
-    return;
-  }
-
   if (selectedTemplate === "") {
     postBody.value = "";
     resizePostBody();
     return;
   }
 
-  postBody.value = postTemplates[selectedTemplate];
-  resizePostBody();
+  if (postBody.value.trim() !== "") {
+    maybeTemplate = selectedTemplate;
+    templateConfirmModal.show();
+    return;
+  }
+
+  applyTemplate(selectedTemplate);
+});
+
+applyTemplateButton.addEventListener("click", function() {
+  applyTemplate(maybeTemplate);
+  templateConfirmModal.hide();
+});
+
+templateConfirmModalElement.addEventListener("hidden.bs.modal", function() {
+  postTemplate.value = "";
+  maybeTemplate = "";
 });
 
 postForm.addEventListener("submit", function(event) {
