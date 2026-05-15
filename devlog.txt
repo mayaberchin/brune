@@ -184,13 +184,41 @@ THE VISION
 -----------------------------------------------------------------------------------------------------------------------------------
 This entry in the log serves to provide a snapshot of our current goals/vision for the app.
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 TIMELINE
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The following should be done by MONDAY:
--
-
+- Simple way to create classes
+- Simple post creation
+- Simple followups
+- Can mark posts/followups as open/closed
+- Can delete posts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The following should be done by next FRIDAY:
--
-
+- More formatted posts
+- Dojo class created
+- Features that we share with Piazza should be working
+- App may be ugly but UI is functional and app is usable
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The following should be done BY THE DEADLINE:
+- Consistent styling
+- Better integration with teacher websites, GitHub if we go for that
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+The following features are being CONSIDERED, treat as OPTIONAL:
+- OAuth for better/more secure authentication
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PRODUCT
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+We want to have the following CLASSES:
+- A default "class" that is just StuyCS. Instructors/teachers would be Dojo students.
+- Classes that you can join for CS courses you're in (teachers create these)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+We want the following PAGES:
+- A home page that shows the n most recent posts of all types from all classes
+- A page that filters posts for a specific class
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+We want the following TABS:
+- Announcements (for teacher posts/assignments)
+- Quick Questions (formatted like a groupchat, just send a quick msg)
+- Questions (closest to Piazza rn)
+- Notes/Resources (for notes, tips, links, etc)
 ===================================================================================================================================
