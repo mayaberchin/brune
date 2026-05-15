@@ -156,3 +156,17 @@ mayaB -- 2026-05-14 15:59
 LOGIN/REGISTER WORKING
 - Bugs killed
 - DB, backend working together in harmony (hooray)
+
+christineC -- 2026-05-15 02:00
+VITE / NVM
+- Piazza post on why Vite did not work on lab machines (Node version too old for current Vite)
+- Investigated solution (nvm) and made pull request for howto_nvm.md
+POST EDITOR
+- Moved inline JS into static/JS
+- Added templates to post_editor w/ dropdown menu for different post types
+- Added textarea auto-resizing when typing/applying templates
+- Added BS modal warning before replacing existing text with a template
+---------------------------------------------------------------------
+TO DO
+- Replace placeholder template text!
+- Get Droplet working
