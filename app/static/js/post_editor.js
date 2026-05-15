@@ -14,27 +14,27 @@ const shareWithDojo = document.getElementById("shareWithDojo");
 
 const postTemplates = {
   question:
-  `QWonderful:
+`QWonderful:
 
-  Awe-inspiring:
+Awe-inspiring:
 
-  Incredible:`,
+Incredible:`,
 
 
   debug:
-  `DWonderful:
+`DWonderful:
 
-  Awe-inspiring:
+Awe-inspiring:
 
-  Incredible:`,
+Incredible:`,
 
 
   announcement:
-  `AWonderful:
+`AWonderful:
 
-  Awe-inspiring:
+Awe-inspiring:
 
-  Incredible:`
+Incredible:`
 };
 
 function showPostEditor() {
@@ -62,6 +62,12 @@ cancelPostButton.addEventListener("click", hidePostEditor);
 
 postTemplate.addEventListener("change", function() {
   const selectedTemplate = postTemplate.value;
+
+  if (postBody.value.trim() !== "") {
+    showError("Clear the post body before applying a template.");
+    return;
+  }
+
   if (selectedTemplate === "") {
     postBody.value = "";
     return;
