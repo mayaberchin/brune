@@ -3,11 +3,39 @@ const postEditor = document.getElementById("postEditor");
 const cancelPostButton = document.getElementById("cancelPostButton");
 const postForm = document.getElementById("postForm");
 const postErrorBox = document.getElementById("postErrorBox");
+
 const postTitle = document.getElementById("postTitle");
 const postType = document.getElementById("postType");
+const postTemplate = document.getElementById("postTemplate");
 const postBody = document.getElementById("postBody");
+
 const isAnonymous = document.getElementById("isAnonymous");
 const shareWithDojo = document.getElementById("shareWithDojo");
+
+const postTemplates = {
+  question:
+  `QWonderful:
+
+  Awe-inspiring:
+
+  Incredible:`,
+
+
+  debug:
+  `DWonderful:
+
+  Awe-inspiring:
+
+  Incredible:`,
+
+
+  announcement:
+  `AWonderful:
+
+  Awe-inspiring:
+
+  Incredible:`
+};
 
 function showPostEditor() {
   postEditor.classList.remove("d-none");
@@ -32,7 +60,19 @@ function hideError() {
 newPostButton.addEventListener("click", showPostEditor);
 cancelPostButton.addEventListener("click", hidePostEditor);
 
+postTemplate.addEventListener("change", function() {
+  const selectedTemplate = postTemplate.value;
+  if (selectedTemplate === "") {
+    postBody.value = "";
+    return;
+  }
+
+  postBody.value = postTemplates[selectedTemplate];
+});
+
 postForm.addEventListener("submit", function(event) {
+  event.preventDefault(); // stop refreshing!!!
+
   const postData = {
     title: postTitle.value.trim(),
     postType: postType.value,
