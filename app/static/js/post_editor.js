@@ -64,7 +64,7 @@ postTemplate.addEventListener("change", function() {
   const selectedTemplate = postTemplate.value;
 
   if (postBody.value.trim() !== "") {
-    showError("Clear the post body before applying a template.");
+    showError("Please clear the post body before applying a template.");
     return;
   }
 
