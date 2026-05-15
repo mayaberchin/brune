@@ -274,9 +274,9 @@ _followups_
 
 | Task                                             | Deadline          |
 |--------------------------------------------------|-------------------|
-| Account creation, authentication                 | 05-13-26w         |
-| Class creation                                   | 05-14-26r         |
-| Basic posts                                      | 05-15-26f         |
+| Account creation, authentication                 | 05-14-26r         |
+| Class creation                                   | 05-15-26f         |
+| Basic posts                                      | 05-18-26m         |
 | Post deletion                                    | 05-18-26m         |
 | Followups                                        | 05-18-26m         |
 | Changing the status of a post or follow-up       | 05-18-26m         |
