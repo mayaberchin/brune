@@ -6,6 +6,15 @@ from datetime import datetime
 
 DB_FILE="data.db"
 
+
+#=============================[GLOBALS]=============================#
+
+USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'class_id']
+CLASSES_COLS = ['class_id', 'name', 'teacher_email']
+POSTS_COLS = ['post_id', 'author_email', 'class_id', 'title', 'body', 'category', 'is_resolved', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
+FOLLOWUPS_COLS = ['followup_id', 'author_email', 'post_id', 'body', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
+
+
 #=============================[MAKE=TABLES]=============================#
 
 
@@ -102,7 +111,9 @@ def add_user(email, password, name, github=''):
         return 'Password cannot be empty'
     password = password.encode('utf-8')
     password = str(hashlib.sha256(password).hexdigest())
-    add_users_row([email, github, name, password, 'no', ''])
+    is_dojo = 'no'
+    class_id = ''
+    add_users_row([email, github, name, password, is_dojo, class_id])
     return 'success'
 
 
@@ -279,7 +290,7 @@ def get_post_pingees(post_id):
     return ping_lst
     
 def get_post_data(post_id):
-    keys = ['post_id', 'author_email', 'class_id', 'title', 'body', 'category', 'is_resolved', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
+    keys = POSTS_COLS
     values = get_row_list('posts', 'post_id', post_id)
     return list_to_dict(keys, values)
 
@@ -313,11 +324,33 @@ def add_post_upvoter(post_id, email):
     upvoters = get_post_upvoters(post_id)
     upvoters_new = add_to_list(upvoters, email)
     update_posts_row(post_id, 'upvoters', upvoters_new)
+    # add upvoter to ping list
+    add_post_pingee(post_id, email)
 
 def add_post_pingee(post_id, email):
     pingees = get_post_pingees(post_id)
     pingees_new = add_to_list(pingees, email)
     update_posts_row(post_id, 'upvoters', pingees_new)
+
+
+
+#---------[creation-deletion]---------#
+
+
+def create_post(author_email, class_id, title, body, category):
+    post_id = unique_id(get_all_posts())
+    is_resolved = 'no'
+    time = str(datetime.now())
+    upvotes = 0
+    upvoters = ''
+    ping = ''
+    add_posts_row([post_id, author_email, class_id, title, body, category, is_resolved, time, time, upvotes, upvoters, ping])
+    # add author to ping list
+    add_post_pingee(post_id, author_email)
+    return post_id
+
+def delete_post(post_id):
+    delete_row('posts', 'post_id', post_id)
 
 
 
@@ -327,7 +360,7 @@ def add_post_pingee(post_id, email):
 def get_posts_field(post_id, field_name):
     return get_field('posts', 'post_id', post_id, field_name)
 
-def get_posts_row(values):
+def add_posts_row(values):
     add_row('posts', values)
 
 def update_posts_row(post_id, col_name, col_val):
@@ -384,7 +417,7 @@ def get_followup_pingees(followup_id):
     return ping_lst
 
 def get_followup_data(followup_id):
-    keys = ['followup_id', 'author_email', 'post_id', 'body', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
+    keys = FOLLOWUPS_COLS
     values = get_row_list('followups', 'followup_id', followup_id)
     return list_to_dict(keys, values)
 
@@ -421,11 +454,35 @@ def add_followup_upvoter(followup_id, email):
     upvoters = get_followup_upvoters(followup_id)
     upvoters_new = add_to_list(upvoters, email)
     update_followups_row(followup_id, 'upvoters', upvoters_new)
+    # add upvoter to ping list
+    add_post_pingee(, followup_id, email)
 
 def add_followup_pingee(followup_id, email):
     pingees = get_followup_pingees(followup_id)
     pingees_new = add_to_list(pingees, email)
     update_followups_row(followup_id, 'upvoters', pingees_new)
+
+
+
+
+#---------[creation-deletion]---------#
+
+def create_followup(author_email, post_id, body):
+    followup_id = unique_id(get_all_followups())
+    is_resolved = 'no'
+    is_answer = 'no'
+    time = str(datetime.now())
+    upvotes = 0
+    upvoters = ''
+    ping = ''
+    add_followups_row([followup_id, author_email, post_id, body, is_resolved, is_answer, time, time, upvotes, upvoters, ping])
+    # add author to ping list
+    add_post_pingee(post_id, author_email)
+    return post_id
+
+def delete_followup(followup_id):
+    delete_row('followups', 'followup_id', followup_id)
+
 
 
 
@@ -435,7 +492,7 @@ def add_followup_pingee(followup_id, email):
 def get_followups_field(followup, field_name):
     return get_field('followups', 'followup_id', followup_id, field_name)
 
-def get_followups_row(values):
+def add_followups_row(values):
     add_row('followups', values)
 
 def update_followups_row(followup_id, col_name, col_val):
