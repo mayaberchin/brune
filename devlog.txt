@@ -214,13 +214,27 @@ We want to have the following CLASSES:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 We want the following PAGES:
 - A home page that shows the n most recent posts of all types from all classes
-- A page that filters posts for a specific class
+- A page for each type of post/tab (see below)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-We want the following TABS:
+SIDEBAR--TABS:
 - Announcements (for teacher posts/assignments)
 - Quick Questions (formatted like a groupchat, just send a quick msg)
 - Questions (closest to Piazza rn)
 - Notes/Resources (for notes, tips, links, etc)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+SIDEBAR--CLASSES:
+- All classes you're enrolled in appear on a sidebar 
+- Pressing on one of the classes results in filtering posts on your current tab/page for just ones from that class
+- There is also an "All classes" option
+  - This is the default tab
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+HOMEPAGE FEATURES:
+- Show the n most recent posts from ALL classes
+- Filter/search to find more specific posts from teachers, classes, types of questions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TAB FEATURES:
+- Display all posts of a specific type: Announcements, Quick Qs, Questions, Notes/Resources 
+- By default, filter by class. Can select class on the sidebar on the right. Sidebar also includes "All" option.
 ===================================================================================================================================
 
 meganK -- 2025-05-15 11:40
