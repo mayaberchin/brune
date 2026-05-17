@@ -297,8 +297,17 @@ STUYCS CLASS:
 Am working to fit this into DD/SB somehow. Just wanted a place to write it down first!
 ===================================================================================================================================
 
-meganK -- 2025-05-15 11:40
+meganK -- 2026-05-15 11:40
 UI/UX DESIGN
 - started design on join/create class
 - drafted pinned page
 - edited announcements page
+
+mayaB -- 2026-05-17y 17:12
+CLASS FUNCTIONS
+- Middleware to do with creating, joining classes etc has been written and tested, pushed to main
+- Did a bunch of other DB repairs/improvements and more still to come
+  - Added some more general-purpose helper functions
+	- Edited pre-existing helpers
+	- Edited older functions to use helpers more effectively
+	- Edited tables to better reflect current vision... need to be tweaked further
