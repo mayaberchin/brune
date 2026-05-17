@@ -5,6 +5,15 @@ import secrets                      # to generate ids
 
 DB_FILE="data.db"
 
+#=============================[GLOBALS]=============================#
+
+USERS_COLS = ['user_id', 'email', 'github', 'name', 'password_hash', 'is_dojo', 'class_id']
+CLASSES_COLS = ['class_id', 'name', 'teacher_id']
+POSTS_COLS = ['post_id', 'poster_id', 'class_id', 'title', 'body', 'category', 'status', 'created_at', 'updated_at', 'upvotes', 'upvoted_by', 'ping']
+FOLLOWUPS_COLS = ['followup_id', 'poster_id', 'post_id', 'body', 'status', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoted_by', 'ping']
+
+CLASS_ID = 0
+
 #=============================[MAKE=TABLES]=============================#
 
 # users
@@ -83,8 +92,18 @@ def create_tables():
 
 # returns a list of usernames
 def get_all_users():
-    data = sqlite_fetchall('SELECT email FROM users')
+    #data = sqlite_fetchall('SELECT email FROM users')
+    data = get_col_list("users", "email")
     return clean_list(data)
+
+
+def get_id(email):
+    data = get_field("users", "email", email, user_id)
+    return data
+
+def get_email(id):
+    data = get_field("users", "user_id", id, "email")
+    return data
 
 
 # returns whether or not a user exists
@@ -103,7 +122,8 @@ def auth(email, password):
         return False
 
     # use ? for unsafe/user provided variables
-    real_pass = sqlite_fetchone('SELECT password_hash FROM users WHERE email = ?', (email,))[0]
+    #real_pass = sqlite_fetchone('SELECT password_hash FROM users WHERE email = ?', (email,))[0]
+    real_pass = get_field("users", "email", email, "password_hash")
     password = password.encode('utf-8')
 
     # hash password here
@@ -117,20 +137,63 @@ def auth(email, password):
 def add_user(email, password, name, github=''):
 
     if user_exists(email):
-        return "There is already a user with this email"
+        return 'There is already a user with this email'
 
     if password == "":
-        return "Password cannot be empty"
+        return 'Password cannot be empty'
 
     # hash password here
     password = password.encode('utf-8')
     password = str(hashlib.sha256(password).hexdigest())
 
     # use ? for unsafe/user provided variables
-    sqlite('INSERT INTO users(email, github, name, password_hash, is_dojo, class_id) VALUES (?, ?, ?, ?, ?, ?)', (email, github, name, password, 'no', '',))
+    #sqlite('INSERT INTO users(email, github, name, password_hash, is_dojo, class_id) VALUES (?, ?, ?, ?, ?, ?)', (email, github, name, password, 'no', '',))
+    add_row("users", USERS_COLS, [email, github, name, password, 'no', ''])
 
-    return "success"
+    return 'success'
 
+
+
+#=============================[CLASSES]=============================#
+
+
+def get_all_classes():
+    #data = sqlite_fetchall('SELECT class_id FROM users')
+    data = get_col_list("users", "class_id")
+    return clean_list(data)
+
+# get the classes someone is in
+def get_classes(email):
+    classes_str = get_field('users', 'email', email, 'class_id')
+    classes = make_list(classes_str)
+    return classes
+
+# get the classes someone teaches 
+def teaches_classes(email):
+    classes = get_classes(email)
+    teaches = [c for c in classes if c in get_teachers(c)]
+    return teaches
+
+# get the teachers of a class
+def get_teachers(class_id):
+    teachers_str = get_field('classes', 'class_id', class_id, 'teacher_id')
+    teachers = make_list(classes_str)
+    return teachers
+
+
+def create_class(teacher_id, class_name):
+    global CLASS_ID
+    #sqlite('INSERT INTO classes(class_id, name, teacher_id) VALUES (?, ?, ?)', (teacher_id, class_name,))
+    add_row('classes', CLASS_COLS, [teacher_id, class_name])
+    CLASS_ID += 1
+    teacher_classes = get_classes(get_email(teacher_id))
+    teacher_classes += f', {CLASS_ID}'
+    update_row('users', 'email', get_email(teacher_id), 'class_id', teacher_classes)
+
+def join_class(email, class_id):
+    classes = get_classes(email)
+    classes += f', {class_id}'
+    update_row('users', 'email', email, 'class_id', classes)
 
 
 #=============================[GENERAL=HELPERS]=============================#
@@ -166,6 +229,72 @@ def sqlite_fetchall(command, vals=()):
     return data
 
 
+
+
+#---------[access]---------#
+
+
+# get_field: return one value from the table based on another value in that row (an "id")
+def get_field(table, ID_fieldname, ID, field):
+    lst = get_field_list(table, ID_fieldname, ID, field)
+    if (len(lst) == 0):
+        return 'None'
+    return lst[0]
+
+# get_field_list: return all values in a specific field (column) in a row with a matching "id" item
+def get_field_list(table, col_name, ID, field):
+    # use ? for unsafe/user provided variables
+    data = sqlite_fetchall(f'SELECT {field} FROM {table} WHERE {col_name} = ?', (ID,))
+    return clean_list(data)
+
+# get_row_list: return all rows that have an "id" field matching the given argument
+def get_row_list(table, col_name, ID):
+    # use ? for unsafe/user provided variables
+    data = sqlite_fetchall(f'SELECT * FROM {table} WHERE {col_name} = ?', (ID,))
+    return clean_list_2d(data)
+
+# return a list of all items in a column of the table
+def get_col_list(table, col_name):
+    # no unsafe/user-provided vars here, safe to use f-strings
+    data = sqlite_fetchall(f'SELECT {col_name} FROM {table}')
+    return clean_list(data)
+
+
+
+
+#---------[modify]---------#
+
+
+def add_row(table, cols=[], vals):
+    
+    # 'INSERT INTO tablename(col0, col1, col2) VALUES (?, ?, ?)', (val0, val1, val2,)
+    
+    command = f'INSERT INTO {table}'
+    
+    if (cols != []):
+        cols_str = str(cols)[1:-1]  # make a string of the list and don't include the '[' or ']'
+        command += f'({cols_str})'
+    
+    q_str = ' VALUES ('
+    for i in range(len(vals)):
+        q_str += '?,'
+    q_str(len(q_str)-1) = ')'
+    command += q_str
+    
+    vals_tup= tuple(vals)
+    
+    sqlite(command, vals_tup)
+
+
+def update_row(table, ID_fieldname, id, col_name, item):
+    command = f'UPDATE {table} SET {col_name} = ? WHERE {ID_fieldname} = ?'
+    vals = [item, id]
+    vals_tup = tuple(vals)
+    sqlite(command, vals_tup)
+
+def delete_row(table, ID_fieldname, id):
+    # use ? for unsafe/user provided variables
+    sqlite(f'DELETE FROM {table} WHERE {ID_fieldname} = ?', (id,))
 
 
 #---------[output-convert]---------#
@@ -210,49 +339,9 @@ def list_2d_to_dict_list(keys, values):
     lst = []
     for val_sublst in values:
         lst += [list_to_dict(keys, val_sublst)]
-    return lst
-
-
-
-
-#---------[access]---------#
-
-
-# get_field: return one value from the table based on another value in that row (an "id")
-def get_field(table, ID_fieldname, ID, field):
-    lst = get_field_list(table, ID_fieldname, ID, field)
-    if (len(lst) == 0):
-        return 'None'
-    return lst[0]
-
-# get_field_list: return all values in a specific field (column) in a row with a matching "id" item
-def get_field_list(table, col_name, ID, field):
-    # use ? for unsafe/user provided variables
-    data = sqlite_fetchall(f'SELECT {field} FROM {table} WHERE {col_name} = ?', (ID,))
-    return clean_list(data)
-
-# get_row_list: return all rows that have an "id" field matching the given argument
-def get_row_list(table, col_name, ID):
-    # use ? for unsafe/user provided variables
-    data = sqlite_fetchall(f'SELECT * FROM {table} WHERE {col_name} = ?', (ID,))
-    return clean_list_2d(data)
-
-# return a list of all items in a column of the table
-def get_col_list(table, col_name):
-    # no unsafe/user-provided vars here, safe to use f-strings
-    data = sqlite_fetchall(f'SELECT {col_name} FROM {table}')
-    return clean_list(data)
-
-
-
-#---------[modify]---------#
-
-
-# delete_row: delete a row of data from the table
-def delete_row(table, ID_fieldname, id):
-    # use ? for unsafe/user provided variables
-    sqlite(f'DELETE FROM {table} WHERE {ID_fieldname} = ?', (id,))
-
+    return lsta
+    
+    
 
 
 #---------[other]---------#
