@@ -297,6 +297,9 @@ def change_post_body(post_id, new_body):
 def resolve_post(post_id):
     update_posts_row(post_id, 'is_resolved', 'yes')
 
+def unresolve_post(post_id):
+    update_posts_row(post_id, 'is_resolved', 'no')
+
 def update_post_time(post_id):
     time = str(datetime.now())
     update_posts_row(post_id, 'updated_at', time)
@@ -385,7 +388,45 @@ def get_followup_data(followup_id):
     values = get_row_list('followups', 'followup_id', followup_id)
     return list_to_dict(keys, values)
 
+
+
 #---------[modifiers]---------#
+
+
+def change_followup_body(followup_id, new_body):
+    update_followups_row(followup_id, 'body', new_body)
+
+def resolve_followup(followup_id):
+    update_followups_row(followup_id, 'is_resolved', 'yes')
+
+def unresolve_followup(followup_id):
+    update_followups_row(followup_id, 'is_resolved', 'no')
+
+def mark_followup_as_answer(followup_id):
+    update_followups_row(followup_id, 'is_answer', 'yes')
+
+def unmark_followup_as_answer(followup_id):
+    update_followups_row(followup_id, 'is_answer', 'no')
+
+def update_followup_time(followup_id):
+    time = str(datetime.now())
+    update_followups_row(followup_id, 'updated_at', time)
+
+def increment_followup_upvotes(followup_id, inc):     # inc can be positive or negative
+    upvotes = get_followup_upvotes(followup_id)
+    upvotes += inc
+    update_followups_row(followup_id, 'upvotes', upvotes)
+
+def add_followup_upvoter(followup_id, email):
+    upvoters = get_followup_upvoters(followup_id)
+    upvoters_new = add_to_list(upvoters, email)
+    update_followups_row(followup_id, 'upvoters', upvoters_new)
+
+def add_followup_pingee(followup_id, email):
+    pingees = get_followup_pingees(followup_id)
+    pingees_new = add_to_list(pingees, email)
+    update_followups_row(followup_id, 'upvoters', pingees_new)
+
 
 
 #---------[followups-helpers]---------#
