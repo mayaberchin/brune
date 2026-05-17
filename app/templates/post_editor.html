@@ -29,6 +29,18 @@
     </div>
 
     <div class="mb-3">
+      <label for="postClass" class="form-label"> Class </label>
+      <select id="postClass" name="classId" class="form-select" required>
+        <option value=""> Choose a class </option>
+        {% for class_info in classes %}
+          <option value="{{ class_info.class_id }}">
+            {{ class_info.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
       <label for="postTemplate" name="postTemplate" class="form-label"> Template </label>
       <select id="postTemplate" class="form-select">
         <option value=""> No Template </option>

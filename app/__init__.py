@@ -56,7 +56,12 @@ def home():
 # TEST
 @app.route("/post_test")
 def posts():
-    return render_template("post_test.html")
+    test_classes = [
+        {"class_id": 1, "name": "Software_Development"},
+        {"class_id": 2, "name": "Systems"},
+        {"class_id": 2, "name": "Cybersecurity"},
+    ]
+    return render_template("post_test.html", classes=test_classes)
 
 #handling data
 #@app.route('/data')

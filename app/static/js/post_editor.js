@@ -6,6 +6,7 @@ const postErrorBox = document.getElementById("postErrorBox");
 
 const postTitle = document.getElementById("postTitle");
 const postType = document.getElementById("postType");
+const postClass = document.getElementById("postClass");
 const postTemplate = document.getElementById("postTemplate");
 const postBody = document.getElementById("postBody");
 
@@ -116,16 +117,19 @@ templateConfirmModalElement.addEventListener("hidden.bs.modal", function() {
 postForm.addEventListener("submit", function(event) {
   event.preventDefault(); // stop refreshing!!!
 
+  const selectedClass = postClass.options[postClass.selectedIndex];
+
   const postData = {
     title: postTitle.value.trim(),
     postType: postType.value,
+    classId: postClass.value,
     body: postBody.value.trim(),
     isAnonymous: isAnonymous.checked,
     shareWithDojo: shareWithDojo.checked
   };
 
-  if (postData.title === "" || postData.body === "") {
-    showError("Please fill out the title and post body.");
+  if (postData.title === "" || postData.classId === "" || postData.body === "") {
+    showError("Please fill out the title, class, and post body.");
     return;
   }
 
