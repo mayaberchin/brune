@@ -183,6 +183,7 @@ mayaB -- 2026-05-15
 THE VISION
 -----------------------------------------------------------------------------------------------------------------------------------
 This entry in the log serves to provide a snapshot of our current goals/vision for the app.
+Sorry guys it's borderline unreadable bc it's so big. I will shove this in DD in a more organized way I swear
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 TIMELINE
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -222,8 +223,8 @@ SIDEBAR--TABS:
 - Questions (closest to Piazza rn)
 - Notes/Resources (for notes, tips, links, etc)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-SIDEBAR--CLASSES:
-- All classes you're enrolled in appear on a sidebar 
+CLASSES:
+- All classes you're enrolled in appear on a sidebar/dropdown
 - Pressing on one of the classes results in filtering posts on your current tab/page for just ones from that class
 - There is also an "All classes" option
   - This is the default tab
@@ -231,10 +232,69 @@ SIDEBAR--CLASSES:
 HOMEPAGE FEATURES:
 - Show the n most recent posts from ALL classes
 - Filter/search to find more specific posts from teachers, classes, types of questions
+- Button to join/create a class
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 TAB FEATURES:
 - Display all posts of a specific type: Announcements, Quick Qs, Questions, Notes/Resources 
 - By default, filter by class. Can select class on the sidebar on the right. Sidebar also includes "All" option.
+- Posts that haven't been read yet will indicate that
+  - This symbol will appear on the different tabs if those tabs contain unread posts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+POSTING:
+- You can create a new post at the top of each page 
+- When creating a post, a popup will appear asking you to choose a class
+  - This will even happen if you have a certain class selected in the sidebar already 
+	- This is to help prevent accidentally posting in the wrong class--it's easy to switch classes and might be easy to forget
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ANNOUNCEMENTS:
+- You can only post here if you are a teacher in the class 
+- Students will see a message at the top of the page informing them that they cannot post here
+- You can create followups as a student
+- By default, you are in reading mode when you click on the page
+- If you are the teacher in the class, there will be an option to make a new announcement 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+QUICK QUESTIONS:
+- Formatted like a groupchat
+- Just send a text
+- Can reply to messages
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+QUESTIONS:
+- Most similar to our current Piazza
+- Users will be provided with templates when posting to better encourage good context in posts
+- Questions can be marked as resolved
+- Users can create followups
+- Followups can be marked as containing answers to the original question
+- Posts and followups can be upvoted
+- Tag system similar to Tumblr
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+NOTES/RESOURCES:
+- Users can post notes such as class notes, reminders, links to useful resources, etc
+- Users can create followups
+- Posts and followups can be upvoted
+- Similar to our current Piazza's "notes"
+- Tag system similar to Tumblr
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+PROFILE PAGE:
+- Update name, email, password, github username
+- View the classes you're in and your role, leave classes, delete classes you own
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+CLASS CREATION PAGE:
+- Choose a name for your class
+- Insert link to notes website(s) (optional)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+CLASS MANAGEMENT PAGE:
+- Change the name of your class
+- Edit website 
+- Promote other users to the teacher role
+- Remove/ban users
+- Archive class
+- Delete class
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+STUYCS CLASS:
+- Be added to a class that represents all of StuyCS--can be invited even if not in general CS class, but must obtain class code
+- Senseis are the instructors (actual teachers have teacher role too but not in charge of moderation for that class)
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Am working to fit this into DD/SB somehow. Just wanted a place to write it down first!
 ===================================================================================================================================
 
 meganK -- 2025-05-15 11:40
