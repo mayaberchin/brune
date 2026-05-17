@@ -1,6 +1,7 @@
 import sqlite3                      # enable control of an sqlite database
 import hashlib                      # for consistent hashes
 import secrets                      # to generate ids
+from datetime import datetime
 
 
 DB_FILE="data.db"
@@ -192,8 +193,7 @@ def create_class(teacher_email, class_name):
     add_classes_row([class_id, class_name, teacher_email])
     # add the class to teacher's users table
     teacher_classes = get_classes(teacher_email)
-    teacher_classes += [class_id]
-    teacher_classes_str = merge_list(teacher_classes)
+    teacher_classes_str = add_to_list(teacher_classes, class_id)
     update_users_row(teacher_email, 'class_id', teacher_classes_str)
     return class_id
     
@@ -205,15 +205,13 @@ def create_class(teacher_email, class_name):
 # add a user to a class as a student
 def join_class(email, class_id):
     classes = get_classes(email)
-    classes += [class_id]
-    classes_str = merge_list(classes)
+    classes_str = add_to_list(classes, class_id)
     update_users_row('users', 'email', email, 'class_id', classes_str)
 
 # promote a class member to a teacher for that class
 def add_teacher(class_id, email):
     teachers = get_teachers(class_id)
-    teachers += [email]
-    teachers_str = merge_list(teachers)
+    teachers_str = add_to_list(teachers, email)
     update_classes_row(class_id, 'teacher_email', teachers_str)
 
 
@@ -236,7 +234,7 @@ def update_classes_row(class_id, col_name, col_val):
 #=============================[POSTS]=============================#
 
 
-#---------[post-accessors]---------#
+#---------[accessors]---------#
 
 def get_all_posts():
     data = get_col('posts', 'post_id')
@@ -279,11 +277,49 @@ def get_post_pingees(post_id):
     ping = get_posts_field(post_id, 'ping')
     ping_lst = make_list(ping)
     return ping_lst
+    
+def get_post_data(post_id):
+    keys = ['post_id', 'poster_email', 'class_id', 'title', 'body', 'category', 'resolved', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
+    values = get_row_list('posts', 'post_id', post_id)
+    return list_to_dict(keys, values)
 
+
+
+#---------[modifiers]---------#
+
+
+def change_post_title(post_id, new_title):
+    update_posts_row(post_id, 'title', new_title)
+
+def change_post_body(post_id, new_body):
+    update_posts_row(post_id, 'body', new_body)
+
+def resolve_post(post_id):
+    update_posts_row(post_id, 'resolved', 'yes')
+
+def update_post_time(post_id):
+    time = str(datetime.now())
+    update_posts_row(post_id, 'updated_at', time)
+
+def increment_post_upvotes(post_id, inc):     # inc can be positive or negative
+    upvotes = get_post_upvotes(post_id)
+    upvotes += inc
+    update_posts_row(post_id, 'upvotes', upvotes)
+
+def add_post_upvoter(post_id, email):
+    upvoters = get_post_upvoters(post_id)
+    upvoters_new = add_to_list(upvoters, email)
+    update_posts_row(post_id, 'upvoters', upvoters_new)
+
+def add_post_pingee(post_id, email):
+    pingees = get_post_pingees(post_id)
+    pingees_new = add_to_list(pingees, email)
+    update_posts_row(post_id, 'upvoters', pingees_new)
 
 
 
 #---------[posts-helpers]---------#
+
 
 def get_posts_field(post_id, field_name):
     return get_field('posts', 'post_id', post_id, field_name)
@@ -389,8 +425,11 @@ def merge_list(lst, delim=","):
 def make_list(str, delim=","):
     lst = str.split(delim)
     return rm_empty(lst)
-    
-    
+
+def add_to_list(lst, item):
+    lst += item
+    new_str = merge_list(lst)
+    return new_str
     
     
 #---------[id]---------#
