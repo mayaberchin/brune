@@ -15,7 +15,7 @@ def create_users_table():
                     github          TEXT,
                     name            TEXT        NOT NULL,
                     password_hash   TEXT        NOT NULL,
-                    is_dojo         TEXT        NOT NULL                                            DEFAULT 'no',
+                    is_dojo         TEXT        NOT NULL                                DEFAULT 'no',
                     class_id        TEXT
                 )"""
     sqlite(command)
@@ -41,8 +41,8 @@ def create_posts_table():
                     body            TEXT        NOT NULL,
                     category        TEXT        NOT NULL,
                     status          TEXT        NOT NULL,
-                    created_at      TEXT        NOT NULL                                            DEFAULT CURRENT_TIMESTAMP,
-                    updated_at      TEXT        NOT NULL                                            DEFAULT CURRENT_TIMESTAMP,
+                    created_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
+                    updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     upvotes         INTEGER     NOT NULL,
                     upvoted_by      TEXT,
                     ping            TEXT
@@ -58,9 +58,9 @@ def create_followups_table():
                     post_id         TEXT        NOT NULL,
                     body            TEXT        NOT NULL,
                     status          TEXT        NOT NULL,
-                    is_answer       TEXT        NOT NULL                                            DEFAULT 'no',
-                    created_at      TEXT        NOT NULL                                            DEFAULT CURRENT_TIMESTAMP,
-                    updated_at      TEXT        NOT NULL                                            DEFAULT CURRENT_TIMESTAMP,
+                    is_answer       TEXT        NOT NULL                                DEFAULT 'no',
+                    created_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
+                    updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     upvotes         INTEGER     NOT NULL,
                     upvoted_by      TEXT,
                     ping            TEXT
@@ -80,10 +80,33 @@ def create_tables():
 #=============================[USERS]=============================#
 
 
+#---------[accessors]---------#
+
 # returns a list of usernames
 def get_all_users():
     data = get_col("users", "email")
     return data
+
+
+
+
+#---------[modifiers]---------#
+
+# adds a new user's data to user table
+def add_user(email, password, name, github=''):
+    if user_exists(email):
+        return 'There is already a user with this email'
+    if password == "":
+        return 'Password cannot be empty'
+    password = password.encode('utf-8')
+    password = str(hashlib.sha256(password).hexdigest())
+    add_row("users", [email, github, name, password, 'no', ''])
+    return 'success'
+
+
+
+
+#---------[verification]---------#
 
 
 # returns whether or not a user exists
@@ -94,53 +117,38 @@ def user_exists(email):
             return True
     return False
 
-
 # checks if provided password in login attempt matches user password
 def auth(email, password):
-
     if not user_exists(email):
         return False
-
-    # use ? for unsafe/user provided variables
-    #real_pass = sqlite_fetchone('SELECT password_hash FROM users WHERE email = ?', (email,))[0]
     real_pass = get_field("users", "email", email, "password_hash")
     password = password.encode('utf-8')
-
-    # hash password here
     if real_pass != str(hashlib.sha256(password).hexdigest()):
         return False
-
     return True
-
-
-# adds a new user's data to user table
-def add_user(email, password, name, github=''):
-
-    if user_exists(email):
-        return 'There is already a user with this email'
-
-    if password == "":
-        return 'Password cannot be empty'
-
-    # hash password here
-    password = password.encode('utf-8')
-    password = str(hashlib.sha256(password).hexdigest())
-
-    # use ? for unsafe/user provided variables
-    #sqlite('INSERT INTO users(email, github, name, password_hash, is_dojo, class_id) VALUES (?, ?, ?, ?, ?, ?)', (email, github, name, password, 'no', '',))
-    add_row("users", [email, github, name, password, 'no', ''])
-
-    return 'success'
 
 
 
 #=============================[CLASSES]=============================#
 
 
+#---------[class-focused-accessors]---------#
+
+
 def get_all_classes():
-    #data = sqlite_fetchall('SELECT class_id FROM users')
     data = get_col('classes', 'class_id')
     return data
+
+# get the teachers of a class
+def get_teachers(class_id):
+    teachers_str = get_field('classes', 'class_id', class_id, 'teacher_email')
+    teachers = make_list(teachers_str)
+    return teachers
+
+
+
+#---------[member-focused-accessors]---------#
+
 
 # get the classes someone is in
 def get_classes(email):
@@ -154,12 +162,35 @@ def get_teaching_classes(email):
     teaches = [c for c in classes if email in get_teachers(c)]
     return teaches
 
-# get the teachers of a class
-def get_teachers(class_id):
-    teachers_str = get_field('classes', 'class_id', class_id, 'teacher_email')
-    teachers = make_list(teachers_str)
-    return teachers
 
+
+#---------[class-creation]---------#
+
+
+def create_class(teacher_email, class_name):
+    # add the class to classes table
+    class_id = unique_id(get_all_classes())
+    add_row('classes', [class_id, class_name, teacher_email])
+    # add the class to teacher's users table
+    teacher_classes = get_classes(teacher_email)
+    teacher_classes += [class_id]
+    teacher_classes_str = merge_list(teacher_classes)
+    update_row('users', 'email', teacher_email, 'class_id', teacher_classes_str)
+    return class_id
+    
+
+    
+#---------[member-focused-modifiers]---------#
+
+
+# add a user to a class as a student
+def join_class(email, class_id):
+    classes = get_classes(email)
+    classes += [class_id]
+    classes_str = merge_list(classes)
+    update_row('users', 'email', email, 'class_id', classes_str)
+
+# promote a class member to a teacher for that class
 def add_teacher(class_id, email):
     teachers = get_teachers(class_id)
     teachers += [email]
@@ -167,74 +198,28 @@ def add_teacher(class_id, email):
     update_row('classes', 'class_id', class_id, 'teacher_email', teachers_str)
 
 
-def create_class(teacher_email, class_name):
-    class_id = unique_id(get_all_classes())
-    add_row('classes', [class_id, class_name, teacher_email])
-    teacher_classes = get_classes(teacher_email)
-    teacher_classes += [class_id]
-    teacher_classes_str = merge_list(teacher_classes)
-    update_row('users', 'email', teacher_email, 'class_id', teacher_classes_str)
-    return class_id
-
-def join_class(email, class_id):
-    classes = get_classes(email)
-    classes += [class_id]
-    classes_str = merge_list(classes)
-    update_row('users', 'email', email, 'class_id', classes_str)
 
 
 #=============================[GENERAL=HELPERS]=============================#
 
 
-#---------[sqlite]---------#
-
-def sqlite(command, vals=()):
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-    if vals == ():
-        c.execute(command)
-    else:
-        c.execute(command, vals)
-    db.commit()
-    db.close()
-
-
-def sqlite_fetchone(command, vals=()):
-    return sqlite_fetchall(command, vals)[0]
-
-
-def sqlite_fetchall(command, vals=()):
-    db = sqlite3.connect(DB_FILE)
-    c = db.cursor()
-    data = ()
-    if vals == ():
-        data = c.execute(command).fetchall()
-    else:
-        data = c.execute(command, vals).fetchall()
-    db.commit()
-    db.close()
-    return data
-
-
-
-
 #---------[access]---------#
 
 
-# get_field: return one value from the table based on another value in that row (an "id")
+# return one value from the table based on another value in that row (an "id")
 def get_field(table, ID_fieldname, ID, field):
     lst = get_field_list(table, ID_fieldname, ID, field)
     if (len(lst) == 0):
         return 'None'
     return lst[0]
 
-# get_field_list: return all values in a specific field (column) in a row with a matching "id" item
+# return all values in a specific field (column) in a row with a matching "id" item
 def get_field_list(table, col_name, ID, field):
     # use ? for unsafe/user provided variables
     data = sqlite_fetchall(f'SELECT {field} FROM {table} WHERE {col_name} = ?', (ID,))
     return clean_list(data)
 
-# get_row_list: return all rows that have an "id" field matching the given argument
+# return all rows that have an "id" field matching the given argument
 def get_row_list(table, col_name, ID):
     # use ? for unsafe/user provided variables
     data = sqlite_fetchall(f'SELECT * FROM {table} WHERE {col_name} = ?', (ID,))
@@ -253,7 +238,6 @@ def get_col(table, col_name):
 
 
 def add_row(table, vals):
-    # 'INSERT INTO tablename(col0, col1, col2) VALUES (?, ?, ?)', (val0, val1, val2,)
     command = f'INSERT INTO {table} VALUES ('
     for i in range(len(vals)):
         command += '?,'
@@ -271,6 +255,40 @@ def update_row(table, ID_fieldname, id, col_name, item):
 def delete_row(table, ID_fieldname, id):
     # use ? for unsafe/user provided variables
     sqlite(f'DELETE FROM {table} WHERE {ID_fieldname} = ?', (id,))
+
+
+
+#---------[db-list-management]---------#
+
+
+# merge a list into a comma-separated (or some other delimeter) string
+def merge_list(lst, delim=","):
+    lst = rm_empty(lst)
+    return delim.join(lst)
+
+# return a list from a string of comma-separated items (or some other delimeter)
+def make_list(str, delim=","):
+    lst = str.split(delim)
+    return rm_empty(lst)
+    
+    
+    
+    
+#---------[id]---------#
+
+
+def unique_id(others):
+    id = gen_id()
+    while id in others:
+        id = gen_id()
+    return id
+
+# generate an id
+def gen_id():
+    # use secrets module to generate a random 3-byte string
+    return secrets.token_hex(3)
+
+
 
 
 #---------[output-convert]---------#
@@ -321,30 +339,41 @@ def list_2d_to_dict_list(keys, values):
 def rm_empty(lst):
     cleanlst = [item for item in lst if str(item) != 'None' and item != '']
     return cleanlst
+    
 
 
-#---------[other]---------#
 
-def unique_id(others):
-    id = gen_id()
-    while id in others:
-        id = gen_id()
-    return id
+#---------[sqlite]---------#
 
-# generate an id
-def gen_id():
-    # use secrets module to generate a random 3-byte string
-    return secrets.token_hex(3)
 
-# merge a list into a comma-separated (or some other delimeter) string
-def merge_list(lst, delim=","):
-    lst = rm_empty(lst)
-    return delim.join(lst)
+def sqlite(command, vals=()):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    if vals == ():
+        c.execute(command)
+    else:
+        c.execute(command, vals)
+    db.commit()
+    db.close()
 
-# return a list from a string of comma-separated items (or some other delimeter)
-def make_list(str, delim=","):
-    lst = str.split(delim)
-    return rm_empty(lst)
+
+def sqlite_fetchone(command, vals=()):
+    return sqlite_fetchall(command, vals)[0]
+
+
+def sqlite_fetchall(command, vals=()):
+    db = sqlite3.connect(DB_FILE)
+    c = db.cursor()
+    data = ()
+    if vals == ():
+        data = c.execute(command).fetchall()
+    else:
+        data = c.execute(command, vals).fetchall()
+    db.commit()
+    db.close()
+    return data
+
+
 
 
 
