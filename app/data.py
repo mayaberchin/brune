@@ -93,11 +93,13 @@ def create_tables():
 
 #---------[accessors]---------#
 
-# returns a list of usernames
+# returns a list of emails
 def get_all_users():
     data = get_col("users", "email")
     return data
 
+def get_all_dojo():
+    return [user for user in get_all_users() if is_dojo(user)]
 
 
 
@@ -117,6 +119,9 @@ def add_user(email, password, name, github=''):
     return 'success'
 
 
+def add_senpai(email):
+    update_users_row(email, 'is_dojo', 'yes')
+
 
 
 #---------[verification]---------#
@@ -129,6 +134,10 @@ def user_exists(email):
         if (user == email):
             return True
     return False
+
+def is_dojo(email):
+    dojo = get_users_field(email, 'is_dojo')
+    return dojo == 'yes'
 
 # checks if provided password in login attempt matches user password
 def auth(email, password):
