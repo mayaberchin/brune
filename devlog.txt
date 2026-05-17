@@ -235,23 +235,23 @@ HOMEPAGE FEATURES:
 - Button to join/create a class
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 TAB FEATURES:
-- Display all posts of a specific type: Announcements, Quick Qs, Questions, Notes/Resources 
+- Display all posts of a specific type: Announcements, Quick Qs, Questions, Notes/Resources
 - By default, filter by class. Can select class on the sidebar on the right. Sidebar also includes "All" option.
 - Posts that haven't been read yet will indicate that
   - This symbol will appear on the different tabs if those tabs contain unread posts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 POSTING:
-- You can create a new post at the top of each page 
+- You can create a new post at the top of each page
 - When creating a post, a popup will appear asking you to choose a class
-  - This will even happen if you have a certain class selected in the sidebar already 
+  - This will even happen if you have a certain class selected in the sidebar already
 	- This is to help prevent accidentally posting in the wrong class--it's easy to switch classes and might be easy to forget
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ANNOUNCEMENTS:
-- You can only post here if you are a teacher in the class 
+- You can only post here if you are a teacher in the class
 - Students will see a message at the top of the page informing them that they cannot post here
 - You can create followups as a student
 - By default, you are in reading mode when you click on the page
-- If you are the teacher in the class, there will be an option to make a new announcement 
+- If you are the teacher in the class, there will be an option to make a new announcement
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 QUICK QUESTIONS:
 - Formatted like a groupchat
@@ -284,7 +284,7 @@ CLASS CREATION PAGE:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 CLASS MANAGEMENT PAGE:
 - Change the name of your class
-- Edit website 
+- Edit website
 - Promote other users to the teacher role
 - Remove/ban users
 - Archive class
@@ -303,7 +303,7 @@ UI/UX DESIGN
 - drafted pinned page
 - edited announcements page
 
-mayaB -- 2026-05-17y 17:12
+mayaB -- 2026-05-17 17:12
 CLASS FUNCTIONS
 - Middleware to do with creating, joining classes etc has been written and tested, pushed to main
 - Did a bunch of other DB repairs/improvements and more still to come
@@ -311,3 +311,14 @@ CLASS FUNCTIONS
 	- Edited pre-existing helpers
 	- Edited older functions to use helpers more effectively
 	- Edited tables to better reflect current vision... need to be tweaked further
+
+christineC -- 2026-05-17 18:16
+POST EDITOR
+- Added class dropdown to post editor (hardcoded test classes)
+- Modified post templates to be applied based on post type (will have to change again!)
+- Added basic CSS for post editor in Static/CSS folder
+POST PAGE
+- Created basic post_page template
+- Added basic routes/pages for announcements, questions, quick questions, and notes / resources using post_page template
+DROPLET
+- Working live site on brunebrune.me!
