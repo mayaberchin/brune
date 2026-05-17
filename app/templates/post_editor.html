@@ -22,9 +22,15 @@
     <div class="mb-3">
       <label for="postType" class="form-label"> Post Type </label>
       <select id="postType" name="postType" class="form-select">
-        <option value="question"> Question </option>
-        <option value="note"> Note </option>
-        <option value="announcement"> Announcement </option>
+        <option value="question" {% if selected_post_type == "question" %}selected{% endif %}>
+          Question
+        </option>
+        <option value="note" {% if selected_post_type == "note" %}selected{% endif %}>
+          Note
+        </option>
+        <option value="announcement" {% if selected_post_type == "announcement" %}selected{% endif %}>
+          Announcement
+        </option>
       </select>
     </div>
 

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title> {{ page_title }} </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/post_editor.css') }}">
+  </head>
+
+  <body>
+    <div class="container py-4">
+      <nav class="mb-4">
+        <a href="/announcements" class="me-3"> Announcements </a>
+        <a href="/questions" class="me-3"> Questions </a>
+        <a href="/quick_questions" class="me-3"> Quick Questions </a>
+        <a href="/notes_resources" class="me-3"> Notes / Resources </a>
+      </nav>
+
+      <div class="d-flex justify-content-between align-items-start mb-4">
+       <div>
+         <h1>{{ page_title }}</h1>
+         <p class="text-muted mb-0">
+           {{ page_description }}
+         </p>
+       </div>
+       <button id="newPostButton" class="btn btn-primary">
+         {{ new_post_label }}
+       </button>
+     </div>
+
+     {% include "post_editor.html" %}
+
+     <section id="postsList" class="mt-4">
+       <p class="text-muted">
+         No posts yet.
+       </p>
+     </section>
+   </div>
+
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+   <script src="{{ url_for('static', filename='js/post_editor.js') }}"></script>
+
+ </body>
+</html>
