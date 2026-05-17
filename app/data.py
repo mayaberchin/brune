@@ -464,7 +464,7 @@ def add_followup_upvoter(followup_id, email):
     upvoters_new = add_to_list(upvoters, email)
     update_followups_row(followup_id, 'upvoters', upvoters_new)
     # add upvoter to ping list
-    add_post_pingee(, followup_id, email)
+    add_post_pingee(followup_id, email)
 
 def add_followup_pingee(followup_id, email):
     pingees = get_followup_pingees(followup_id)
