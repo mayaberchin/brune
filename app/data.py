@@ -168,7 +168,7 @@ def add_teacher(class_id, email):
 
 
 def create_class(teacher_email, class_name):
-    class_id = gen_id()
+    class_id = unique_id(get_all_classes())
     add_row('classes', [class_id, class_name, teacher_email])
     teacher_classes = get_classes(teacher_email)
     teacher_classes += [class_id]
@@ -325,10 +325,16 @@ def rm_empty(lst):
 
 #---------[other]---------#
 
+def unique_id(others):
+    id = gen_id()
+    while id in others:
+        id = gen_id()
+    return id
+
 # generate an id
 def gen_id():
-    # use secrets module to generate a random 32-byte string
-    return secrets.token_hex(32)
+    # use secrets module to generate a random 3-byte string
+    return secrets.token_hex(3)
 
 # merge a list into a comma-separated (or some other delimeter) string
 def merge_list(lst, delim=","):
@@ -361,7 +367,7 @@ if __name__ == "__main__":
     
     join_class("other@gmail.com", class_id)
     print("\nClasses Maya is in: " + str(get_classes("mayaberchin@gmail.com")))
-    print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmaill.com")))
+    print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
     print("Classes Other is in: " + str(get_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
     
