@@ -164,7 +164,7 @@ def add_teacher(class_id, email):
     teachers = get_teachers(class_id)
     teachers += [email]
     teachers_str = merge_list(teachers)
-    update_row('classes', 'class_id', class_id, 'teacher_email', teachers)
+    update_row('classes', 'class_id', class_id, 'teacher_email', teachers_str)
 
 
 def create_class(teacher_email, class_name):
