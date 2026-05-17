@@ -37,12 +37,12 @@ def create_posts_table():
     command =  """
                 CREATE TABLE IF NOT EXISTS posts (
                     post_id         TEXT        NOT NULL    PRIMARY KEY,
-                    poster_email    TEXT        NOT NULL,
+                    author_email    TEXT        NOT NULL,
                     class_id        TEXT        NOT NULL,
                     title           TEXT        NOT NULL,
                     body            TEXT        NOT NULL,
                     category        TEXT        NOT NULL,
-                    resolved        TEXT        NOT NULL                                DEFAULT 'no',
+                    is_resolved     TEXT        NOT NULL                                DEFAULT 'no',
                     created_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     upvotes         INTEGER     NOT NULL,
@@ -56,10 +56,10 @@ def create_followups_table():
     command =  """
                 CREATE TABLE IF NOT EXISTS posts (
                     followup_id     TEXT        NOT NULL    PRIMARY KEY,
-                    poster_email    TEXT        NOT NULL,
+                    author_email    TEXT        NOT NULL,
                     post_id         TEXT        NOT NULL,
                     body            TEXT        NOT NULL,
-                    resolved        TEXT        NOT NULL                                DEFAULT 'no',
+                    is_resolved     TEXT        NOT NULL                                DEFAULT 'no',
                     is_answer       TEXT        NOT NULL                                DEFAULT 'no',
                     created_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
@@ -241,7 +241,7 @@ def get_all_posts():
     return data
 
 def get_post_author(post_id):
-    return get_posts_field(post_id, 'poster_id')
+    return get_posts_field(post_id, 'author_id')
 
 def get_post_class(post_id):
     return get_posts_field(post_id, 'class_id')
@@ -255,9 +255,9 @@ def get_post_body(post_id):
 def get_post_category(post_id):
     return get_posts_field(post_id, 'category')
 
-def post_is_resolved(post_id):
-    resolved = get_posts_field(post_id, 'resolved')
-    return resolved == 'yes'
+def post_is_is_resolved(post_id):
+    is_resolved = get_posts_field(post_id, 'is_resolved')
+    return is_resolved == 'yes'
 
 def get_post_ctime(post_id):
     return get_posts_field(post_id, 'created_at')
@@ -279,7 +279,7 @@ def get_post_pingees(post_id):
     return ping_lst
     
 def get_post_data(post_id):
-    keys = ['post_id', 'poster_email', 'class_id', 'title', 'body', 'category', 'resolved', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
+    keys = ['post_id', 'author_email', 'class_id', 'title', 'body', 'category', 'is_resolved', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
     values = get_row_list('posts', 'post_id', post_id)
     return list_to_dict(keys, values)
 
@@ -295,7 +295,7 @@ def change_post_body(post_id, new_body):
     update_posts_row(post_id, 'body', new_body)
 
 def resolve_post(post_id):
-    update_posts_row(post_id, 'resolved', 'yes')
+    update_posts_row(post_id, 'is_resolved', 'yes')
 
 def update_post_time(post_id):
     time = str(datetime.now())
@@ -332,16 +332,64 @@ def update_posts_row(post_id, col_name, col_val):
 
 
 
+
 #=============================[FOLLOWUPS]=============================#
+
+
+
+#---------[accessors]---------#
 
 
 def get_all_followups():
     data = get_col('followups', 'followup_id')
     return data
 
+def get_followup_author(followup_id):
+    return get_followups_field(post_id, 'author_id')
+
+def get_followup_post(followup_id):
+    return get_followups_field(followup_id, 'post_id')
+
+def get_followup_body(followup_id):
+    return get_followups_field(followup_id, 'body')
+
+def followup_is_is_resolved(followup_id):
+    is_resolved = get_followups_field(followup_id, 'is_resolved')
+    return is_resolved == 'yes'
+
+def followup_is_answer(followup_id):
+    is_answer = get_followups_field(followup_id, 'is_answer')
+    return is_answer == 'yes'
+
+def get_followup_ctime(followup_id):
+    return get_followups_field(followup_id, 'created_at')
+
+def get_followup_utime(followup_id):
+    return get_followups_field(followup_id, 'updated_at')
+
+def get_followup_upvotes(followup_id):
+    return get_followups_field(followup_id, 'upvotes')
+
+def get_followup_upvoters(followup_id):
+    upvoters = get_followups_field(followup_id, 'upvoters')
+    upvoters_lst = make_list(upvoters)
+    return upvoters_lst
+
+def get_followup_pingees(followup_id):
+    ping = get_followups_field(followup_id, 'ping')
+    ping_lst = make_list(ping)
+    return ping_lst
+
+def get_followup_data(followup_id):
+    keys = ['followup_id', 'author_email', 'post_id', 'body', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
+    values = get_row_list('followups', 'followup_id', followup_id)
+    return list_to_dict(keys, values)
+
+#---------[modifiers]---------#
 
 
-#---------[posts-helpers]---------#
+#---------[followups-helpers]---------#
+
 
 def get_followups_field(followup, field_name):
     return get_field('followups', 'followup_id', followup_id, field_name)
