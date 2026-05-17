@@ -7,6 +7,7 @@ DB_FILE="data.db"
 
 #=============================[MAKE=TABLES]=============================#
 
+
 # users
 def create_users_table():
     command =  """
@@ -40,11 +41,11 @@ def create_posts_table():
                     title           TEXT        NOT NULL,
                     body            TEXT        NOT NULL,
                     category        TEXT        NOT NULL,
-                    status          TEXT        NOT NULL,
+                    resolved        TEXT        NOT NULL                                DEFAULT 'no',
                     created_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     upvotes         INTEGER     NOT NULL,
-                    upvoted_by      TEXT,
+                    upvoters        TEXT,
                     ping            TEXT
                 )"""
     sqlite(command)
@@ -57,12 +58,12 @@ def create_followups_table():
                     poster_email    TEXT        NOT NULL,
                     post_id         TEXT        NOT NULL,
                     body            TEXT        NOT NULL,
-                    status          TEXT        NOT NULL,
+                    resolved        TEXT        NOT NULL                                DEFAULT 'no',
                     is_answer       TEXT        NOT NULL                                DEFAULT 'no',
                     created_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     upvotes         INTEGER     NOT NULL,
-                    upvoted_by      TEXT,
+                    upvoters        TEXT,
                     ping            TEXT
                 )"""
     sqlite(command)
@@ -100,7 +101,7 @@ def add_user(email, password, name, github=''):
         return 'Password cannot be empty'
     password = password.encode('utf-8')
     password = str(hashlib.sha256(password).hexdigest())
-    add_row("users", [email, github, name, password, 'no', ''])
+    add_users_row([email, github, name, password, 'no', ''])
     return 'success'
 
 
@@ -121,11 +122,26 @@ def user_exists(email):
 def auth(email, password):
     if not user_exists(email):
         return False
-    real_pass = get_field("users", "email", email, "password_hash")
+    real_pass = get_users_field(email, 'password_hash')
     password = password.encode('utf-8')
     if real_pass != str(hashlib.sha256(password).hexdigest()):
         return False
     return True
+
+
+
+#---------[users-helpers]---------#
+
+
+def get_users_field(email, field_name):
+    return get_field('users', 'email', email, field_name)
+
+def add_users_row(values):
+    add_row('users', values)
+
+def update_users_row(email, col_name, col_val):
+    update_row('users', 'email', email, col_name, col_val)
+
 
 
 
@@ -138,6 +154,9 @@ def auth(email, password):
 def get_all_classes():
     data = get_col('classes', 'class_id')
     return data
+
+def get_name(class_id):
+    return get_field('classes', 'class_id', class_id, 'name')
 
 # get the teachers of a class
 def get_teachers(class_id):
@@ -170,12 +189,12 @@ def get_teaching_classes(email):
 def create_class(teacher_email, class_name):
     # add the class to classes table
     class_id = unique_id(get_all_classes())
-    add_row('classes', [class_id, class_name, teacher_email])
+    add_classes_row([class_id, class_name, teacher_email])
     # add the class to teacher's users table
     teacher_classes = get_classes(teacher_email)
     teacher_classes += [class_id]
     teacher_classes_str = merge_list(teacher_classes)
-    update_row('users', 'email', teacher_email, 'class_id', teacher_classes_str)
+    update_users_row(teacher_email, 'class_id', teacher_classes_str)
     return class_id
     
 
@@ -188,14 +207,114 @@ def join_class(email, class_id):
     classes = get_classes(email)
     classes += [class_id]
     classes_str = merge_list(classes)
-    update_row('users', 'email', email, 'class_id', classes_str)
+    update_users_row('users', 'email', email, 'class_id', classes_str)
 
 # promote a class member to a teacher for that class
 def add_teacher(class_id, email):
     teachers = get_teachers(class_id)
     teachers += [email]
     teachers_str = merge_list(teachers)
-    update_row('classes', 'class_id', class_id, 'teacher_email', teachers_str)
+    update_classes_row(class_id, 'teacher_email', teachers_str)
+
+
+
+#---------[classes-helpers]---------#
+
+
+def get_classes_field(class_id, field_name):
+    return get_field('classes', 'class_id', class_id, field_name)
+
+def add_classes_row(values):
+    add_row('classes', values)
+
+def update_classes_row(class_id, col_name, col_val):
+    update_row('classes', 'class_id', class_id, col_name, col_val)
+
+
+
+
+#=============================[POSTS]=============================#
+
+
+#---------[post-accessors]---------#
+
+def get_all_posts():
+    data = get_col('posts', 'post_id')
+    return data
+
+def get_post_author(post_id):
+    return get_posts_field(post_id, 'poster_id')
+
+def get_post_class(post_id):
+    return get_posts_field(post_id, 'class_id')
+
+def get_post_title(post_id):
+    return get_posts_field(post_id, 'title')
+
+def get_post_body(post_id):
+    return get_posts_field(post_id, 'body')
+
+def get_post_category(post_id):
+    return get_posts_field(post_id, 'category')
+
+def post_is_resolved(post_id):
+    resolved = get_posts_field(post_id, 'resolved')
+    return resolved == 'yes'
+
+def get_post_ctime(post_id):
+    return get_posts_field(post_id, 'created_at')
+
+def get_post_utime(post_id):
+    return get_posts_field(post_id, 'updated_at')
+
+def get_post_upvotes(post_id):
+    return get_posts_field(post_id, 'upvotes')
+
+def get_post_upvoters(post_id):
+    upvoters = get_posts_field(post_id, 'upvoters')
+    upvoters_lst = make_list(upvoters)
+    return upvoters_lst
+
+def get_post_pingees(post_id):
+    ping = get_posts_field(post_id, 'ping')
+    ping_lst = make_list(ping)
+    return ping_lst
+
+
+
+
+#---------[posts-helpers]---------#
+
+def get_posts_field(post_id, field_name):
+    return get_field('posts', 'post_id', post_id, field_name)
+
+def get_posts_row(values):
+    add_row('posts', values)
+
+def update_posts_row(post_id, col_name, col_val):
+    update_row('posts', 'post_id', post_id, col_name, col_val)
+
+
+
+#=============================[FOLLOWUPS]=============================#
+
+
+def get_all_followups():
+    data = get_col('followups', 'followup_id')
+    return data
+
+
+
+#---------[posts-helpers]---------#
+
+def get_followups_field(followup, field_name):
+    return get_field('followups', 'followup_id', followup_id, field_name)
+
+def get_followups_row(values):
+    add_row('followups', values)
+
+def update_followups_row(followup_id, col_name, col_val):
+    update_row('followups', 'followup_id', followup_id, col_name, col_val)
 
 
 
