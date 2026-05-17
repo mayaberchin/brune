@@ -316,8 +316,11 @@ def list_2d_to_dict_list(keys, values):
     for val_sublst in values:
         lst += [list_to_dict(keys, val_sublst)]
     return lsta
-    
-    
+
+# remove empty and none from a 1d list
+def rm_empty(lst):
+    cleanlst = [item for item in lst if str(item) != 'None' and item != '']
+    return cleanlst
 
 
 #---------[other]---------#
@@ -329,11 +332,13 @@ def gen_id():
 
 # merge a list into a comma-separated (or some other delimeter) string
 def merge_list(lst, delim=","):
+    lst = rm_empty(lst)
     return delim.join(lst)
 
 # return a list from a string of comma-separated items (or some other delimeter)
 def make_list(str, delim=","):
-    return str.split(delim)
+    lst = str.split(delim)
+    return rm_empty(lst)
 
 
 
