@@ -206,7 +206,7 @@ def create_class(teacher_email, class_name):
 def join_class(email, class_id):
     classes = get_classes(email)
     classes_str = add_to_list(classes, class_id)
-    update_users_row('users', 'email', email, 'class_id', classes_str)
+    update_users_row(email, 'class_id', classes_str)
 
 # promote a class member to a teacher for that class
 def add_teacher(class_id, email):
@@ -516,7 +516,7 @@ def make_list(str, delim=","):
     return rm_empty(lst)
 
 def add_to_list(lst, item):
-    lst += item
+    lst += [item]
     new_str = merge_list(lst)
     return new_str
     
@@ -651,6 +651,6 @@ if __name__ == "__main__":
     add_teacher(class_id, 'other@gmail.com')
     print("Class teachers: " + str(get_teachers(class_id)))
     print("Classes Maya is in: " + str(get_classes("mayaberchin@gmail.com")))
-    print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmaill.com")))
+    print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
     print("Classes Other is in: " + str(get_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
