@@ -57,7 +57,7 @@ def home():
 @app.route("/post_test")
 def posts():
     test_classes = [
-        {"class_id": 1, "name": "Software_Development"},
+        {"class_id": 1, "name": "Software Development"},
         {"class_id": 2, "name": "Systems"},
         {"class_id": 2, "name": "Cybersecurity"},
     ]

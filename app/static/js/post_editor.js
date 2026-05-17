@@ -41,6 +41,8 @@ Awe-inspiring:
 Incredible:`
 };
 
+const postsList = document.getElementById("postsList");
+
 function showPostEditor() {
   postEditor.classList.remove("d-none");
 
@@ -91,6 +93,25 @@ function handlePostTypeChange() {
   applyTemplate(selectedPostType);
 }
 
+function addPostToPage(postData) {
+  const postCard = document.createElement("div");
+  postCard.className = "card mb-3";
+
+  postCard.innerHTML = `
+  <div class="card-body">
+    <h2 class="h5 mb-1"></h2>
+    <p class="text-muted mb-2"></p>
+    <p class="mb-0"></p>
+  </div>
+`;
+
+  postCard.querySelector("h2").textContent = postData.title;
+  postCard.querySelector(".text-muted").textContent = `Type: ${postData.postType} | Class: ${postData.classId}`;
+  postCard.querySelector(".mb-0").textContent = postData.body;
+
+  postsList.prepend(postCard);
+}
+
 newPostButton.addEventListener("click", showPostEditor);
 cancelPostButton.addEventListener("click", hidePostEditor);
 postBody.addEventListener("input", resizePostBody);
@@ -124,5 +145,6 @@ postForm.addEventListener("submit", function(event) {
   }
 
   console.log(postData);
+  addPostToPage(postData);
   hidePostEditor();
 });
