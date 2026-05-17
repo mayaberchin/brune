@@ -7,7 +7,6 @@ const postErrorBox = document.getElementById("postErrorBox");
 const postTitle = document.getElementById("postTitle");
 const postType = document.getElementById("postType");
 const postClass = document.getElementById("postClass");
-const postTemplate = document.getElementById("postTemplate");
 const postBody = document.getElementById("postBody");
 
 const isAnonymous = document.getElementById("isAnonymous");
@@ -16,7 +15,8 @@ const shareWithDojo = document.getElementById("shareWithDojo");
 const templateConfirmModalElement = document.getElementById("templateConfirmModal");
 const templateConfirmModal = new bootstrap.Modal(templateConfirmModalElement);
 const applyTemplateButton = document.getElementById("applyTemplateButton");
-let maybeTemplate = "";
+
+let maybePostType = "";
 
 const postTemplates = {
   question:
@@ -26,14 +26,12 @@ Awe-inspiring:
 
 Incredible:`,
 
-
-  debug:
-`DWonderful:
+  note:
+`NWonderful:
 
 Awe-inspiring:
 
 Incredible:`,
-
 
   announcement:
 `AWonderful:
@@ -45,6 +43,11 @@ Incredible:`
 
 function showPostEditor() {
   postEditor.classList.remove("d-none");
+
+  if (postBody.value.trim() === "") {
+    applyTemplate(postType.value);
+  }
+
   resizePostBody();
 }
 
@@ -52,6 +55,7 @@ function hidePostEditor() {
   postEditor.classList.add("d-none");
   postForm.reset();
   postBody.style.height = "";
+  maybePostType = "";
   hideError();
 }
 
@@ -70,54 +74,40 @@ function resizePostBody() {
   postBody.style.height = postBody.scrollHeight + "px";
 }
 
-function applyTemplate(template) {
-  if (template === "") {
-    postBody.value = "";
-  }
-  else {
-    postBody.value = postTemplates[template];
-  }
+function applyTemplate(postType) {
+  postBody.value = postTemplates[postType];
   resizePostBody();
-  postTemplate.value = "";
-  maybeTemplate = "";
+  maybePostType = "";
+}
+
+function handlePostTypeChange() {
+  const selectedPostType = postType.value;
+  if (postBody.value.trim() !== "") {
+    maybePostType = selectedPostType;
+    templateConfirmModal.show();
+    return;
+  }
+
+  applyTemplate(selectedPostType);
 }
 
 newPostButton.addEventListener("click", showPostEditor);
 cancelPostButton.addEventListener("click", hidePostEditor);
 postBody.addEventListener("input", resizePostBody);
 
-postTemplate.addEventListener("change", function() {
-  const selectedTemplate = postTemplate.value;
-
-  if (selectedTemplate === "") {
-    postBody.value = "";
-    resizePostBody();
-    return;
-  }
-
-  if (postBody.value.trim() !== "") {
-    maybeTemplate = selectedTemplate;
-    templateConfirmModal.show();
-    return;
-  }
-
-  applyTemplate(selectedTemplate);
-});
+postType.addEventListener("change", handlePostTypeChange);
 
 applyTemplateButton.addEventListener("click", function() {
-  applyTemplate(maybeTemplate);
+  applyTemplate(maybePostType);
   templateConfirmModal.hide();
 });
 
 templateConfirmModalElement.addEventListener("hidden.bs.modal", function() {
-  postTemplate.value = "";
-  maybeTemplate = "";
+  maybePostType = "";
 });
 
 postForm.addEventListener("submit", function(event) {
   event.preventDefault(); // stop refreshing!!!
-
-  const selectedClass = postClass.options[postClass.selectedIndex];
 
   const postData = {
     title: postTitle.value.trim(),
