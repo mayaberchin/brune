@@ -436,7 +436,7 @@
 
     <div class="posts">
 
-      <!-- 
+      <!--
       <div class="post-card">
         <div class="post-head">
           <div class="post-title">Notes on regex <span>by Bob Dylan</span></div>
@@ -447,7 +447,7 @@
         </div>
       </div>
 -->
-    
+
     {% for post in posts %}
       <div class="post-card">
         <div class="post-head">
@@ -455,9 +455,9 @@
         </div>
         <div class="post-body">
           <div class="post-desc">{{ post.body }}</div>
-          {% if post.has_attachment %}
-            <span class="post-tag">{{ post.attachment.type }} attached</span>
-          {% endif %}
+          <!-- {% if post.has_attachment %}
+            <span class="post-tag">attachments included</span>
+          {% endif %} -->
         </div>
       </div>
     {% endfor %}
@@ -479,7 +479,7 @@
         <button class="btn-join">Join/Create</button>
       </div>
 
-      <!-- 
+      <!--
       <div class="course-card">
         <div class="course-head">Cybersecurity</div>
         <div class="course-body">
@@ -487,14 +487,15 @@
           <div class="course-item">- Announcement</div>
         </div>
       </div> -->
-    
+
       {% for class in classes %}
         <div class="course-card">
             <div class="course-head">{{ class.name }}</div>
-            <div class="course-body">
+            <!-- <div class="course-body">
+            { % if  % }
             <div class="course-item">- {{ class.post -- make this into a for}} - <span class="due">due mm/dd/yy</span></div>
             <div class="course-item">- {{ class.post }}</div>
-            </div>
+            </div> -->
         </div>
       {% endfor %}
 
@@ -512,6 +513,16 @@
       </div>
     </div> -->
     {% for message in messages %}
+      { % if email in message.unreaders % }
+        <div class="messages-card">
+          <div class="msg-preview">
+            <div class="msg-sender">{{ classes.message.class_id }}</div> <!--check this-->
+            <div class="msg-snippet">{{ message.author_name }}: {{ message.body }}</div>
+          </div>
+        </div>
+      { % endif % }
+    { % endfor %}
+
 
 
   </aside>
