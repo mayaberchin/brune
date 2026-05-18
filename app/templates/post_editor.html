@@ -22,9 +22,27 @@
     <div class="mb-3">
       <label for="postType" class="form-label"> Post Type </label>
       <select id="postType" name="postType" class="form-select">
-        <option value="question"> Question </option>
-        <option value="note"> Note </option>
-        <option value="announcement"> Announcement </option>
+        <option value="question" {% if selected_post_type == "question" %}selected{% endif %}>
+          Question
+        </option>
+        <option value="note" {% if selected_post_type == "note" %}selected{% endif %}>
+          Note
+        </option>
+        <option value="announcement" {% if selected_post_type == "announcement" %}selected{% endif %}>
+          Announcement
+        </option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="postClass" class="form-label"> Class </label>
+      <select id="postClass" name="classId" class="form-select" required>
+        <option value=""> Choose a class </option>
+        {% for class_info in classes %}
+          <option value="{{ class_info.class_id }}">
+            {{ class_info.name }}
+          </option>
+        {% endfor %}
       </select>
     </div>
 
@@ -69,3 +87,26 @@
     </div>
   </form>
 </section>
+
+<!-- Bootstrap modal for template confirmation -->
+<div class="modal fade" id="templateConfirmModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="templateConfirmTitle"> Replace current post body? </h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        Applying this post type's template will replace the text currently in the post body.
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"> Cancel </button>
+        <button id="applyTemplateButton" type="button" class="btn btn-primary"> Apply Template </button>
+      </div>
+    </div>
+
+  </div>
+</div>
