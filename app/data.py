@@ -63,7 +63,7 @@ def create_posts_table():
 # followups
 def create_followups_table():
     command =  """
-                CREATE TABLE IF NOT EXISTS posts (
+                CREATE TABLE IF NOT EXISTS followups (
                     followup_id     TEXT        NOT NULL    PRIMARY KEY,
                     author_email    TEXT        NOT NULL,
                     post_id         TEXT        NOT NULL,
@@ -101,6 +101,12 @@ def get_all_users():
 def get_all_dojo():
     return [user for user in get_all_users() if is_dojo(user)]
 
+def get_user_data(email):
+    keys = USERS_COLS
+    values = get_row('users', 'email', email)
+    d = list_to_dict(keys, values)
+    d['class_id'] = make_list(d['class_id'])
+    return d
 
 
 #---------[modifiers]---------#
@@ -185,6 +191,12 @@ def get_teachers(class_id):
     teachers = make_list(teachers_str)
     return teachers
 
+def get_class_data(class_id):
+    keys = CLASSES_COLS
+    values = get_row('classes', 'class_id', class_id)
+    d = list_to_dict(keys, values)
+    d['teacher_email'] = make_list(d['teacher_email'])
+    return d
 
 
 #---------[member-focused-accessors]---------#
@@ -300,8 +312,11 @@ def get_post_pingees(post_id):
     
 def get_post_data(post_id):
     keys = POSTS_COLS
-    values = get_row_list('posts', 'post_id', post_id)
-    return list_to_dict(keys, values)
+    values = get_row('posts', 'post_id', post_id)
+    d = list_to_dict(keys, values)
+    d['upvoters'] = make_list(d['upvoters'])
+    d['ping'] = make_list(d['ping'])
+    return d
 
 
 
@@ -333,13 +348,27 @@ def add_post_upvoter(post_id, email):
     upvoters = get_post_upvoters(post_id)
     upvoters_new = add_to_list(upvoters, email)
     update_posts_row(post_id, 'upvoters', upvoters_new)
-    # add upvoter to ping list
+    increment_post_upvotes(post_id, 1)
     add_post_pingee(post_id, email)
+
+def remove_post_upvoter(post_id, email):
+    upvoters = get_post_upvoters(post_id)
+    upvoters = upvoters.remove(email)
+    upvoters_new = merge_list(upvoters)
+    update_posts_row(post_id, 'upvoters', upvoters_new)
+    increment_post_upvotes(post_id, -1)
+    remove_post_pingee(post_id, email)
 
 def add_post_pingee(post_id, email):
     pingees = get_post_pingees(post_id)
     pingees_new = add_to_list(pingees, email)
-    update_posts_row(post_id, 'upvoters', pingees_new)
+    update_posts_row(post_id, 'ping', pingees_new)
+
+def remove_post_pingee(post_id, email):
+    pingees = get_post_pingees(post_id)
+    pingees= pingees.remove(email)
+    pingees_new = merge_list(pingees)
+    update_posts_row(post_id, 'ping', pingees_new)
 
 
 
@@ -352,10 +381,8 @@ def create_post(author_email, class_id, title, body, category):
     time = str(datetime.now())
     upvotes = 0
     upvoters = ''
-    ping = ''
+    ping = f'{author_email}'
     add_posts_row([post_id, author_email, class_id, title, body, category, is_resolved, time, time, upvotes, upvoters, ping])
-    # add author to ping list
-    add_post_pingee(post_id, author_email)
     return post_id
 
 def delete_post(post_id):
@@ -427,8 +454,11 @@ def get_followup_pingees(followup_id):
 
 def get_followup_data(followup_id):
     keys = FOLLOWUPS_COLS
-    values = get_row_list('followups', 'followup_id', followup_id)
-    return list_to_dict(keys, values)
+    values = get_row('followups', 'followup_id', followup_id)
+    d = list_to_dict(keys, values)
+    d['upvoters'] = make_list(d['upvoters'])
+    d['ping'] = make_list(d['ping'])
+    return d
 
 
 
@@ -463,13 +493,28 @@ def add_followup_upvoter(followup_id, email):
     upvoters = get_followup_upvoters(followup_id)
     upvoters_new = add_to_list(upvoters, email)
     update_followups_row(followup_id, 'upvoters', upvoters_new)
-    # add upvoter to ping list
-    add_post_pingee(followup_id, email)
+    increment_followup_upvotes(followup_id, 1)
+    add_followup_pingee(followup_id, email)
+
+def remove_followup_upvoter(followup_id, email):
+    upvoters = get_followup_upvoters(followup_id)
+    print(str(upvoters))
+    upvoters = upvoters.remove(email)
+    upvoters_new = merge_list(upvoters)
+    update_posts_row(followup_id, 'upvoters', upvoters_new)
+    increment_followup_upvotes(followup_id, -1)
+    remove_followup_pingee(followup_id, email)
 
 def add_followup_pingee(followup_id, email):
     pingees = get_followup_pingees(followup_id)
     pingees_new = add_to_list(pingees, email)
     update_followups_row(followup_id, 'upvoters', pingees_new)
+
+def remove_followup_pingee(followup_id, email):
+    pingees = get_followup_pingees(followup_id)
+    pingees = pingees.remove(email)
+    pingees_new = merge_list(pingees)
+    update_followups_row(followup_id, 'ping', pingees_new)
 
 
 
@@ -483,11 +528,10 @@ def create_followup(author_email, post_id, body):
     time = str(datetime.now())
     upvotes = 0
     upvoters = ''
-    ping = ''
+    ping = f'{author_email}'
     add_followups_row([followup_id, author_email, post_id, body, is_resolved, is_answer, time, time, upvotes, upvoters, ping])
     # add author to ping list
-    add_post_pingee(post_id, author_email)
-    return post_id
+    return followup_id
 
 def delete_followup(followup_id):
     delete_row('followups', 'followup_id', followup_id)
@@ -498,7 +542,7 @@ def delete_followup(followup_id):
 #---------[followups-helpers]---------#
 
 
-def get_followups_field(followup, field_name):
+def get_followups_field(followup_id, field_name):
     return get_field('followups', 'followup_id', followup_id, field_name)
 
 def add_followups_row(values):
@@ -528,6 +572,10 @@ def get_field_list(table, col_name, ID, field):
     # use ? for unsafe/user provided variables
     data = sqlite_fetchall(f'SELECT {field} FROM {table} WHERE {col_name} = ?', (ID,))
     return clean_list(data)
+
+# return the first row that has an "id" field matching the given argument
+def get_row(table, col_name, ID):
+    return get_row_list(table, col_name, ID)[0]
 
 # return all rows that have an "id" field matching the given argument
 def get_row_list(table, col_name, ID):
@@ -573,6 +621,8 @@ def delete_row(table, ID_fieldname, id):
 
 # merge a list into a comma-separated (or some other delimeter) string
 def merge_list(lst, delim=","):
+    if lst == None:
+        return ''
     lst = rm_empty(lst)
     return delim.join(lst)
 
@@ -623,10 +673,12 @@ def clean_list_2d(raw_output):
     for lst in raw_output:
         clean_1d = []
         for item in lst:
-            if str(item) != 'None' and item != '':
+            if str(item) != 'None':
                 clean_1d += [item]
-        if len(lst) > 0:
-            clean_output += [lst]
+            else:
+                clean_1d += ['']
+        if len(clean_1d) > 0:
+            clean_output += [clean_1d]
     return clean_output
 
 
@@ -720,3 +772,21 @@ if __name__ == "__main__":
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
     print("Classes Other is in: " + str(get_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
+    
+    
+    print("\n----------------------------------\n")
+    post_id = create_post("mayaberchin@gmail.com", class_id, "test_post", "this is the body of the test post", "question")
+    print(get_all_posts())
+    print(str(get_post_data(post_id)))
+    add_post_upvoter(post_id, "other@gmail.com")
+    followup_id = create_followup("b@b.com", post_id, "lmao this post sucks (don't hate first time ragebaiting)")
+    change_post_title(post_id, "test title 2")
+    resolve_post(post_id)
+    print(str(get_post_data(post_id)))
+    print(str(get_followup_data(followup_id)))
+    unresolve_post(post_id)
+    remove_post_upvoter(post_id, "other@gmail.com")
+    add_post_upvoter(post_id, "b@b.com")
+    add_followup_upvoter(followup_id, "b@b.com")
+    print(str(get_post_data(post_id)))
+    print(str(get_followup_data(followup_id)))
