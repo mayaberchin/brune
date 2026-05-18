@@ -59,6 +59,7 @@ def create_posts_table():
                     ping            TEXT
                 )"""
     sqlite(command)
+    # add attachement in
 
 # followups
 def create_followups_table():
