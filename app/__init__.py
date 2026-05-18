@@ -53,6 +53,7 @@ def render_post_page(page):
 #login
 @app.route("/", methods=["GET", "POST"])
 def login():
+    return "Hello! Temporary test."
     if 'email' in session:
         return redirect(url_for('home'))
     if request.method == 'POST':
