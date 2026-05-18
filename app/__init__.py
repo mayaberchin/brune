@@ -9,7 +9,7 @@ data.create_tables()
 #login
 @app.route("/", methods=["GET", "POST"])
 def login():
-    return "Temp--test updating on vm"
+    #return "Temp--test updating on vm"
     if 'email' in session:
         return redirect(url_for('home'))
     if request.method == 'POST':
