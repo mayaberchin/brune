@@ -91,7 +91,9 @@ def create_tables():
 #=============================[USERS]=============================#
 
 
+
 #---------[accessors]---------#
+
 
 # returns a list of emails
 def get_all_users():
@@ -101,12 +103,38 @@ def get_all_users():
 def get_all_dojo():
     return [user for user in get_all_users() if is_dojo(user)]
 
+def get_user_name(email):
+    return get_users_field(email, 'name')
+
+def get_user_password(email):
+    return get_users_field(email, 'password_hash')
+
+def get_user_github(email):
+    get_users_field(email, 'github')
+
+# get the classes someone is in
+def get_classes(email):
+    classes_str = get_field('users', 'email', email, 'class_id')
+    classes = make_list(classes_str)
+    return classes
+
+# get the classes someone teaches 
+def get_teaching_classes(email):
+    classes = get_classes(email)
+    teaches = [c for c in classes if email in get_teachers(c)]
+    return teaches
+    
+def is_dojo(email):
+    dojo = get_users_field(email, 'is_dojo')
+    return dojo == 'yes'
+
 def get_user_data(email):
     keys = USERS_COLS
     values = get_row('users', 'email', email)
     d = list_to_dict(keys, values)
     d['class_id'] = make_list(d['class_id'])
     return d
+
 
 
 #---------[modifiers]---------#
@@ -141,15 +169,11 @@ def user_exists(email):
             return True
     return False
 
-def is_dojo(email):
-    dojo = get_users_field(email, 'is_dojo')
-    return dojo == 'yes'
-
 # checks if provided password in login attempt matches user password
 def auth(email, password):
     if not user_exists(email):
         return False
-    real_pass = get_users_field(email, 'password_hash')
+    real_pass = get_user_password(email)
     password = password.encode('utf-8')
     if real_pass != str(hashlib.sha256(password).hexdigest()):
         return False
@@ -175,7 +199,7 @@ def update_users_row(email, col_name, col_val):
 #=============================[CLASSES]=============================#
 
 
-#---------[class-focused-accessors]---------#
+#---------[accessors]---------#
 
 
 def get_all_classes():
@@ -198,21 +222,6 @@ def get_class_data(class_id):
     d['teacher_email'] = make_list(d['teacher_email'])
     return d
 
-
-#---------[member-focused-accessors]---------#
-
-
-# get the classes someone is in
-def get_classes(email):
-    classes_str = get_field('users', 'email', email, 'class_id')
-    classes = make_list(classes_str)
-    return classes
-
-# get the classes someone teaches 
-def get_teaching_classes(email):
-    classes = get_classes(email)
-    teaches = [c for c in classes if email in get_teachers(c)]
-    return teaches
 
 
 
@@ -273,7 +282,7 @@ def get_all_posts():
     return data
 
 def get_post_author(post_id):
-    return get_posts_field(post_id, 'author_id')
+    return get_posts_field(post_id, 'author_email')
 
 def get_post_class(post_id):
     return get_posts_field(post_id, 'class_id')
@@ -361,14 +370,17 @@ def remove_post_upvoter(post_id, email):
 
 def add_post_pingee(post_id, email):
     pingees = get_post_pingees(post_id)
-    pingees_new = add_to_list(pingees, email)
-    update_posts_row(post_id, 'ping', pingees_new)
+    if email not in pingees:
+        pingees_new = add_to_list(pingees, email)
+        update_posts_row(post_id, 'ping', pingees_new)
 
 def remove_post_pingee(post_id, email):
-    pingees = get_post_pingees(post_id)
-    pingees= pingees.remove(email)
-    pingees_new = merge_list(pingees)
-    update_posts_row(post_id, 'ping', pingees_new)
+    author = get_post_author(post_id)
+    if author != email:
+        pingees = get_post_pingees(post_id)
+        pingees= pingees.remove(email)
+        pingees_new = merge_list(pingees)
+        update_posts_row(post_id, 'ping', pingees_new)
 
 
 
@@ -417,7 +429,7 @@ def get_all_followups():
     return data
 
 def get_followup_author(followup_id):
-    return get_followups_field(post_id, 'author_id')
+    return get_followups_field(followup_id, 'author_email')
 
 def get_followup_post(followup_id):
     return get_followups_field(followup_id, 'post_id')
@@ -498,23 +510,25 @@ def add_followup_upvoter(followup_id, email):
 
 def remove_followup_upvoter(followup_id, email):
     upvoters = get_followup_upvoters(followup_id)
-    print(str(upvoters))
     upvoters = upvoters.remove(email)
     upvoters_new = merge_list(upvoters)
-    update_posts_row(followup_id, 'upvoters', upvoters_new)
+    update_followups_row(followup_id, 'upvoters', upvoters_new)
     increment_followup_upvotes(followup_id, -1)
     remove_followup_pingee(followup_id, email)
 
 def add_followup_pingee(followup_id, email):
     pingees = get_followup_pingees(followup_id)
-    pingees_new = add_to_list(pingees, email)
-    update_followups_row(followup_id, 'upvoters', pingees_new)
+    if email not in pingees:
+        pingees_new = add_to_list(pingees, email)
+        update_followups_row(followup_id, 'upvoters', pingees_new)
 
 def remove_followup_pingee(followup_id, email):
-    pingees = get_followup_pingees(followup_id)
-    pingees = pingees.remove(email)
-    pingees_new = merge_list(pingees)
-    update_followups_row(followup_id, 'ping', pingees_new)
+    author = get_followup_author(followup_id)
+    if email != author:
+        pingees = get_followup_pingees(followup_id)
+        pingees = pingees.remove(email)
+        pingees_new = merge_list(pingees)
+        update_followups_row(followup_id, 'ping', pingees_new)
 
 
 
@@ -530,7 +544,6 @@ def create_followup(author_email, post_id, body):
     upvoters = ''
     ping = f'{author_email}'
     add_followups_row([followup_id, author_email, post_id, body, is_resolved, is_answer, time, time, upvotes, upvoters, ping])
-    # add author to ping list
     return followup_id
 
 def delete_followup(followup_id):
@@ -788,5 +801,10 @@ if __name__ == "__main__":
     remove_post_upvoter(post_id, "other@gmail.com")
     add_post_upvoter(post_id, "b@b.com")
     add_followup_upvoter(followup_id, "b@b.com")
+    remove_followup_upvoter(followup_id, "b@b.com")
     print(str(get_post_data(post_id)))
     print(str(get_followup_data(followup_id)))
+    
+    print("\n----------------------------------\n")
+    add_senpai("mayaberchin@gmail.com")
+    print(str(get_all_dojo()))
