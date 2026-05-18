@@ -322,3 +322,12 @@ POST PAGE
 - Added basic routes/pages for announcements, questions, quick questions, and notes / resources using post_page template
 DROPLET
 - Working live site on brunebrune.me!
+
+mayaB -- 2026-05-17 21:41
+POST/FOLLOWUP FUNCTIONS
+- done (for now) and tested (kinda)
+- didn't test every single little feature but logic was the same across similar functions and i tested every truly distinct thing i could think of 
+  - might run into small bugs but should be fixable
+	- did test everything we need for tomorrow: working
+- wrote todo list and i have a lot to overhaul :/
+- anyway the app doesn't crash and required dd functions for tomorrow plus a bunch for the future are in place!
