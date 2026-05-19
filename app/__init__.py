@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 
 import data
 
@@ -38,17 +38,6 @@ POST_PAGE_INFO = {
         "new_post_label": "New Note",
     },
 }
-
-def render_post_page(page):
-    page_info = POST_PAGE_INFO[page]
-    return render_template(
-        "post_page.html",
-        classes=TEST_CLASSES,
-        page_title=page_info["page_title"],
-        page_description=page_info["page_description"],
-        selected_post_type=page_info["selected_post_type"],
-        new_post_label=page_info["new_post_label"]
-    )
 
 #login
 @app.route("/", methods=["GET", "POST"])
@@ -97,6 +86,21 @@ def home():
         return redirect(url_for('login'))
     return render_template("home.html")
 
+
+
+# ------------------ POST PAGES ------------------
+
+def render_post_page(page):
+    page_info = POST_PAGE_INFO[page]
+    return render_template(
+        "post_page.html",
+        classes=TEST_CLASSES,
+        page_title=page_info["page_title"],
+        page_description=page_info["page_description"],
+        selected_post_type=page_info["selected_post_type"],
+        new_post_label=page_info["new_post_label"]
+    )
+
 @app.route("/announcements")
 def announcements():
     return render_post_page("announcements")
@@ -116,10 +120,44 @@ def quick_qs():
 def notes_rsrc():
     return render_post_page("notes_resources")
 
-# TEST
-@app.route("/post_test")
-def posts():
-    return render_template("post_test.html", classes=TEST_CLASSES)
+
+
+# ------------------ REACT POST API ROUTES ------------------
+
+# loads posts
+@app.route("/api/posts")
+def api_posts():
+    category = request.args.get("category", "")
+    posts = []
+
+    for post_id in data.get_all_posts(): # list of all post IDs in db
+        post = data.get_post_data(post_id)
+
+        if category == "" or post["category"] == category:
+            posts.append(post)
+
+    posts.reverse() # newest posts first
+    return jsonify({"posts": posts})
+
+# ceates and saves a new post
+@app.route("/api/posts", methods=["POST"])
+def api_create_post():
+    post = request.get_json()
+
+    title = post.get("title", "").strip()
+    class_id = post.get("class_id", "").strip()
+    body = post.get("body", "").strip()
+    category = post.get("category", "").strip()
+
+    post_id = data.create_post( # returns new post_id
+        session["email"],
+        class_id,
+        title,
+        body,
+        category
+    )
+    saved_post = data.get_post_data(post_id)
+    return jsonify({"post": saved_post})
 
 #handling data
 #@app.route('/data')

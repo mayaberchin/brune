@@ -46,14 +46,14 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
 
     const postData = {
       title: title.trim(),
-      postType: selectedPostType,
-      classId: postClass,
+      category: selectedPostType,
+      class_id: postClass,
       body: body.trim(),
       isAnonymous: isAnonymous,
       shareWithDojo: shareWithDojo
     };
 
-    if (postData.title === "" || postData.classId === "" || postData.body === "") {
+    if (postData.title === "" || postData.class_id === "" || postData.body === "") {
       setError("Please fill out the title, class, and post body.");
       return;
     }

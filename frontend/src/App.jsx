@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PostEditor from "./components/PostEditor";
 import PostCard from "./components/PostCard";
 
 const root = document.getElementById("root");
+
 const selectedPostType = root.dataset.postType;
 const pageTitle = root.dataset.pageTitle;
 const pageDescription = root.dataset.pageDescription;
@@ -19,15 +20,28 @@ function App() {
   const [showPostEditor, setShowPostEditor] = useState(false);
   const [posts, setPosts] = useState([]);
 
-  function addPost(postData) {
-    const newPost = {
-      ...postData, // copies all fields from postData into newPost
-      id: Date.now(), // post_id later!
-    };
+  useEffect(() => {
+    async function loadPosts() {
+      const response = await fetch(`/api/posts?category=${selectedPostType}`);
+      const data = await response.json();
+      setPosts(data.posts);
+    }
+
+    loadPosts();
+  }, []);
+
+  async function addPost(postData) {
+    const response = await fetch("/api/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(postData),
+    });
+    const data = await response.json();
 
     // crete array w/ newest post in front
-    setPosts([newPost, ...posts]);
-
+    setPosts([data.post, ...posts]);
     setShowPostEditor(false);
   }
 
@@ -62,7 +76,7 @@ function App() {
           <p className="text-muted">No posts yet.</p>
         ) : (
           posts.map((post) => (
-            <PostCard key={post.id} postData={post} />
+            <PostCard key={post.post_id} postData={post} />
           ))
         )}
       </section>

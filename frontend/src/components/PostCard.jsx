@@ -10,7 +10,7 @@ function PostCard({ postData }) {
           <div>
             <h5 className="mb-1">{postData.title}</h5>
             <p className="text-muted mb-2">
-              Type: {postData.postType} | Class: {postData.classId}
+              Type: {postData.category} | Class: {postData.class_id}
             </p>
 
             <p className="mb-0">{postData.body}</p>
