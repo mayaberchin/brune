@@ -451,13 +451,13 @@
     {% for post in posts %}
       <div class="post-card">
         <div class="post-head">
-          <div class="post-title">{{ post.title }} <span>by Bob Dylan</span></div>
+          <div class="post-title">{{ post.title }} <span>{{ get_user_name(post.author_email) }}</span></div>
         </div>
         <div class="post-body">
           <div class="post-desc">{{ post.body }}</div>
-          <!-- {% if post.has_attachment %}
+          {% if post.attachments != NULL %}
             <span class="post-tag">attachments included</span>
-          {% endif %} -->
+          {% endif %}
         </div>
       </div>
     {% endfor %}
@@ -516,8 +516,8 @@
       { % if email in message.unreaders % }
         <div class="messages-card">
           <div class="msg-preview">
-            <div class="msg-sender">{{ classes.message.class_id }}</div> <!--check this-->
-            <div class="msg-snippet">{{ message.author_name }}: {{ message.body }}</div>
+            <div class="msg-sender">{{ get_class_name(message.class_id) }}</div> <!--check this-->
+            <div class="msg-snippet">{{ get_user_name(message.author_email) }}: {{ message.body }}</div>
           </div>
         </div>
       { % endif % }
