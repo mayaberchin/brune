@@ -2,6 +2,12 @@ import { useState } from "react";
 import PostEditor from "./components/PostEditor";
 import PostCard from "./components/PostCard";
 
+const root = document.getElementById("root");
+const selectedPostType = root.dataset.postType;
+const pageTitle = root.dataset.pageTitle;
+const pageDescription = root.dataset.pageDescription;
+const newPostLabel = root.dataset.newPostLabel;
+
 // get classes from flask later!
 const testClasses = [
   { class_id: "1", name: "Software Development" },
@@ -12,8 +18,6 @@ const testClasses = [
 function App() {
   const [showPostEditor, setShowPostEditor] = useState(false);
   const [posts, setPosts] = useState([]);
-
-  const selectedPostType = "question";
 
   function addPost(postData) {
     const newPost = {
@@ -31,7 +35,8 @@ function App() {
     <main className="container py-4">
       <div className="d-flex justify-content-between align-items-start mb-4">
         <div>
-          <h1>Questions</h1>
+          <h1>{pageTitle}</h1>
+          <p className="text-muted mb-0">{pageDescription}</p>
         </div>
 
         <button
@@ -39,7 +44,7 @@ function App() {
           className="btn btn-primary"
           onClick={() => setShowPostEditor(true)}
         >
-          + New Question
+          + {newPostLabel}
         </button>
       </div>
 
