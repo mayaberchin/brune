@@ -37,7 +37,9 @@ def create_classes_table():
                 CREATE TABLE IF NOT EXISTS classes (
                     class_id        TEXT        NOT NULL    PRIMARY KEY,
                     name            TEXT        NOT NULL,
-                    teacher_email   TEXT        NOT NULL
+                    teacher_email   TEXT        NOT NULL,
+                    post_ids        TEXT,
+                    student_emails  TEXT
                 )"""
     sqlite(command)
 
@@ -56,7 +58,8 @@ def create_posts_table():
                     updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     upvotes         INTEGER     NOT NULL,
                     upvoters        TEXT,
-                    ping            TEXT
+                    ping            TEXT,
+                    attachments     TEXT
                 )"""
     sqlite(command)
     # add attachement in
@@ -223,7 +226,7 @@ def get_all_classes():
     data = get_col('classes', 'class_id')
     return data
 
-def get_name(class_id):
+def get_class_name(class_id):
     return get_field('classes', 'class_id', class_id, 'name')
 
 # get the teachers of a class
