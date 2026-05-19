@@ -17,25 +17,25 @@ POST_PAGE_INFO = {
         "page_title": "Announcements",
         "page_description": "Teacher posts, assignments, and important class updates.",
         "selected_post_type": "announcement",
-        "new_post_label": "+ New Announcement",
+        "new_post_label": "New Announcement",
     },
     "questions": {
         "page_title": "Questions",
         "page_description": "Ask longer questions and provide context for help.",
         "selected_post_type": "question",
-        "new_post_label": "+ New Question",
+        "new_post_label": "New Question",
     },
     "quick_questions": {
         "page_title": "Quick Questions",
         "page_description": "Shorter questions formatted more like a quick class chat.",
         "selected_post_type": "question",
-        "new_post_label": "+ New Quick Question",
+        "new_post_label": "New Quick Question",
     },
     "notes_resources": {
         "page_title": "Notes / Resources",
         "page_description": "Share notes, reminders, links, and useful resources.",
         "selected_post_type": "note",
-        "new_post_label": "+ New Note",
+        "new_post_label": "New Note",
     },
 }
 
