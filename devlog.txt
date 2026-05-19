@@ -326,8 +326,23 @@ DROPLET
 mayaB -- 2026-05-17 21:41
 POST/FOLLOWUP FUNCTIONS
 - done (for now) and tested (kinda)
-- didn't test every single little feature but logic was the same across similar functions and i tested every truly distinct thing i could think of 
+- didn't test every single little feature but logic was the same across similar functions and i tested every truly distinct thing i could think of
   - might run into small bugs but should be fixable
 	- did test everything we need for tomorrow: working
 - wrote todo list and i have a lot to overhaul :/
 - anyway the app doesn't crash and required dd functions for tomorrow plus a bunch for the future are in place!
+
+christineC -- 2026-05-19 02:57
+REACT
+- Converted old post editor setup into React components
+- Replaced DOM manipulation w/ React states
+VITE
+- Passed Flask page data into React using `data-*` attributes
+- Updated vite.config.js so `npm run build` outputs files into Flask static folder!
+- Updated pages to use new Vite assets, removed old code
+POST BACKEND APIS
+- `GET /api/posts` route to load saved posts from database
+  - Uses `data.get_all_posts()` and `data.get_post_data()` (thank you Maya!!!)
+- `POST /api/posts` route to create/save new posts
+  - Uses `data.create_post()`
+- Connected it to React with `fetch()`
