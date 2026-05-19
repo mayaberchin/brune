@@ -28,7 +28,7 @@ POST_PAGE_INFO = {
     "quick_questions": {
         "page_title": "Quick Questions",
         "page_description": "Shorter questions formatted more like a quick class chat.",
-        "selected_post_type": "question",
+        "selected_post_type": "quick_question",
         "new_post_label": "New Quick Question",
     },
     "notes_resources": {
