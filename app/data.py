@@ -37,7 +37,9 @@ def create_classes_table():
                 CREATE TABLE IF NOT EXISTS classes (
                     class_id        TEXT        NOT NULL    PRIMARY KEY,
                     name            TEXT        NOT NULL,
-                    teacher_email   TEXT        NOT NULL
+                    teacher_email   TEXT        NOT NULL,
+                    post_ids        TEXT,
+                    student_emails  TEXT
                 )"""
     sqlite(command)
 
@@ -56,9 +58,11 @@ def create_posts_table():
                     updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     upvotes         INTEGER     NOT NULL,
                     upvoters        TEXT,
-                    ping            TEXT
+                    ping            TEXT,
+                    attachments     TEXT
                 )"""
     sqlite(command)
+    # add attachement in
 
 # followups
 def create_followups_table():
@@ -78,6 +82,22 @@ def create_followups_table():
                 )"""
     sqlite(command)
 
+# Messages
+def create_messages():
+    command="""
+            CREATE TABLE IF NOT EXISTS messages (
+                message_id TEXT NOT NULL PRIMARY KEY,
+                author_name TEXT NOT NULL,
+                class_id TEXT NOT NULL,
+                body TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                unreaders TEXT,
+                ping TEXT
+            )
+    """
+    sqlite(command)
+
+# change the messages unreaders to be in users table
 
 # all
 def create_tables():
@@ -118,12 +138,12 @@ def get_classes(email):
     classes = make_list(classes_str)
     return classes
 
-# get the classes someone teaches 
+# get the classes someone teaches
 def get_teaching_classes(email):
     classes = get_classes(email)
     teaches = [c for c in classes if email in get_teachers(c)]
     return teaches
-    
+
 def is_dojo(email):
     dojo = get_users_field(email, 'is_dojo')
     return dojo == 'yes'
@@ -206,7 +226,7 @@ def get_all_classes():
     data = get_col('classes', 'class_id')
     return data
 
-def get_name(class_id):
+def get_class_name(class_id):
     return get_field('classes', 'class_id', class_id, 'name')
 
 # get the teachers of a class
@@ -237,9 +257,9 @@ def create_class(teacher_email, class_name):
     teacher_classes_str = add_to_list(teacher_classes, class_id)
     update_users_row(teacher_email, 'class_id', teacher_classes_str)
     return class_id
-    
 
-    
+
+
 #---------[member-focused-modifiers]---------#
 
 
@@ -318,7 +338,7 @@ def get_post_pingees(post_id):
     ping = get_posts_field(post_id, 'ping')
     ping_lst = make_list(ping)
     return ping_lst
-    
+
 def get_post_data(post_id):
     keys = POSTS_COLS
     values = get_row('posts', 'post_id', post_id)
@@ -648,8 +668,8 @@ def add_to_list(lst, item):
     lst += [item]
     new_str = merge_list(lst)
     return new_str
-    
-    
+
+
 #---------[id]---------#
 
 
@@ -717,7 +737,7 @@ def list_2d_to_dict_list(keys, values):
 def rm_empty(lst):
     cleanlst = [item for item in lst if str(item) != 'None' and item != '']
     return cleanlst
-    
+
 
 
 
@@ -758,26 +778,26 @@ def sqlite_fetchall(command, vals=()):
 #=============================[TESTING]=============================#
 
 if __name__ == "__main__":
-    
+
     create_tables()
-    
+
     add_user("mayaberchin@gmail.com", "hello", "Maya Berchin")
     add_user("other@gmail.com", "other", "Other Student")
     print(str(get_all_users()))
     add_user("b@b.com", "b", "b b")
-    
+
     print(str(get_all_classes()))
     class_id = create_class("mayaberchin@gmail.com", "testclass")
     create_class("b@b.com", "dontjoin")
     print("\n" + str(get_all_classes()))
     print("Class teachers: " + str(get_teachers(class_id)))
-    
+
     join_class("other@gmail.com", class_id)
     print("\nClasses Maya is in: " + str(get_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
     print("Classes Other is in: " + str(get_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
-    
+
     print("\nPromoting Other...")
     add_teacher(class_id, 'other@gmail.com')
     print("Class teachers: " + str(get_teachers(class_id)))
@@ -785,8 +805,8 @@ if __name__ == "__main__":
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
     print("Classes Other is in: " + str(get_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
-    
-    
+
+
     print("\n----------------------------------\n")
     post_id = create_post("mayaberchin@gmail.com", class_id, "test_post", "this is the body of the test post", "question")
     print(get_all_posts())
@@ -804,7 +824,7 @@ if __name__ == "__main__":
     remove_followup_upvoter(followup_id, "b@b.com")
     print(str(get_post_data(post_id)))
     print(str(get_followup_data(followup_id)))
-    
+
     print("\n----------------------------------\n")
     add_senpai("mayaberchin@gmail.com")
     print(str(get_all_dojo()))
