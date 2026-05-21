@@ -346,3 +346,20 @@ POST BACKEND APIS
 - `POST /api/posts` route to create/save new posts
   - Uses `data.create_post()`
 - Connected it to React with `fetch()`
+
+christineC -- 2026-05-20 23:50
+FULL POST VIEW
+- Created `PostPreview.jsx` for clickable post previews (moved out of App.jsx)
+- Created `PostView.jsx` for displaying full selected post
+- Add back button
+POST LAYOUT
+- Added class filters (still using hardcoded class list)
+- Modified post layout:
+  * Wide screen, no post opened: [post list] [class filters]
+  * Wide screen, post opened: [smaller post list] [opened post]
+  * Small screen/mobile, no post opened: post list only
+  * Small screen/mobile, post opened: full post only
+  * :0 it's responsive!!!
+OTHER
+- Renamed quick_questions to chat
+- So much CSS...
