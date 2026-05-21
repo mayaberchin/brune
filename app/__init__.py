@@ -25,11 +25,11 @@ POST_PAGE_INFO = {
         "selected_post_type": "question",
         "new_post_label": "New Question",
     },
-    "quick_questions": {
-        "page_title": "Quick Questions",
-        "page_description": "Shorter questions formatted more like a quick class chat.",
-        "selected_post_type": "quick_question",
-        "new_post_label": "New Quick Question",
+    "chat": {
+        "page_title": "Chat",
+        "page_description": "CHat!!!!",
+        "selected_post_type": "chat",
+        "new_post_label": "New Chat",
     },
     "notes_resources": {
         "page_title": "Notes / Resources",
@@ -111,9 +111,9 @@ def questions():
     return render_post_page("questions")
 
 
-@app.route("/quick_questions")
-def quick_qs():
-    return render_post_page("quick_questions")
+@app.route("/chat")
+def chat():
+    return render_post_page("chat")
 
 
 @app.route("/notes_resources")
