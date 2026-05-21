@@ -162,15 +162,16 @@ As a CS Dojo staff member, I want to use this platform to communicate with StuyC
 
 _users_  
 
-| Variable Type | Variable Name | Variable Attribute(s)                       |
-|---------------|---------------|---------------------------------------------|
-| INTEGER       | user_id       | PRIMARY KEY AUTOINCREMENT                   |
-| TEXT          | email         | UNIQUE NOT NULL                             |
-| TEXT          | github        |                                             |
-| TEXT          | name          | NOT NULL                                    |
-| TEXT          | password_hash | NOT NULL                                    |
-| TEXT          | is_dojo       | NOT NULL                                    |
-| TEXT          | class_id      | (can have multiple, comma-separated)        |
+| Variable Type | Variable Name | Variable Attribute(s)                                     |
+|---------------|---------------|-----------------------------------------------------------|
+| INTEGER       | user_id       | PRIMARY KEY AUTOINCREMENT                                 |
+| TEXT          | email         | UNIQUE NOT NULL                                           |
+| TEXT          | github        |                                                           |
+| TEXT          | name          | NOT NULL                                                  |
+| TEXT          | password_hash | NOT NULL                                                  |
+| TEXT          | is_dojo       | NOT NULL                                                  |
+| TEXT          | class_id      | (can have multiple, comma-separated)                      |
+| TEXT          | unread_posts  | (can have multiple, comma-separated) (references post_id) |
 
 <br>
 
@@ -181,6 +182,7 @@ _classes_
 | INTEGER       | class_id      | PRIMARY KEY AUTOINCREMENT                                                       |
 | TEXT          | name          | NOT NULL                                                                        |
 | TEXT          | teacher_id    | NOT NULL FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | is_archived   | NOT NULL                                                                        |
 
 <br>
 
