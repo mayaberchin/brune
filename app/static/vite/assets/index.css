@@ -1,1 +1,1 @@
-.post-editor-card{border:1px solid gray;max-width:850px;padding:24px}.post-body-input{min-height:220px;max-height:60vh;overflow-y:auto}
+.post-body-input{min-height:220px;max-height:60vh;overflow-y:auto}.post-editor-preview{border:1px solid gray;max-width:850px;padding:24px}.post-preview{cursor:pointer}.post-preview:hover{background-color:#f8f8f8}.post-view-body{white-space:pre-wrap}

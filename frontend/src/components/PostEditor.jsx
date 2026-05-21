@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
 const questionTemplate =
-`What problem did you encounter?
+`QWonderful:
 
 
-What steps have you taken to remedy this problem?
+Awe-inspiring:
 
 
-Any resources/code snippets?
+Incredible:
 
 
 `;
@@ -62,7 +62,7 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
   }
 
   return (
-    <section className="post-editor-card">
+    <section className="post-editor-preview">
       <h2 className="mb-2">New Post</h2>
       <p className="text-muted mb-4">
         Write a question, note, or announcement for your class.

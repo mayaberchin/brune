@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-function PostCard({ postData }) {
+function PostPreview({ postData, onOpen }) {
 
   return (
-    <div className="card mb-3">
+    <div className="card mb-3 post-preview" onClick={() => onOpen(postData)}>
       <div className="card-body">
         <div className="d-flex justify-content-between align-items-start gap-3">
 
@@ -12,9 +12,7 @@ function PostCard({ postData }) {
             <p className="text-muted mb-2">
               Type: {postData.category} | Class: {postData.class_id}
             </p>
-
             <p className="mb-0">{postData.body}</p>
-
           </div>
 
         </div>
@@ -23,4 +21,4 @@ function PostCard({ postData }) {
   );
 }
 
-export default PostCard;
+export default PostPreview;

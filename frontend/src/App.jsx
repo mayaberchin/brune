@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import PostEditor from "./components/PostEditor";
-import PostCard from "./components/PostCard";
+import PostPreview from "./components/PostPreview";
+import PostView from "./components/PostView";
 
 const root = document.getElementById("root");
 
@@ -19,9 +20,10 @@ const testClasses = [
 function App() {
   const [showPostEditor, setShowPostEditor] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
 
-  useEffect(() => {
-    async function loadPosts() {
+  useEffect(() => { // runs after React renders the pg
+    async function loadPosts() { // GET request fo Flask
       const response = await fetch(`/api/posts?category=${selectedPostType}`);
       const data = await response.json();
       setPosts(data.posts);
@@ -47,37 +49,47 @@ function App() {
 
   return (
     <main className="container py-4">
-      <div className="d-flex justify-content-between align-items-start mb-4">
-        <div>
-          <h1>{pageTitle}</h1>
-          <p className="text-muted mb-0">{pageDescription}</p>
-        </div>
 
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={() => setShowPostEditor(true)}
-        >
-          + {newPostLabel}
-        </button>
-      </div>
+      {selectedPost === null && (
+        <>
+          <div className="d-flex justify-content-between align-items-start mb-4">
+            <div>
+              <h1>{pageTitle}</h1>
+              <p className="text-muted mb-0">{pageDescription}</p>
+            </div>
 
-      {showPostEditor && (
-        <PostEditor
-          selectedPostType={selectedPostType}
-          classes={testClasses}
-          onCancel={() => setShowPostEditor(false)}
-          onSubmit={addPost}
-        />
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => setShowPostEditor(true)}
+            >
+              + {newPostLabel}
+            </button>
+          </div>
+
+          {showPostEditor && (
+            <PostEditor
+              selectedPostType={selectedPostType}
+              classes={testClasses}
+              onCancel={() => setShowPostEditor(false)}
+              onSubmit={addPost}
+            />
+          )}
+        </>
       )}
 
       <section className="mt-4">
-        {posts.length === 0 ? (
+        {selectedPost !== null ? ( // if not null show full post
+          <PostView
+            postData={selectedPost}
+            onBack={() => setSelectedPost(null)}
+          />
+        ) : posts.length === 0 ? ( // if no post opened AND no posts
           <p className="text-muted">No posts yet.</p>
         ) : (
-          posts.map((post) => (
-            <PostCard key={post.post_id} postData={post} />
-          ))
+          posts.map((post) => ( // if no posts opened AND posts exist
+            <PostPreview key={post.post_id} postData={post} onOpen={setSelectedPost} />
+          )) // I feel like this should go in our code obfuscator its a miracle it worked...
         )}
       </section>
 
