@@ -1,4 +1,108 @@
+/* --------------------------------------------------------- */
+/* Post Layout:  */
+/* Wide Screen:
+  - No Post Opened: [post list] [class filters]
+  - Post Opened: [smaller post list] [opened post]
+*/
+/* --------------------------------------------------------- */
+
+.post-layout {
+  display: grid;
+  grid-template-columns: 1fr 180px; /* larger left side! */
+  width: 100%;
+}
+
+.post-layout.has-open-post {
+  grid-template-columns: 360px 1fr; /* smaller left list when post is open */
+}
+
+/* --------------------------------------------------------- */
+/* Left panel: post list                                     */
+/* --------------------------------------------------------- */
+
+.post-list-panel {
+  min-width: 0;
+  overflow-y: auto;
+  border-right: 1px solid #ddd;
+}
+
+.post-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* align at top! */
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.post-layout.has-open-post .post-list-header {
+  display: block; /* stack title and button when narrow (rather than side-by-side) */
+  margin-bottom: 16px;
+}
+
+.post-layout.has-open-post .post-list-header h1 {
+  font-size: 1.6rem; /* smaller title when sidebar shrinks */
+}
+
+/* --------------------------------------------------------- */
+/* Post preview cards                                        */
+/* --------------------------------------------------------- */
+
+.post-preview {
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  background-color: white;
+}
+
+.post-preview:hover {
+  background-color: #fff;
+}
+
+/* --------------------------------------------------------- */
+/* Right panel: class filters or opened post                 */
+/* --------------------------------------------------------- */
+
+.post-side-panel {
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.class-filter-panel {
+  min-height: 100%;
+}
+
+.class-filter {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  background-color: white;
+}
+
+.class-filter.active {
+  border: 2px solid #aaa;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------- */
+/* Opened post view                                          */
+/* --------------------------------------------------------- */
+
+.post-view {
+  max-width: 900px;
+}
+
+.post-view-body {
+  white-space: pre-wrap; /* preserve line breaks */
+}
+
+/* --------------------------------------------------------- */
 /* Post Editor:  */
+/* --------------------------------------------------------- */
 
 .post-body-input {
   min-height: 220px;
@@ -7,26 +111,25 @@
 }
 
 /* --------------------------------------------------------- */
-
-/* Post Preview:  */
-
-.post-editor-preview {
-  max-width: 850px;
-  padding: 24px;
-  border: 1px solid grey;
-}
-
-.post-preview {
-  cursor: pointer;
-}
-
-.post-preview:hover {
-  background-color: #f8f8f8;
-}
-
-/* Preserve line breaks */
-.post-view-body {
-  white-space: pre-wrap;
-}
-
+/* Mobile / small screens                                    */
+/* - no post opened: show post list only                       */
+/* - post opened: show full post only                          */
 /* --------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  .post-layout, .post-layout.has-open-post {
+    display: block;
+  }
+
+  .post-list-panel {
+    border-right: none;
+  }
+
+  .post-layout.has-open-post .post-list-panel {
+    display: none;
+  }
+
+  .post-layout:not(.has-open-post) .post-side-panel {
+    display: none;
+
+}

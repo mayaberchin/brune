@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import PostEditor from "./components/PostEditor";
 import PostPreview from "./components/PostPreview";
 import PostView from "./components/PostView";
+import PostLayout from "./layouts/PostLayout";
 
 const root = document.getElementById("root");
 
@@ -48,53 +49,21 @@ function App() {
   }
 
   return (
-    <main className="container py-4">
-
-      {selectedPost === null && (
-        <>
-          <div className="d-flex justify-content-between align-items-start mb-4">
-            <div>
-              <h1>{pageTitle}</h1>
-              <p className="text-muted mb-0">{pageDescription}</p>
-            </div>
-
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => setShowPostEditor(true)}
-            >
-              + {newPostLabel}
-            </button>
-          </div>
-
-          {showPostEditor && (
-            <PostEditor
-              selectedPostType={selectedPostType}
-              classes={testClasses}
-              onCancel={() => setShowPostEditor(false)}
-              onSubmit={addPost}
-            />
-          )}
-        </>
-      )}
-
-      <section className="mt-4">
-        {selectedPost !== null ? ( // if not null show full post
-          <PostView
-            postData={selectedPost}
-            onBack={() => setSelectedPost(null)}
-          />
-        ) : posts.length === 0 ? ( // if no post opened AND no posts
-          <p className="text-muted">No posts yet.</p>
-        ) : (
-          posts.map((post) => ( // if no posts opened AND posts exist
-            <PostPreview key={post.post_id} postData={post} onOpen={setSelectedPost} />
-          )) // I feel like this should go in our code obfuscator its a miracle it worked...
-        )}
-      </section>
-
-    </main>
+    <PostLayout
+      pageTitle={pageTitle}
+      pageDescription={pageDescription}
+      newPostLabel={newPostLabel}
+      selectedPostType={selectedPostType}
+      classes={testClasses}
+      posts={posts}
+      selectedPost={selectedPost}
+      showPostEditor={showPostEditor}
+      setSelectedPost={setSelectedPost}
+      setShowPostEditor={setShowPostEditor}
+      addPost={addPost}
+    />
   );
+
 }
 
 export default App;
