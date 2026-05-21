@@ -363,3 +363,9 @@ POST LAYOUT
 OTHER
 - Renamed quick_questions to chat
 - So much CSS...
+---------------------------------------------------------------------
+TO DO
+- Improve CSS :( + formatting for chat
+- Fancy MD + code formatting, etc. text editor
+- No more hard-coded classes!
+- only teachers post announcements, sharing to dojo and post anonymously (+ add who even posted it...)! 
