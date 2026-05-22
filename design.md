@@ -164,13 +164,13 @@ _users_
 
 | Variable Type | Variable Name | Variable Attribute(s)                                     |
 |---------------|---------------|-----------------------------------------------------------|
-| INTEGER       | user_id       | PRIMARY KEY AUTOINCREMENT                                 |
 | TEXT          | email         | UNIQUE NOT NULL                                           |
 | TEXT          | github        |                                                           |
 | TEXT          | name          | NOT NULL                                                  |
 | TEXT          | password_hash | NOT NULL                                                  |
 | TEXT          | is_dojo       | NOT NULL                                                  |
 | TEXT          | is_senpai     | NOT NULL                                                  |
+| TEXT          | is_sensei     | NOT NULL                                                  |
 | TEXT          | is_teacher    | NOT NULL                                                  |
 | TEXT          | class_id      | (can have multiple, comma-separated)                      |
 | TEXT          | unread_posts  | (can have multiple, comma-separated) (references post_id) |
@@ -181,9 +181,10 @@ _classes_
 
 | Variable Type | Variable Name | Variable Attribute(s)                                                           |
 |---------------|---------------|---------------------------------------------------------------------------------|
-| INTEGER       | class_id      | PRIMARY KEY AUTOINCREMENT                                                       |
+| TEXT          | class_id      | PRIMARY KEY                                                                     |
 | TEXT          | name          | NOT NULL                                                                        |
 | TEXT          | teacher_id    | NOT NULL FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | posts         | FOREIGN KEY references post_id, followup_id                                     |
 | TEXT          | is_archived   | NOT NULL                                                                        |
 
 <br>
@@ -193,10 +194,11 @@ _posts_
 | Variable Type | Variable Name | Variable Attribute(s)                                                  |
 |---------------|---------------|------------------------------------------------------------------------|
 | TEXT          | post_id       | PRIMARY KEY                                                            |
-| INTEGER       | poster_id     | NOT NULL FOREIGN KEY references user_id                                |
-| INTEGER       | class_id      | NOT NULL FOREIGN KEY references class_id                               |
+| TEXT          | author_email  | NOT NULL FOREIGN KEY references email                                  |
+| TEXT          | class_id      | NOT NULL FOREIGN KEY references class_id                               |
 | TEXT          | title         | (null if quick q)                                                      |
 | TEXT          | body          | NOT NULL                                                               |
+| TEXT          | attachments   |                                                                        |
 | TEXT          | category      | NOT NULL (e.g. announcement, question)                                 |
 | TEXT          | is_resolved   | (null if not question)                                                 |
 | TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
@@ -212,9 +214,10 @@ _followups_
 | Variable Type | Variable Name | Variable Attribute(s)                                                  |
 |---------------|---------------|------------------------------------------------------------------------|
 | TEXT          | followup_id   | PRIMARY KEY                                                            |
-| INTEGER       | poster_id     | NOT NULL FOREIGN KEY references user_id                                |
-| INTEGER       | post_id       | NOT NULL FOREIGN KEY references post_id                                |
+| TEXT          | author_email  | NOT NULL FOREIGN KEY references email                                  |
+| TEXT          | post_id       | FOREIGN KEY references post_id (null if quick q)                       |
 | TEXT          | body          | NOT NULL                                                               |
+| TEXT          | attachments   |                                                                        |
 | TEXT          | is_resolved   | (null if not question)                                                 |
 | TEXT          | is_answer     | NOT NULL DEFAULT 'no'                                                  |
 | TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
