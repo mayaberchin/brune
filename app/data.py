@@ -147,17 +147,31 @@ def get_user_password(email):
 def get_user_github(email):
     get_users_field(email, 'github')
 
+def get_unread_posts(email):
+    unread_posts_str = get_users_field(email, 'unread_posts')
+    unread_posts = make_list(unread_posts_str)
+    return unread_posts
+
 # get the classes someone is in
-def get_classes(email):
-    classes_str = get_field('users', 'email', email, 'class_id')
+def get_user_classes(email):
+    classes_str = get_users_field(email, 'class_id')
     classes = make_list(classes_str)
     return classes
 
 # get the classes someone teaches
 def get_teaching_classes(email):
-    classes = get_classes(email)
+    classes = get_user_classes(email)
     teaches = [c for c in classes if email in get_teachers(c)]
     return teaches
+    
+
+def get_user_data(email):
+    keys = USERS_COLS
+    values = get_row('users', 'email', email)
+    d = list_to_dict(keys, values)
+    d['class_id'] = make_list(d['class_id'])
+    d['unread_posts'] = make_list(d['unread_posts'])
+    return d
 
 
 
@@ -173,13 +187,6 @@ def is_teacher(email):
     teacher = get_users_field(email, 'is_teacher')
     return teacher == 'yes'
 
-def get_user_data(email):
-    keys = USERS_COLS
-    values = get_row('users', 'email', email)
-    d = list_to_dict(keys, values)
-    d['class_id'] = make_list(d['class_id'])
-    d['unread_posts'] = make_list(d['unread_posts'])
-    return d
 
 
 
@@ -211,6 +218,13 @@ def add_sensei(email):
 
 def add_teacher(email):
     update_users_row(email, 'is_teacher', 'yes')
+
+def mark_read(email, post_id):
+    unread_posts = get_unread_posts(email)
+    if (post_id in unread_posts):
+        unread_posts.remove(post_id)
+        unread_str = merge_list(unread_posts)
+        update_users_row(email, 'unread_posts', unread_posts)
 
 
 
@@ -289,7 +303,7 @@ def create_class(teacher_email, class_name):
     class_id = unique_id(get_all_classes(), 3)
     add_classes_row([class_id, class_name, teacher_email])
     # add the class to teacher's users table
-    teacher_classes = get_classes(teacher_email)
+    teacher_classes = get_user_classes(teacher_email)
     teacher_classes_str = add_to_list(teacher_classes, class_id)
     update_users_row(teacher_email, 'class_id', teacher_classes_str)
     return class_id
@@ -301,7 +315,7 @@ def create_class(teacher_email, class_name):
 
 # add a user to a class as a student
 def join_class(email, class_id):
-    classes = get_classes(email)
+    classes = get_user_classes(email)
     classes_str = add_to_list(classes, class_id)
     update_users_row(email, 'class_id', classes_str)
 
@@ -829,17 +843,17 @@ if __name__ == "__main__":
     print("Class teachers: " + str(get_teachers(class_id)))
 
     join_class("other@gmail.com", class_id)
-    print("\nClasses Maya is in: " + str(get_classes("mayaberchin@gmail.com")))
+    print("\nClasses Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
-    print("Classes Other is in: " + str(get_classes("other@gmail.com")))
+    print("Classes Other is in: " + str(get_user_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
 
     print("\nPromoting Other...")
     add_teacher(class_id, 'other@gmail.com')
     print("Class teachers: " + str(get_teachers(class_id)))
-    print("Classes Maya is in: " + str(get_classes("mayaberchin@gmail.com")))
+    print("Classes Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
-    print("Classes Other is in: " + str(get_classes("other@gmail.com")))
+    print("Classes Other is in: " + str(get_user_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
 
 
