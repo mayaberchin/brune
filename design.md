@@ -228,7 +228,7 @@ _posts_
 - Test tagging system (post content, other users/posts)
 - Test posting as anonymous
 - Test that posts/classes can only be viewed by whoever is supposed to have access to them
-- For any stretch-goal feature we impement, test one by one (stretch goal features enumerated above)
+- For any stretch-goal feature we implement, test one by one (stretch goal features enumerated above)
 
 ---
 
