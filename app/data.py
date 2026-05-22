@@ -299,6 +299,10 @@ def update_users_row(email, col_name, col_val):
 
 
 def get_all_classes():
+    classes = get_all_classes_archived()
+    return [c for c in classes if ! is_archived(c)]
+
+def get_all_classes_archived():
     data = get_col('classes', 'class_id')
     return data
 
@@ -317,6 +321,11 @@ def get_class_data(class_id):
     d = list_to_dict(keys, values)
     d['teacher_email'] = make_list(d['teacher_email'])
     return d
+
+
+
+def is_archived(class_id):
+    return get_classes_field(class_id, 'is_archived') == 'yes'
 
 
 
