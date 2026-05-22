@@ -9,7 +9,7 @@ DB_FILE="data.db"
 
 #=============================[GLOBALS]=============================#
 
-USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_senpai', 'is_sensei', 'is_teacher', 'class_id', 'unread_posts']
+USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_teacher', 'class_id', 'unread_posts']
 CLASSES_COLS = ['class_id', 'name', 'teacher_email', 'posts', 'is_archived']
 POSTS_COLS = ['post_id', 'author_email', 'class_id', 'title', 'body', 'attachments', 'category', 'is_resolved', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
 FOLLOWUPS_COLS = ['followup_id', 'author_email', 'post_id', 'body', 'attachments', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
@@ -27,7 +27,6 @@ def create_users_table():
                     name            TEXT        NOT NULL,
                     password_hash   TEXT        NOT NULL,
                     is_dojo         TEXT        NOT NULL                                DEFAULT 'no',
-                    is_senpai       TEXT        NOT NULL                                DEFAULT 'no',
                     is_sensei       TEXT        NOT NULL                                DEFAULT 'no',
                     is_teacher      TEXT        NOT NULL                                DEFAULT 'no',
                     class_id        TEXT,
@@ -131,6 +130,14 @@ def get_all_users():
 def get_all_dojo():
     return [user for user in get_all_users() if is_dojo(user)]
 
+def get_all_senseis():
+    return [user for user in get_all_users() if is_sensei(user)]
+
+def get_all_teachers():
+    return [user for user in get_all_users() if is_teacher(user)]
+
+
+
 def get_user_name(email):
     return get_users_field(email, 'name')
 
@@ -152,15 +159,26 @@ def get_teaching_classes(email):
     teaches = [c for c in classes if email in get_teachers(c)]
     return teaches
 
+
+
 def is_dojo(email):
     dojo = get_users_field(email, 'is_dojo')
     return dojo == 'yes'
+
+def is_sensei(email):
+    sensei = get_users_field(email, 'is_sensei')
+    return sensei == 'yes'
+
+def is_teacher(email):
+    teacher = get_users_field(email, 'is_teacher')
+    return teacher == 'yes'
 
 def get_user_data(email):
     keys = USERS_COLS
     values = get_row('users', 'email', email)
     d = list_to_dict(keys, values)
     d['class_id'] = make_list(d['class_id'])
+    d['unread_posts'] = make_list(d['unread_posts'])
     return d
 
 
@@ -176,13 +194,23 @@ def add_user(email, password, name, github=''):
     password = password.encode('utf-8')
     password = str(hashlib.sha256(password).hexdigest())
     is_dojo = 'no'
+    is_sensei = 'no'
+    is_teacher = 'no'
     class_id = ''
-    add_users_row([email, github, name, password, is_dojo, class_id])
+    unread_posts = ''
+    add_users_row([email, github, name, password, is_dojo, is_senpai, is_sensei, is_teacher, class_id, unread_posts])
     return 'success'
 
 
-def add_senpai(email):
+def add_dojo(email):
     update_users_row(email, 'is_dojo', 'yes')
+
+def add_sensei(email):
+    update_users_row(email, 'is_dojo', 'yes')
+    update_users_row(email, 'is_sensei', 'yes')
+
+def add_teacher(email):
+    update_users_row(email, 'is_teacher', 'yes')
 
 
 
