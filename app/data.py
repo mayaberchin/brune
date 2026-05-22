@@ -147,10 +147,36 @@ def get_user_password(email):
 def get_user_github(email):
     get_users_field(email, 'github')
 
+
+
 def get_unread_posts(email):
     unread_posts_str = get_users_field(email, 'unread_posts')
     unread_posts = make_list(unread_posts_str)
-    return unread_posts
+    return unread_posts.reverse()
+
+# returns unread posts from announcements, questions, and notes (but not groupchat) from any class
+def get_top_n_unread(email, n):
+    all = get_unread_posts(email)
+    return all[-1*n:].reverse()
+    
+# returns at most one message (if there is an unread one) from the groupchat of at most n classes
+def get_top_n_gc(email, n):
+    all = get_unread_posts(email)
+    gc = [post for post in all if get_post_category(post) == 'groupchat']
+    messages = []
+    classes = []
+    while len(gc) > 0 and len(classes) < n:
+        msg_class = get_post_class(gc[-1])
+        if msg_class not in classes:
+            classes += msg_class
+            messages += [{gc[-1]: msg_class}]
+            gc = gc.remove(gc[-1])
+    return messages.reverse()
+
+def filter_by_class(posts, class_id):
+    return [post for post in posts if get_post_class(post_id) == class_id]
+
+
 
 # get the classes someone is in
 def get_user_classes(email):
@@ -222,7 +248,7 @@ def add_teacher(email):
 def mark_read(email, post_id):
     unread_posts = get_unread_posts(email)
     if (post_id in unread_posts):
-        unread_posts.remove(post_id)
+        unread_posts = unread_posts.remove(post_id)
         unread_str = merge_list(unread_posts)
         update_users_row(email, 'unread_posts', unread_posts)
 
