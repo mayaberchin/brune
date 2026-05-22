@@ -195,28 +195,11 @@ _posts_
 | TEXT          | post_id       | PRIMARY KEY                                                            |
 | TEXT          | author_email  | NOT NULL FOREIGN KEY references email                                  |
 | TEXT          | class_id      | NOT NULL FOREIGN KEY references class_id                               |
+| TEXT          | parent_id     | references previous post (null if not followup)                        |
 | TEXT          | title         | (null if quick q)                                                      |
 | TEXT          | body          | NOT NULL                                                               |
 | TEXT          | attachments   |                                                                        |
 | TEXT          | category      | NOT NULL (e.g. announcement, question)                                 |
-| TEXT          | is_resolved   | (null if not question)                                                 |
-| TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
-| TEXT          | updated_at    | NOT NULL CURRENT_TIMESTAMP                                             |
-| INTEGER       | upvotes       | NOT NULL                                                               |
-| TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
-| TEXT          | ping          | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
-
-<br>
-
-_followups_  
-
-| Variable Type | Variable Name | Variable Attribute(s)                                                  |
-|---------------|---------------|------------------------------------------------------------------------|
-| TEXT          | followup_id   | PRIMARY KEY                                                            |
-| TEXT          | author_email  | NOT NULL FOREIGN KEY references email                                  |
-| TEXT          | post_id       | FOREIGN KEY references post_id (null if quick q)                       |
-| TEXT          | body          | NOT NULL                                                               |
-| TEXT          | attachments   |                                                                        |
 | TEXT          | is_resolved   | (null if not question)                                                 |
 | TEXT          | is_answer     | NOT NULL DEFAULT 'no'                                                  |
 | TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
@@ -224,6 +207,8 @@ _followups_
 | INTEGER       | upvotes       | NOT NULL                                                               |
 | TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 | TEXT          | ping          | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+
+<br>
 
 </div>
 
