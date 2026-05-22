@@ -169,7 +169,6 @@ _users_
 | TEXT          | name          | NOT NULL                                                  |
 | TEXT          | password_hash | NOT NULL                                                  |
 | TEXT          | is_dojo       | NOT NULL                                                  |
-| TEXT          | is_senpai     | NOT NULL                                                  |
 | TEXT          | is_sensei     | NOT NULL                                                  |
 | TEXT          | is_teacher    | NOT NULL                                                  |
 | TEXT          | class_id      | (can have multiple, comma-separated)                      |
