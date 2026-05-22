@@ -1,0 +1,5 @@
+            <!-- <div class="course-body">
+            { % if  % }
+            <div class="course-item">- {{ class.post -- make this into a for}} - <span class="due">due mm/dd/yy</span></div>
+            <div class="course-item">- {{ class.post }}</div>
+            </div> -->
