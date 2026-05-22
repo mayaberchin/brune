@@ -201,7 +201,7 @@ _posts_
 | TEXT          | attachments   |                                                                        |
 | TEXT          | category      | NOT NULL (e.g. announcement, question)                                 |
 | TEXT          | is_resolved   | (null if not question)                                                 |
-| TEXT          | is_answer     | NOT NULL DEFAULT 'no'                                                  |
+| TEXT          | is_answer     | (null if not question)                                                 |
 | TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
 | TEXT          | updated_at    | NOT NULL CURRENT_TIMESTAMP                                             |
 | INTEGER       | upvotes       | NOT NULL                                                               |
