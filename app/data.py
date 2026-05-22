@@ -53,29 +53,11 @@ def create_posts_table():
                     post_id         TEXT        NOT NULL    PRIMARY KEY,
                     author_email    TEXT        NOT NULL,
                     class_id        TEXT        NOT NULL,
+                    parent_id       TEXT,
                     title           TEXT,
                     body            TEXT        NOT NULL,
                     attachments     TEXT,
                     category        TEXT        NOT NULL,
-                    is_resolved     TEXT,
-                    created_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
-                    updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
-                    upvotes         INTEGER     NOT NULL,
-                    upvoters        TEXT,
-                    ping            TEXT
-                )"""
-    sqlite(command)
-    # add attachement in
-
-# followups
-def create_followups_table():
-    command =  """
-                CREATE TABLE IF NOT EXISTS followups (
-                    followup_id     TEXT        NOT NULL    PRIMARY KEY,
-                    author_email    TEXT        NOT NULL,
-                    post_id         TEXT,
-                    body            TEXT        NOT NULL,
-                    attachments     TEXT,
                     is_resolved     TEXT,
                     is_answer       TEXT,
                     created_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
@@ -85,33 +67,14 @@ def create_followups_table():
                     ping            TEXT
                 )"""
     sqlite(command)
+    # add attachement in
 
-# might use this? prob not? comment out for now
-'''
-# Messages
-def create_messages():
-    command="""
-            CREATE TABLE IF NOT EXISTS messages (
-                message_id TEXT NOT NULL PRIMARY KEY,
-                author_name TEXT NOT NULL,
-                class_id TEXT NOT NULL,
-                body TEXT NOT NULL,
-                created_at TEXT NOT NULL,
-                unreaders TEXT,
-                ping TEXT
-            )
-    """
-    sqlite(command)
-'''
-
-# change the messages unreaders to be in users table
 
 # all
 def create_tables():
     create_users_table()
     create_classes_table()
     create_posts_table()
-    create_followups_table()
 
 
 
@@ -158,7 +121,7 @@ def get_unread_posts(email):
 def get_top_n_unread(email, n):
     all = get_unread_posts(email)
     return all[-1*n:].reverse()
-    
+
 # returns at most one message (if there is an unread one) from the groupchat of at most n classes
 def get_top_n_gc(email, n):
     all = get_unread_posts(email)
@@ -189,7 +152,7 @@ def get_teaching_classes(email):
     classes = get_user_classes(email)
     teaches = [c for c in classes if email in get_teachers(c)]
     return teaches
-    
+
 
 def get_user_data(email):
     keys = USERS_COLS
