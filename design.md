@@ -162,15 +162,18 @@ As a CS Dojo staff member, I want to use this platform to communicate with StuyC
 
 _users_  
 
-| Variable Type | Variable Name | Variable Attribute(s)                       |
-|---------------|---------------|---------------------------------------------|
-| INTEGER       | user_id       | PRIMARY KEY AUTOINCREMENT                   |
-| TEXT          | email         | UNIQUE NOT NULL                             |
-| TEXT          | github        |                                             |
-| TEXT          | name          | NOT NULL                                    |
-| TEXT          | password_hash | NOT NULL                                    |
-| TEXT          | is_dojo       | NOT NULL                                    |
-| TEXT          | class_id      | (can have multiple, comma-separated)        |
+| Variable Type | Variable Name | Variable Attribute(s)                                     |
+|---------------|---------------|-----------------------------------------------------------|
+| INTEGER       | user_id       | PRIMARY KEY AUTOINCREMENT                                 |
+| TEXT          | email         | UNIQUE NOT NULL                                           |
+| TEXT          | github        |                                                           |
+| TEXT          | name          | NOT NULL                                                  |
+| TEXT          | password_hash | NOT NULL                                                  |
+| TEXT          | is_dojo       | NOT NULL                                                  |
+| TEXT          | is_senpai     | NOT NULL                                                  |
+| TEXT          | is_teacher    | NOT NULL                                                  |
+| TEXT          | class_id      | (can have multiple, comma-separated)                      |
+| TEXT          | unread_posts  | (can have multiple, comma-separated) (references post_id) |
 
 <br>
 
@@ -181,6 +184,7 @@ _classes_
 | INTEGER       | class_id      | PRIMARY KEY AUTOINCREMENT                                                       |
 | TEXT          | name          | NOT NULL                                                                        |
 | TEXT          | teacher_id    | NOT NULL FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | is_archived   | NOT NULL                                                                        |
 
 <br>
 
@@ -188,13 +192,13 @@ _posts_
 
 | Variable Type | Variable Name | Variable Attribute(s)                                                  |
 |---------------|---------------|------------------------------------------------------------------------|
-| INTEGER       | post_id       | PRIMARY KEY AUTOINCREMENT                                              |
+| TEXT          | post_id       | PRIMARY KEY                                                            |
 | INTEGER       | poster_id     | NOT NULL FOREIGN KEY references user_id                                |
 | INTEGER       | class_id      | NOT NULL FOREIGN KEY references class_id                               |
-| TEXT          | title         | NOT NULL                                                               |
+| TEXT          | title         | (null if quick q)                                                      |
 | TEXT          | body          | NOT NULL                                                               |
 | TEXT          | category      | NOT NULL (e.g. announcement, question)                                 |
-| TEXT          | status        | NOT NULL (e.g. open, closed)                                           |
+| TEXT          | is_resolved   | (null if not question)                                                 |
 | TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
 | TEXT          | updated_at    | NOT NULL CURRENT_TIMESTAMP                                             |
 | INTEGER       | upvotes       | NOT NULL                                                               |
@@ -207,11 +211,11 @@ _followups_
 
 | Variable Type | Variable Name | Variable Attribute(s)                                                  |
 |---------------|---------------|------------------------------------------------------------------------|
-| INTEGER       | followup_id   | PRIMARY KEY AUTOINCREMENT                                              |
+| TEXT          | followup_id   | PRIMARY KEY                                                            |
 | INTEGER       | poster_id     | NOT NULL FOREIGN KEY references user_id                                |
 | INTEGER       | post_id       | NOT NULL FOREIGN KEY references post_id                                |
 | TEXT          | body          | NOT NULL                                                               |
-| TEXT          | status        | NOT NULL (e.g. open, closed)                                           |
+| TEXT          | is_resolved   | (null if not question)                                                 |
 | TEXT          | is_answer     | NOT NULL DEFAULT 'no'                                                  |
 | TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
 | TEXT          | updated_at    | NOT NULL CURRENT_TIMESTAMP                                             |
