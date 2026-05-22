@@ -9,10 +9,10 @@ DB_FILE="data.db"
 
 #=============================[GLOBALS]=============================#
 
-USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'class_id']
-CLASSES_COLS = ['class_id', 'name', 'teacher_email']
-POSTS_COLS = ['post_id', 'author_email', 'class_id', 'title', 'body', 'category', 'is_resolved', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
-FOLLOWUPS_COLS = ['followup_id', 'author_email', 'post_id', 'body', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
+USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_senpai', 'is_sensei', 'is_teacher', 'class_id', 'unread_posts']
+CLASSES_COLS = ['class_id', 'name', 'teacher_email', 'posts', 'is_archived']
+POSTS_COLS = ['post_id', 'author_email', 'class_id', 'title', 'body', 'attachments', 'category', 'is_resolved', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
+FOLLOWUPS_COLS = ['followup_id', 'author_email', 'post_id', 'body', 'attachments', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
 
 
 #=============================[MAKE=TABLES]=============================#
@@ -27,7 +27,11 @@ def create_users_table():
                     name            TEXT        NOT NULL,
                     password_hash   TEXT        NOT NULL,
                     is_dojo         TEXT        NOT NULL                                DEFAULT 'no',
-                    class_id        TEXT
+                    is_senpai       TEXT        NOT NULL                                DEFAULT 'no',
+                    is_sensei       TEXT        NOT NULL                                DEFAULT 'no',
+                    is_teacher      TEXT        NOT NULL                                DEFAULT 'no',
+                    class_id        TEXT,
+                    unread_posts    TEXT
                 )"""
     sqlite(command)
 
@@ -38,8 +42,8 @@ def create_classes_table():
                     class_id        TEXT        NOT NULL    PRIMARY KEY,
                     name            TEXT        NOT NULL,
                     teacher_email   TEXT        NOT NULL,
-                    post_ids        TEXT,
-                    student_emails  TEXT
+                    posts           TEXT,
+                    is_archived     TEXT        NOT NULL
                 )"""
     sqlite(command)
 
@@ -50,16 +54,16 @@ def create_posts_table():
                     post_id         TEXT        NOT NULL    PRIMARY KEY,
                     author_email    TEXT        NOT NULL,
                     class_id        TEXT        NOT NULL,
-                    title           TEXT        NOT NULL,
+                    title           TEXT,
                     body            TEXT        NOT NULL,
+                    attachments     TEXT,
                     category        TEXT        NOT NULL,
-                    is_resolved     TEXT        NOT NULL                                DEFAULT 'no',
+                    is_resolved     TEXT,
                     created_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     upvotes         INTEGER     NOT NULL,
                     upvoters        TEXT,
-                    ping            TEXT,
-                    attachments     TEXT
+                    ping            TEXT
                 )"""
     sqlite(command)
     # add attachement in
@@ -70,10 +74,11 @@ def create_followups_table():
                 CREATE TABLE IF NOT EXISTS followups (
                     followup_id     TEXT        NOT NULL    PRIMARY KEY,
                     author_email    TEXT        NOT NULL,
-                    post_id         TEXT        NOT NULL,
+                    post_id         TEXT,
                     body            TEXT        NOT NULL,
-                    is_resolved     TEXT        NOT NULL                                DEFAULT 'no',
-                    is_answer       TEXT        NOT NULL                                DEFAULT 'no',
+                    attachments     TEXT,
+                    is_resolved     TEXT,
+                    is_answer       TEXT,
                     created_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     upvotes         INTEGER     NOT NULL,
@@ -82,6 +87,8 @@ def create_followups_table():
                 )"""
     sqlite(command)
 
+# might use this? prob not? comment out for now
+'''
 # Messages
 def create_messages():
     command="""
@@ -96,6 +103,7 @@ def create_messages():
             )
     """
     sqlite(command)
+'''
 
 # change the messages unreaders to be in users table
 
@@ -250,7 +258,7 @@ def get_class_data(class_id):
 
 def create_class(teacher_email, class_name):
     # add the class to classes table
-    class_id = unique_id(get_all_classes())
+    class_id = unique_id(get_all_classes(), 3)
     add_classes_row([class_id, class_name, teacher_email])
     # add the class to teacher's users table
     teacher_classes = get_classes(teacher_email)
@@ -408,7 +416,7 @@ def remove_post_pingee(post_id, email):
 
 
 def create_post(author_email, class_id, title, body, category):
-    post_id = unique_id(get_all_posts())
+    post_id = unique_id(get_all_posts(), 16)
     is_resolved = 'no'
     time = str(datetime.now())
     upvotes = 0
@@ -556,7 +564,7 @@ def remove_followup_pingee(followup_id, email):
 #---------[creation-deletion]---------#
 
 def create_followup(author_email, post_id, body):
-    followup_id = unique_id(get_all_followups())
+    followup_id = unique_id(get_all_followups(), 16)
     is_resolved = 'no'
     is_answer = 'no'
     time = str(datetime.now())
@@ -673,16 +681,16 @@ def add_to_list(lst, item):
 #---------[id]---------#
 
 
-def unique_id(others):
+def unique_id(others, byte_nums):
     id = gen_id()
     while id in others:
-        id = gen_id()
+        id = gen_id(byte_nums)
     return id
 
 # generate an id
-def gen_id():
-    # use secrets module to generate a random 3-byte string
-    return secrets.token_hex(3)
+def gen_id(byte_nums):
+    # use secrets module to generate a random byte_nums-byte string
+    return secrets.token_hex(byte_nums)
 
 
 
