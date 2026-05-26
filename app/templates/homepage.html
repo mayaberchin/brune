@@ -502,26 +502,7 @@
 
     </div>
 
-    <!-- Messages -->
-    <div class="section-header-row">
-        <div class="section-title">Messages <span class="msg-count">(3)</span></div>
-    </div>
-    <!-- <div class="messages-card">
-      <div class="msg-preview">
-        <div class="msg-sender">SofDev</div>
-        <div class="msg-snippet">Carter: what's on the test tmr</div>
-      </div>
-    </div> -->
-    {% for message in messages %}
-      { % if email in message.unreaders % }
-        <div class="messages-card">
-          <div class="msg-preview">
-            <div class="msg-sender">{{ get_class_name(message.class_id) }}</div> <!--check this-->
-            <div class="msg-snippet">{{ get_user_name(message.author_email) }}: {{ message.body }}</div>
-          </div>
-        </div>
-      { % endif % }
-    { % endfor %}
+
 
 
 
