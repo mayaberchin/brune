@@ -397,19 +397,19 @@
 
 <!-- LEFT NAV -->
 <nav class="nav">
-  <div class="nav-btn active"><a href="homepage.html">Home</a></div>
-  <div class="nav-btn"><a href="announcements.html">Announcements</a></div>
+  <div class="nav-btn active"><a href="{{ url_for('home') }}">Home</a></div>
+  <div class="nav-btn"><a href="{{ url_for('announcements') }}">Announcements</a></div>
   <div class="nav-btn">
-    <a href="chat.html">Chat</a>
+    <a href="{{ url_for('chat') }}">Chat</a>
     <!-- <span class="nav-badge" id="chatNotifs"></span> will inject code -->
   </div>
   <div class="nav-btn">
     Help
   </div>
-  <div class="nav-btn"><a href="pinned.html">Pinned</a></div>
+  <div class="nav-btn"><a href="{{ url_for('pinned') }}">Pinned</a></div>
   <div class="nav-spacer"></div>
-  <div class="nav-btn"><a href="settings.html">Settings</a></div>
-  <div class="nav-btn"><a href="/logout">Logout</a></div>
+  <div class="nav-btn"><a href="{{ url_for('settings') }}">Settings</a></div>
+  <div class="nav-btn"><a href="{{ url_for('logout') }}">Logout</a></div>
 </nav>
 
 <!-- MAIN LAYOUT -->
@@ -451,11 +451,11 @@
     {% for post in posts %}
       <div class="post-card">
         <div class="post-head">
-          <div class="post-title">{{ post.title }} <span>{{ get_user_name(post.author_email) }}</span></div>
+          <div class="post-title">{{ post['title'] }} <span>{{ get_user_name(post['author_email']) }}</span></div>
         </div>
         <div class="post-body">
-          <div class="post-desc">{{ post.body }}</div>
-          {% if post.attachments != NULL %}
+          <div class="post-desc">{{ post['body'] }}</div>
+          {% if post['attachments'] %}
             <span class="post-tag">attachments included</span>
           {% endif %}
         </div>
@@ -488,14 +488,16 @@
         </div>
       </div> -->
 
-      {% for class in classes %}
+      {% for course in classes %}
         <div class="course-card">
-            <div class="course-head">{{ class.name }}</div>
-            <!-- <div class="course-body">
-            { % if  % }
-            <div class="course-item">- {{ class.post -- make this into a for}} - <span class="due">due mm/dd/yy</span></div>
-            <div class="course-item">- {{ class.post }}</div>
-            </div> -->
+            <div class="course-head">{{ course['name'] }}</div>
+            <div class="course-body">
+            { % for post in unread_posts  % }
+            <div class="course-item">- {{ post['title'] }}
+              <!-- - <span class="due">due mm/dd/yy</span> -->
+            </div>
+            { % endfor % }
+            </div>
         </div>
       {% endfor %}
 
