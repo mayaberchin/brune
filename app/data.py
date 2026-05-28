@@ -120,7 +120,8 @@ def get_user_github(email):
 def get_pinged_posts(email):
     pinged_posts_str = get_users_field(email, 'pinged_posts')
     pinged_posts = make_list(pinged_posts_str)
-    return pinged_posts.reverse()
+    pinged_posts.reverse()
+    return pinged_posts
 
 # returns unread posts from announcements, questions, and notes (but not groupchat) from any class
 def get_top_n_pinged(email, n):
@@ -146,7 +147,8 @@ def get_top_n_pinged(email, n):
 def get_unread_posts(email):
     unread_posts_str = get_users_field(email, 'unread_posts')
     unread_posts = make_list(unread_posts_str)
-    return unread_posts.reverse()
+    unread_posts.reverse()
+    return unread_posts
 
 # returns unread posts from announcements, questions, and notes (but not groupchat) from any class
 def get_top_n_unread(email, n):
@@ -181,7 +183,8 @@ def get_top_n_gc(email, n):
             classes += msg_class
             messages += [{gc[-1]: msg_class}]
             gc.remove(gc[-1])
-    return messages.reverse()
+    messages.reverse()
+    return messages
 
 
 # returns a dictionary of stuff to display on the homepage
@@ -390,14 +393,16 @@ def get_class_notes(class_id):
     return [post for post in get_head_posts(class_id) if get_post_category(post) == 'note']
 
 def get_class_n_gc(class_id, n=-1):
-    posts = get_class_posts(class_id).reverse()
+    posts = get_class_posts(class_id)
+    posts.reverse()
     gc = [post for post in posts if get_post_category(post) == 'chat']
     if (n > 0):
         return gc[:n]
     return gc
 
 def get_class_gc_by(class_id, email):
-    posts = get_class_posts(class_id).reverse()
+    posts = get_class_posts(class_id)
+    posts.reverse()
     gc = [post for post in posts if get_post_category(post) == 'chat' and get_post_author(post) == email]
     return gc
 
@@ -818,7 +823,7 @@ def ping(post_id, pingees=[]):
         if not user_exists(user):
             remove_users += [user]
         else:
-            pinged_posts = get_pinged_posts(email)
+            pinged_posts = get_pinged_posts(user)
             pinged_str = add_to_list(pinged_posts, post_id)
             update_users_row(user, 'pinged_posts', pinged_str)
 
@@ -844,8 +849,8 @@ def create_post(author_email, class_id, title, body, category, show_dojo, attach
     time = str(datetime.now())
     upvotes = 0
     upvoters = ''
-    ping = author_email
-    add_posts_row([post_id, author_email, class_id, parent_id, title, body, attachments, category, is_resolved, is_answer, time, time, upvotes, upvoters, ping, show_dojo, is_anonymous])
+    to_ping = author_email
+    add_posts_row([post_id, author_email, class_id, parent_id, title, body, attachments, category, is_resolved, is_answer, time, time, upvotes, upvoters, to_ping, show_dojo, is_anonymous])
     ping_post = get_top_parent(post_id)
     # add to classes table 
     class_posts = get_class_posts(class_id)
@@ -1016,6 +1021,8 @@ def merge_list(lst, delim=","):
     if lst == None:
         return ''
     lst = rm_empty(lst)
+    if lst == None:
+        return ''
     return delim.join(lst)
 
 # return a list from a string of comma-separated items (or some other delimeter)
@@ -1233,6 +1240,12 @@ if __name__ == "__main__":
     add_post_upvoter(post_id, "b@b.com")
     share_to_dojo(post_id)
     print(str(get_post_data(post_id)))
+    
+    announcement_id = create_post("mayaberchin@gmail.com", class_id, "ann", "important announcement!", "announcement", "no")
+    print("\n")
+    print(announcement_id)
+    print(str(get_unread_posts('0@gmail.com')))
+    print(str(get_pinged_posts('0@gmail.com')))
 
     '''
     print("\n----------------------------------\n")
