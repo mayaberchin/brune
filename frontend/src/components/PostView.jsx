@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 function PostView({ postData, onBack }) {
-
   return (
     <div className="post-view">
       <button
@@ -13,12 +12,12 @@ function PostView({ postData, onBack }) {
       </button>
 
       <h2 className="mb-2">{postData.title}</h2>
-      <p className="text-muted mb-2">
+
+      <p className="post-view-meta">
         Type: {postData.category} | Class: {postData.class_id}
       </p>
 
       <div className="post-view-body">{postData.body}</div>
-
     </div>
   );
 }

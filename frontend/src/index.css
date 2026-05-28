@@ -54,10 +54,34 @@
   margin-bottom: 12px;
   cursor: pointer;
   background-color: white;
+  padding: 14px 16px;
 }
 
 .post-preview:hover {
-  background-color: #fff;
+  background-color: whitesmoke;
+}
+
+.post-preview.selected {
+  background-color: aliceblue;
+  border-color: blue;
+}
+
+.post-preview-title {
+  font-size: 1.05rem;
+  margin: 0 0 6px;
+  overflow-wrap: anywhere;
+}
+
+.post-preview-meta {
+  color: gray;
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+}
+
+.post-preview-body {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 /* --------------------------------------------------------- */
@@ -98,8 +122,15 @@
   max-width: 900px;
 }
 
+.post-view-meta {
+  color: gray;
+  margin-bottom: 16px;
+}
+
 .post-view-body {
   white-space: pre-wrap; /* preserve line breaks */
+  line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 
 /* --------------------------------------------------------- */
