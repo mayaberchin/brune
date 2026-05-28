@@ -823,6 +823,16 @@ def ping(post_id, pingees=[]):
             update_users_row(user, 'pinged_posts', pinged_str)
 
 
+# decide to share post to dojo after post has already been created (this action cannot be undone)
+def share_to_dojo(post_id):
+    readers = get_all_dojo()
+    for reader in readers:
+        unread = get_unread_posts(reader)
+        unread_str = add_to_list(unread, ping_post)
+        update_users_row(reader, 'unread_posts', unread_str)
+    update_posts_row(post_id, 'show_dojo', 'yes')
+
+
 
 #---------[creation-deletion]---------#
 
@@ -1221,6 +1231,8 @@ if __name__ == "__main__":
     unresolve_post(post_id)
     remove_post_upvoter(post_id, "other@gmail.com")
     add_post_upvoter(post_id, "b@b.com")
+    share_to_dojo(post_id)
+    print(str(get_post_data(post_id)))
 
     '''
     print("\n----------------------------------\n")
