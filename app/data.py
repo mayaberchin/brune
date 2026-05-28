@@ -378,6 +378,11 @@ def get_class_posts(class_id):
     posts = make_list(data)
     return posts
 
+# return only top-level posts, not followupss
+def get_head_posts(class_id):
+    posts = [post for post in get_class_posts(class_id) if get_post_depth(post) == 0]
+    return posts
+
 
 def get_class_data(class_id):
     keys = CLASSES_COLS
@@ -446,13 +451,17 @@ def un_archive_class(class_id):
 
 
 # add a user to a class as a student
-def add_class_member(email, class_id):
+def add_class_member(class_id, email):
+    banned = get_banned_members(class_id)
+    if email in banned:
+        return 'nuh uh, you\'re banned lil bro'
     classes = get_user_classes(email)
     classes_updated = add_to_list(classes, class_id)
     update_users_row(email, 'class_id', classes_updated)
     users = get_class_members(class_id)
     users_updated = add_to_list(users, email)
     update_classes_row(class_id, 'member_email', users_updated)
+    return 'oke'
     
 
 
@@ -491,22 +500,26 @@ def demote_owner(class_id, email, leave_as_teacher=True):
 def remove_member(class_id, email, purge_posts=False):
     # remove email from class owners list
     if (is_class_owner(class_id, email)):
-        class_owners = get_class_owners(email)
+        class_owners = get_class_owners(class_id)
         new_class_owners = remove_from_list(class_owners, email)
         update_classes_row(class_id, 'owner_email', new_class_owners)
     # remove email from class teachers list
     if (is_class_teacher(class_id, email)):
-        class_teachers = get_class_teachers(email)
+        class_teachers = get_class_teachers(class_id)
         new_class_teachers = remove_from_list(class_teachers, email)
         update_classes_row(class_id, 'teacher_email', new_class_teachers)
     # remove email from class members list
-    class_members = get_class_members(email)
+    class_members = get_class_members(class_id)
     new_class_members = remove_from_list(class_members, email)
     update_classes_row(class_id, 'member_email', new_class_members)
     # remove class from users class list
     user_classes = get_user_classes(email)
     new_user_classes = remove_from_list(user_classes, class_id)
     update_users_row(email, 'class_id', new_user_classes)
+    # remove posts from this class in the user's table 
+    posts = get_class_posts(class_id)
+    for post in posts:
+        mark_as_read(email, post)
     # purge posts from this user if specified
     if (purge_posts):
         delete_class_posts_by(class_id, email)
@@ -796,6 +809,12 @@ def create_post(author_email, class_id, title, body, category, attachments, show
     if (parent_id != ''):
         ping(parent_id)
         add_post_pingee(parent_id, author_email)
+    elif get_post_category(post_id) == 'announcement':
+        ping_list = get_class_members(class_id)
+        if (show_dojo == 'yes'):
+            ping_list += get_all_dojo()
+        ping_list.remove(author_email)
+        ping(post_id, ping_list)
     return post_id
 
 def delete_post(post_id):
@@ -1062,24 +1081,27 @@ if __name__ == "__main__":
     
     add_user("mayaberchin@gmail.com", "hello", "Maya Berchin")
     add_user("other@gmail.com", "other", "Other Student")
-    print(str(get_all_users()))
+    #print(str(get_all_users()))
     add_user("b@b.com", "b", "b b")
 
-    print(str(get_all_classes()))
+    #print(str(get_all_classes()))
     class_id = create_class("mayaberchin@gmail.com", "testclass")
     create_class("b@b.com", "dontjoin")
-    print("\n" + str(get_all_classes()))
-    print("Class teachers: " + str(get_class_teachers(class_id)))
+    #print("\n" + str(get_all_classes()))
+    #print("Class teachers: " + str(get_class_teachers(class_id)))
 
-    add_class_member("other@gmail.com", class_id)
+    add_class_member(class_id, "other@gmail.com")
+    '''
     print("\nClasses Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
     print("Classes Other is in: " + str(get_user_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
+    '''
 
-    print("\nPromoting Other... also removing Maya as owner")
+    #print("\nPromoting Other... also removing Maya as owner")
     promote_to_owner(class_id, 'other@gmail.com')
     demote_owner(class_id, "mayaberchin@gmail.com")
+    '''
     print("Class teachers: " + str(get_class_teachers(class_id)))
     print("Classes Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
@@ -1087,6 +1109,17 @@ if __name__ == "__main__":
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
     print("Classes Maya owns: " + str(get_owned_classes("mayaberchin@gmail.com")))
     print("Classes Other owns: " + str(get_owned_classes("other@gmail.com")))
+    '''
+    
+    for i in range(10):
+        add_user(f"{i}@gmail.com", "b", "b b")
+        add_class_member(class_id, f'{i}@gmail.com')
+    print(str(get_class_members(class_id)))
+    ban_member(class_id, '1@gmail.com')
+    print(str(get_class_members(class_id)))
+    add_class_member(class_id, '1@gmail.com')
+    add_class_member(class_id, '11@gmail.com')
+    print(str(get_class_members(class_id)))
 
     '''
     print("\n----------------------------------\n")
