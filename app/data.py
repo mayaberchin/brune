@@ -197,10 +197,6 @@ def get_homepage_posts(email, n):
     return posts
 
 
-def filter_by_class(posts, class_id):
-    return [post for post in posts if get_post_class(post_id) == class_id]
-
-
 
 # get the classes someone is in
 def get_user_classes(email):
@@ -336,7 +332,7 @@ def update_users_row(email, col_name, col_val):
 
 
 def get_active_classes():
-    classes = get_all_classes_archived()
+    classes = get_all_classes()
     return [c for c in classes if not is_archived(c)]
 
 def get_all_classes():
@@ -382,6 +378,27 @@ def get_class_posts(class_id):
 def get_head_posts(class_id):
     posts = [post for post in get_class_posts(class_id) if get_post_depth(post) == 0]
     return posts
+
+def get_class_announcements(class_id):
+    return [post for post in get_head_posts(class_id) if get_post_category(post) == 'announcement']
+
+def get_class_questions(class_id):
+    return [post for post in get_head_posts(class_id) if get_post_category(post) == 'question']
+
+def get_class_notes(class_id):
+    return [post for post in get_head_posts(class_id) if get_post_category(post) == 'note']
+
+def get_class_n_gc(class_id, n=-1):
+    posts = get_class_posts(class_id).reverse()
+    gc = [post for post in posts if get_post_category(post) == 'chat']
+    if (n > 0):
+        return gc[:n]
+    return gc
+
+def get_class_gc_by(class_id, email):
+    posts = get_class_posts(class_id).reverse()
+    gc = [post for post in posts if get_post_category(post) == 'chat' and get_post_author(post) == email]
+    return gc
 
 
 def get_class_data(class_id):
@@ -558,6 +575,32 @@ def update_classes_row(class_id, col_name, col_val):
 def get_all_posts():
     data = get_col('posts', 'post_id')
     return data
+
+def get_posts_by(email):
+    posts = get_all_posts()
+    return [post for post in posts if get_post_author(post) == email]
+
+def get_all_announcements():
+    posts = get_all_posts()
+    return [post for post in posts if get_post_category(post) == 'announcement']
+
+def get_announcements_by(email):
+    return [post for post in get_all_announcements() if get_post_author(post) == email]
+
+def get_all_questions():
+    posts = get_all_posts()
+    return [post for post in posts if get_post_category(post) == 'announcement']
+
+def get_questions_by(email):
+    return [post for post in get_all_quesetions() if get_post_author(post) == email]
+
+def get_all_notes():
+    posts = get_all_posts()
+    return [post for post in posts if get_post_category(post) == 'announcement']
+
+def get_notes_by(email):
+    return [post for post in get_all_notes() if get_post_author(post) == email]
+
 
 # returns a dictionary of different types of followups
 def get_post_followups(post_id):
@@ -828,9 +871,19 @@ def delete_post(post_id):
         delete_post_trace(f)
     delete_post_trace(post_id)
 
+# delete all posts/followups in this class by this person
+def delete_class_posts_by(class_id, email):
+    posts = filter_by_class(get_posts_by(email), class_id)
+    for post in posts:
+        delete_post(post_id)
+
 
 
 #---------[posts-helpers]---------#
+
+
+def filter_by_class(posts, class_id):
+    return [post for post in posts if get_post_class(post_id) == class_id]
 
 
 def order_by_upvotes(posts):
@@ -1111,15 +1164,38 @@ if __name__ == "__main__":
     print("Classes Other owns: " + str(get_owned_classes("other@gmail.com")))
     '''
     
-    for i in range(10):
+    for i in range(15):
         add_user(f"{i}@gmail.com", "b", "b b")
         add_class_member(class_id, f'{i}@gmail.com')
-    print(str(get_class_members(class_id)))
+    #print(str(get_class_members(class_id)))
+    add_user("16@gmail.com", "b", "b b")
+    add_user("17@gmail.com", "b", "b b")
+    add_user("18@gmail.com", "b", "b b")
+    add_class_member(class_id, '16@gmail.com')
     ban_member(class_id, '1@gmail.com')
-    print(str(get_class_members(class_id)))
+    add_class_member(class_id, '17@gmail.com')
+    #print(str(get_class_members(class_id)))
     add_class_member(class_id, '1@gmail.com')
-    add_class_member(class_id, '11@gmail.com')
-    print(str(get_class_members(class_id)))
+    add_class_member(class_id, '18@gmail.com')
+    #print(str(get_class_members(class_id)))
+    change_class_name(class_id, "testingagain!")
+    #print(get_class_name(class_id))
+    archive_class(class_id)
+    #print(str(get_active_classes()))
+    un_archive_class(class_id)
+    #print(str(get_active_classes()))
+    
+    print("\n")
+    print(str(get_all_posts()))
+    delete_class(class_id)
+    print(str(get_all_classes()))
+    print("Classes Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
+    print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
+    print("Classes Other is in: " + str(get_user_classes("other@gmail.com")))
+    print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
+    print("Classes Maya owns: " + str(get_owned_classes("mayaberchin@gmail.com")))
+    print("Classes Other owns: " + str(get_owned_classes("other@gmail.com")))
+    print(str(get_all_posts()))
 
     '''
     print("\n----------------------------------\n")
