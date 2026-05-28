@@ -125,7 +125,8 @@ def render_post_page(page):
         page_description=page_info["page_description"],
         selected_post_type=page_info["selected_post_type"],
         new_post_label=page_info["new_post_label"],
-        can_post=can_post
+        can_post=can_post,
+        current_user_email=session["email"]
     )
 
 @app.route("/announcements")

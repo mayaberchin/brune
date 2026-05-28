@@ -3,6 +3,7 @@ import PostEditor from "./components/PostEditor";
 import PostPreview from "./components/PostPreview";
 import PostView from "./components/PostView";
 import PostLayout from "./layouts/PostLayout";
+import ChatLayout from "./layouts/ChatLayout";
 
 const root = document.getElementById("root");
 
@@ -11,6 +12,7 @@ const pageTitle = root.dataset.pageTitle;
 const pageDescription = root.dataset.pageDescription;
 const newPostLabel = root.dataset.newPostLabel;
 const canPost = root.dataset.canPost === "yes";
+const currentUserEmail = root.dataset.currentUserEmail;
 
 // get classes from flask later!
 const testClasses = [
@@ -52,6 +54,18 @@ function App() {
     // crete array w/ newest post in front
     setPosts([data.post, ...posts]);
     setShowPostEditor(false);
+  }
+
+  if (selectedPostType === "chat") {
+    return (
+      <ChatLayout
+        classes={testClasses}
+        posts={posts}
+        selectedPostType={selectedPostType}
+        currentUserEmail={currentUserEmail}
+        addPost={addPost}
+      />
+    );
   }
 
   return (
