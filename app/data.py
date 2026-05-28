@@ -640,24 +640,24 @@ def get_post_followups(post_id):
             teacher_responses += [post]
         else:
             other += [post]
-    # teacher_answers = order_by_upvotes(teacher_answers)
-    # answers = order_by_upvotes(answers)
+    teacher_answers = order_by_upvotes(teacher_answers)
+    answers = order_by_upvotes(answers)
     answers = teacher_answers + answers
     followups['answers'] = answers
-    # teacher_responses = order_by_upvotes(teacher_responses)
+    teacher_responses = order_by_upvotes(teacher_responses)
     followups['teacher_responses'] = teacher_responses
-    # other = order_by_upvotes(other)
+    other = order_by_upvotes(other)
     followups['other'] = other
     return followups
 
 
 def get_post_depth(post_id):
+    depth = 0
     post = post_id
     parent = get_post_parent(post_id)
-    depth = 0
     while str(parent) != 'None':
         depth += 1
-        parent = get_post_parent(post_id)
+        parent = get_post_parent(parent)
     return depth
 
 
@@ -934,9 +934,9 @@ def order_by_upvotes(posts):
             if upvotes[j] < min_val:
                 min_ind = j
                 min_val = upvotes[j]
-        ordered += posts[min_ind]
-        posts.remove(min_ind)
-        upvotes.remove(min_ind)
+        ordered += [posts[min_ind]]
+        posts.pop(min_ind)
+        upvotes.pop(min_ind)
     return ordered
 
 
@@ -1272,7 +1272,15 @@ if __name__ == "__main__":
     f_id = create_followup('0@gmail.com', announcement_id, ":)")
     print("parent: " + get_post_parent(f_id))
     add_post_upvoter(f_id, "b@b.com")
-    print(str(get_post_followups(announcement_id)))
+    fs = get_post_followups(announcement_id)['other']
+    for f in fs:
+        print(get_post_body(f))
+    ff_id = create_followup('0@gmail.com', f_id, "double followup")
+    ff_id = create_followup('0@gmail.com', f_id, "bleh")
+    add_post_upvoter(ff_id, "b@b.com")
+    ffs = get_post_followups(f_id)['other']
+    for ff in ffs:
+        print(get_post_body(ff))
 
     '''
     print("\n----------------------------------\n")
