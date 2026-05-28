@@ -660,10 +660,10 @@ def get_post_parent(post_id):
 
 def get_top_parent(post_id):
     parent = get_post_parent(post_id)
-    if (not parent):
+    if (str(parent) == 'None' or parent == ''):
         return post_id
     grandparent = get_post_parent(parent)
-    if (not grandparent):
+    if (str(grandparent) == 'None' or grandparent == ''):
         return parent 
     return grandparent
 
@@ -827,7 +827,7 @@ def ping(post_id, pingees=[]):
 #---------[creation-deletion]---------#
 
 
-def create_post(author_email, class_id, title, body, category, attachments, show_dojo, is_anonymous='no', parent_id=''):
+def create_post(author_email, class_id, title, body, category, show_dojo, attachments='', is_anonymous='no', parent_id=''):
     post_id = unique_id(get_all_posts(), 16)
     is_resolved = 'no'
     is_answer = 'no'
@@ -1014,8 +1014,12 @@ def make_list(str, delim=","):
     return rm_empty(lst)
 
 def add_to_list(lst, item):
-    lst += [item]
-    new_str = merge_list(lst)
+    new_lst = []
+    if (str(lst) == 'None'):
+        new_lst = [item]
+    else:
+        new_lst = lst + [item]
+    new_str = merge_list(new_lst)
     return new_str
 
 def remove_from_list(lst, item):
@@ -1090,6 +1094,8 @@ def list_2d_to_dict_list(keys, values):
 # remove empty and none from a 1d list
 def rm_empty(lst):
     cleanlst = [item for item in lst if str(item) != 'None' and item != '']
+    if (str(cleanlst) == 'None'):
+        cleanlst = []
     return cleanlst
 
 
@@ -1188,9 +1194,10 @@ if __name__ == "__main__":
     un_archive_class(class_id)
     #print(str(get_active_classes()))
     
-    print("\n")
-    print(str(get_all_posts()))
-    delete_class(class_id)
+    #print("\n")
+    #print(str(get_all_posts()))
+    #delete_class(class_id)
+    '''
     print(str(get_all_classes()))
     print("Classes Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
@@ -1199,26 +1206,23 @@ if __name__ == "__main__":
     print("Classes Maya owns: " + str(get_owned_classes("mayaberchin@gmail.com")))
     print("Classes Other owns: " + str(get_owned_classes("other@gmail.com")))
     print(str(get_all_posts()))
-
     '''
+
+    
     print("\n----------------------------------\n")
-    post_id = create_post("mayaberchin@gmail.com", class_id, "test_post", "this is the body of the test post", "question")
+    # author_email, class_id, title, body, category, show_dojo, attachments='', is_anonymous='no', parent_id=''
+    post_id = create_post("mayaberchin@gmail.com", class_id, "test_post", "this is the body of the test post", "question", "no")
     print(get_all_posts())
     print(str(get_post_data(post_id)))
     add_post_upvoter(post_id, "other@gmail.com")
-    followup_id = create_followup("b@b.com", post_id, "lmao this post sucks (don't hate first time ragebaiting)")
     change_post_title(post_id, "test title 2")
     resolve_post(post_id)
     print(str(get_post_data(post_id)))
-    print(str(get_followup_data(followup_id)))
     unresolve_post(post_id)
     remove_post_upvoter(post_id, "other@gmail.com")
     add_post_upvoter(post_id, "b@b.com")
-    add_followup_upvoter(followup_id, "b@b.com")
-    remove_followup_upvoter(followup_id, "b@b.com")
-    print(str(get_post_data(post_id)))
-    print(str(get_followup_data(followup_id)))
 
+    '''
     print("\n----------------------------------\n")
     add_senpai("mayaberchin@gmail.com")
     print(str(get_all_dojo()))
