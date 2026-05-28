@@ -86,6 +86,28 @@ def home():
         return redirect(url_for('login'))
     return render_template("homepage.html")
 
+    # get all posts
+    post_ids = data.get_homepage_posts('email',20)
+    posts = []
+    for post_id in post_ids:
+        post_data = data.get_post_data(post_id)
+        posts.append(post_data)
+    posts.reverse()
+    
+    # get courses
+    for class_id in class_ids:
+        class_data = data.get_class_data(class_id)
+        classes.append(class_data)
+
+    return render_template(
+        "homepage.html",
+        posts=posts,
+        classes=classes,
+        get_user_name=data.get_user_name
+    )
+
+
+
 
 
 # ------------------ POST PAGES ------------------
@@ -106,24 +128,51 @@ def render_post_page(page):
 
 @app.route("/announcements")
 def announcements():
+    if 'email' not in session:
+        return redirect(url_for('login'))
     return render_post_page("announcements")
+
+
+
+@app.route("/pinned")
+def pinned():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    return render_post_page("pinned")
 
 
 @app.route("/questions")
 def questions():
+    if 'email' not in session:
+        return redirect(url_for('login'))
     return render_post_page("questions")
 
 
 @app.route("/chat")
 def chat():
+    if 'email' not in session:
+        return redirect(url_for('login'))
     return render_post_page("chat")
 
 
 @app.route("/notes_resources")
 def notes_rsrc():
+    if 'email' not in session:
+        return redirect(url_for('login'))
     return render_post_page("notes_resources")
 
 
+@app.route("/account")
+def account():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    return render_template("account")
+
+@app.route("/settings")
+def settings():
+    if 'email' not in session:
+        return redirect(url_for('login'))
+    return render_template("settings")
 
 # ------------------ REACT POST API ROUTES ------------------
 
