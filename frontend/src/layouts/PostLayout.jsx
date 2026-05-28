@@ -64,20 +64,23 @@ function PostLayout({
           />
         )}
 
-        <div className="post-preview-list">
-          {filteredPosts.length === 0 ? (
-            <p className="text-muted p-3">No posts yet.</p>
-          ) : (
-            filteredPosts.map((post) => (
-              <PostPreview
-                key={post.post_id}
-                postData={post}
-                onOpen={setSelectedPost}
-                isSelected={selectedPost?.post_id === post.post_id}
-              />
-            ))
-          )}
-        </div>
+        {!showPostEditor && (
+          <div className="post-preview-list">
+            {filteredPosts.length === 0 ? (
+              <p className="text-muted p-3">No posts yet.</p>
+            ) : (
+              filteredPosts.map((post) => (
+                <PostPreview
+                  key={post.post_id}
+                  postData={post}
+                  onOpen={setSelectedPost}
+                  isSelected={selectedPost?.post_id === post.post_id}
+                  showClass={selectedClassId === "all"}
+                />
+              ))
+            )}
+          </div>
+        )}
       </section>
 
       <section className="post-side-panel">
@@ -85,6 +88,7 @@ function PostLayout({
           <PostView
             postData={selectedPost}
             onBack={() => setSelectedPost(null)}
+            showClass={selectedClassId === "all"}
           />
         ) : (
           <div className="class-filter-panel">
