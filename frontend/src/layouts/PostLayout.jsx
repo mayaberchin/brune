@@ -12,6 +12,7 @@ function PostLayout({
   posts,
   selectedPost,
   showPostEditor,
+  canPost,
   setSelectedPost,
   setShowPostEditor,
   addPost,
@@ -33,7 +34,7 @@ function PostLayout({
 
             {selectedPost === null ? (
               <p className="text-muted mb-0">{pageDescription}</p>
-            ) : (
+            ) : canPost && (
               <button
                 type="button"
                 className="btn btn-primary btn-sm mt-2"
@@ -44,7 +45,7 @@ function PostLayout({
             )}
             </div>
 
-            {selectedPost === null && (
+            {selectedPost === null && canPost && (
             <button
               type="button"
               className="btn btn-primary"
@@ -55,7 +56,7 @@ function PostLayout({
           )}
         </div>
 
-        {showPostEditor && (
+        {showPostEditor && canPost && (
           <PostEditor
             selectedPostType={selectedPostType}
             classes={classes}
@@ -64,20 +65,23 @@ function PostLayout({
           />
         )}
 
-        <div className="post-preview-list">
-          {filteredPosts.length === 0 ? (
-            <p className="text-muted p-3">No posts yet.</p>
-          ) : (
-            filteredPosts.map((post) => (
-              <PostPreview
-                key={post.post_id}
-                postData={post}
-                onOpen={setSelectedPost}
-                isSelected={selectedPost?.post_id === post.post_id}
-              />
-            ))
-          )}
-        </div>
+        {!showPostEditor && (
+          <div className="post-preview-list">
+            {filteredPosts.length === 0 ? (
+              <p className="text-muted p-3">No posts yet.</p>
+            ) : (
+              filteredPosts.map((post) => (
+                <PostPreview
+                  key={post.post_id}
+                  postData={post}
+                  onOpen={setSelectedPost}
+                  isSelected={selectedPost?.post_id === post.post_id}
+                  showClass={selectedClassId === "all"}
+                />
+              ))
+            )}
+          </div>
+        )}
       </section>
 
       <section className="post-side-panel">
@@ -85,6 +89,7 @@ function PostLayout({
           <PostView
             postData={selectedPost}
             onBack={() => setSelectedPost(null)}
+            showClass={selectedClassId === "all"}
           />
         ) : (
           <div className="class-filter-panel">

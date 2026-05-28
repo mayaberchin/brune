@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function PostPreview({ postData, onOpen, isSelected }) {
+function PostPreview({ postData, onOpen, isSelected, showClass }) {
   const previewClassName = isSelected
     ? "post-preview selected"
     : "post-preview";
@@ -9,9 +9,9 @@ function PostPreview({ postData, onOpen, isSelected }) {
     <div className={previewClassName} onClick={() => onOpen(postData)}>
       <h2 className="post-preview-title">{postData.title}</h2>
 
-      <p className="post-preview-meta">
-        By {postData.display_author} | Type: {postData.category} | Class: {postData.class_id}
-      </p>
+      {showClass && (
+        <p className="post-preview-meta">Class: {postData.class_id}</p>
+      )}
 
       <p className="post-preview-body">{postData.body}</p>
     </div>
