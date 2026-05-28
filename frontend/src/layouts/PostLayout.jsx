@@ -2,6 +2,7 @@ import { useState } from "react";
 import PostEditor from "../components/PostEditor";
 import PostPreview from "../components/PostPreview";
 import PostView from "../components/PostView";
+import ClassFilter, { MobileClassFilter } from "../components/ClassFilter";
 
 function PostLayout({
   pageTitle,
@@ -56,6 +57,14 @@ function PostLayout({
           )}
         </div>
 
+        {selectedPost === null && (
+          <MobileClassFilter
+            classes={classes}
+            selectedClassId={selectedClassId}
+            setSelectedClassId={setSelectedClassId}
+          />
+        )}
+
         {showPostEditor && canPost && (
           <PostEditor
             selectedPostType={selectedPostType}
@@ -92,32 +101,11 @@ function PostLayout({
             showClass={selectedClassId === "all"}
           />
         ) : (
-          <div className="class-filter-panel">
-            <h2 className="h4">Courses</h2>
-
-            <button
-              type="button"
-              className={selectedClassId === "all" ? "class-filter active" : "class-filter"}
-              onClick={() => setSelectedClassId("all")}
-            >
-              All
-            </button>
-
-            {classes.map((classInfo) => (
-              <button
-                key={classInfo.class_id}
-                type="button"
-                className={
-                  selectedClassId === String(classInfo.class_id)
-                    ? "class-filter active"
-                    : "class-filter"
-                }
-                onClick={() => setSelectedClassId(String(classInfo.class_id))}
-              >
-                {classInfo.name}
-              </button>
-            ))}
-          </div>
+          <ClassFilter
+            classes={classes}
+            selectedClassId={selectedClassId}
+            setSelectedClassId={setSelectedClassId}
+          />
         )}
       </section>
     </main>
