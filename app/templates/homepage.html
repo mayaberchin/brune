@@ -120,6 +120,7 @@
   }
 
   .btn-ask {
+    display: inline-block;
     background: var(--accent);
     color: #fff;
     border: none;
@@ -128,6 +129,7 @@
     font-family: 'IBM Plex Sans', sans-serif;
     font-size: 13px;
     font-weight: 600;
+    text-decoration: none;
     cursor: pointer;
     transition: background 0.15s;
   }
@@ -521,7 +523,7 @@
     <div class="feed-header">
       <div class="feed-title-row">
         <h1 class="feed-title">Newest Posts</h1>
-        <button class="btn-ask">Ask Question</button>
+        <a class="btn-ask" href="{{ url_for('questions') }}">Ask Question</a>
       </div>
       <div class="feed-tabs">
         <div class="tab active" onclick="show_newest_posts()">Newest</div>
