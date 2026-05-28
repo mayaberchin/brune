@@ -369,3 +369,9 @@ TO DO
 - Fancy MD + code formatting, etc. text editor
 - No more hard-coded classes!
 - only teachers post announcements, sharing to dojo and post anonymously (+ add who even posted it...)! 
+
+mayaB -- 2026-05-22 00:12
+DD+DB OVERHAUL
+- Edit tables in DD to be more similar to current vision of site
+- Add/modify a bunch of user-related functions to comply with new database needs (needs testing)
+- Begin modifying class-related middleware too
