@@ -391,6 +391,107 @@
     font-size: 12px;
     color: var(--text-muted);
   }
+  /* POPUP */
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.popup-box {
+  width: 360px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  background: #f7f5f2;
+}
+
+.popup-header h2 {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.close-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+.popup-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.popup-box form,
+#popupChoiceScreen,
+#popupJoinScreen {
+  padding: 18px;
+}
+
+.popup-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.popup-main-btn {
+  flex: 1;
+  border: none;
+  background: var(--accent);
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.popup-main-btn:hover {
+  background: var(--accent-hover);
+}
+
+.popup-secondary-btn {
+  flex: 1;
+  border: 1px solid var(--border);
+  background: white;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.popup-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 14px;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.create-btn {
+  background: #3a7bd5;
+}
+
+.create-btn:hover {
+  background: #2f68b7;
+}
 </style>
 </head>
 <body>
@@ -423,44 +524,75 @@
         <button class="btn-ask">Ask Question</button>
       </div>
       <div class="feed-tabs">
-        <div class="tab active">Newest</div>
+        <div class="tab active" onclick="show_newest_posts()">Newest</div>
         <span class="tab-sep">|</span>
-        <div class="tab">Updated</div>
+        <div class="tab" onclick="show_updated_posts()">Updated</div>
         <span class="tab-sep">|</span>
-        <div class="tab">Unanswered</div>
+        <div class="tab" onclick="show_unresolved_posts()">Unresolved</div>
         <span class="tab-sep">|</span>
-        <div class="tab">Instructors' Posts</div>
+        <div class="tab" onclick="show_instructors_posts()">Instructors' Posts</div>
       </div>
     </div>
     <div class="filter-row"><span>Filter by ∨</span></div>
 
-    <div class="posts">
-
-      <!--
-      <div class="post-card">
-        <div class="post-head">
-          <div class="post-title">Notes on regex <span>by Bob Dylan</span></div>
+    <div class="posts" id="homepage_posts">
+      {% for post in homepage_posts %}
+        <div class="post-card">
+          <div class="post-head">
+            <div class="post-title">{{ post['title'] }} <span>{{ get_user_name(post['author_email']) }}</span></div>
+          </div>
+          <div class="post-body">
+            <div class="post-desc">{{ post['body'] }}</div>
+            {% if post['attachments'] %}
+              <span class="post-tag">attachments included</span>
+            {% endif %}
+          </div>
         </div>
-        <div class="post-body">
-          <div class="post-desc">Description</div>
-          <span class="post-tag">pdf attached</span>
+      {% endfor %}
+    </div>
+    <div class="posts" id="updated_posts" style="display:none;">
+      {% for post in updated_posts %}
+        <div class="post-card">
+          <div class="post-head">
+            <div class="post-title">{{ post['title'] }} <span>{{ get_user_name(post['author_email']) }}</span></div>
+          </div>
+          <div class="post-body">
+            <div class="post-desc">{{ post['body'] }}</div>
+            {% if post['attachments'] %}
+              <span class="post-tag">attachments included</span>
+            {% endif %}
+          </div>
         </div>
-      </div>
--->
-
-    {% for post in posts %}
-      <div class="post-card">
-        <div class="post-head">
-          <div class="post-title">{{ post['title'] }} <span>{{ get_user_name(post['author_email']) }}</span></div>
+      {% endfor %}
+    <div class="posts" id="unresolved_posts" style="display:none;">
+      {% for post in unresolved_posts %}
+        <div class="post-card">
+          <div class="post-head">
+            <div class="post-title">{{ post['title'] }} <span>{{ get_user_name(post['author_email']) }}</span></div>
+          </div>
+          <div class="post-body">
+            <div class="post-desc">{{ post['body'] }}</div>
+            {% if post['attachments'] %}
+              <span class="post-tag">attachments included</span>
+            {% endif %}
+          </div>
         </div>
-        <div class="post-body">
-          <div class="post-desc">{{ post['body'] }}</div>
-          {% if post['attachments'] %}
-            <span class="post-tag">attachments included</span>
-          {% endif %}
+      {% endfor %}
+    </div>
+    <div class="posts" id="instructors_posts" style="display:none;">
+      {% for post in instructors_posts %}
+        <div class="post-card">
+          <div class="post-head">
+            <div class="post-title">{{ post['title'] }} <span>{{ get_user_name(post['author_email']) }}</span></div>
+          </div>
+          <div class="post-body">
+            <div class="post-desc">{{ post['body'] }}</div>
+            {% if post['attachments'] %}
+              <span class="post-tag">attachments included</span>
+            {% endif %}
+          </div>
         </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
     </div>
   </section>
 
@@ -476,7 +608,7 @@
     <div>
       <div class="section-header-row">
         <div class="section-title">Courses</div>
-        <button class="btn-join">Join/Create</button>
+        <button onclick="join_create_class_display()"class="btn-join">Join/Create</button>
       </div>
 
       <!--
@@ -511,5 +643,144 @@
   </aside>
 </div>
 
+<!-- JOIN / CREATE CLASS POPOUT -->
+
+<div id="classPopupOverlay" class="popup-overlay" style="display:none;">
+
+  <div class="popup-box">
+
+    <div class="popup-header">
+      <h2>Join or Create a Class</h2>
+      <button class="close-btn" onclick="join_create_class_close()">✕</button>
+    </div>
+
+    <!-- FIRST SCREEN -->
+    <div id="popupChoiceScreen">
+
+      <p class="popup-text">
+        What would you like to do?
+      </p>
+
+      <div class="popup-actions">
+
+        <button class="popup-main-btn" onclick="join_class()">
+          Join a Class
+        </button>
+
+        <button class="popup-main-btn create-btn" onclick="window.location.href='/create_class'">
+          Create a Class
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- JOIN SCREEN -->
+    <div id="popupJoinScreen" style="display:none;">
+
+      <p class="popup-text">
+        Enter your class code:
+      </p>
+
+      <form action="/join_class" method="POST">
+
+        <input
+          type="text"
+          name="class_code"
+          class="popup-input"
+          placeholder="Class code"
+          required
+        >
+
+        <div class="popup-actions">
+
+          <button type="submit" class="popup-main-btn">
+            Join
+          </button>
+
+          <button
+            type="button"
+            class="popup-secondary-btn"
+            onclick="back_to_choice()"
+          >
+            Back
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+
+
+</script>
 </body>
 </html>
+
+<script>
+
+    function join_create_class_display() {
+      document.getElementById("classPopupOverlay").style.display = "flex";
+    }
+
+    function join_create_class_close() {
+      document.getElementById("classPopupOverlay").style.display = "none";
+    }
+
+    function join_class() {
+      document.getElementById("popupChoiceScreen").style.display = "none";
+      document.getElementById("popupJoinScreen").style.display = "block";
+    }
+
+    function back_to_choice() {
+      document.getElementById("popupJoinScreen").style.display = "none";
+      document.getElementById("popupChoiceScreen").style.display = "block";
+    }
+
+    function show_newest_posts(){
+      
+    }
+    function show_unresolved_posts(){
+    
+    }
+    function show_updated_posts(){
+
+    }
+    function show_instructors_posts(){
+
+    }
+
+  // close if user clicks the dark background
+    document.getElementById("modal").addEventListener("click", function(e) {
+      if (e.target === this) closeModal();
+    });
+
+    document.getElementById("post-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      fetch("/api/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: document.getElementById("title").value,
+          class_id: document.getElementById("class_id").value,
+          body: document.getElementById("body").value,
+          category: "{{ selected_post_type }}"
+        })
+      })
+      .then(r => r.json())
+      .then(data => {
+        console.log("Post created:", data.post);
+        e.target.reset();
+        closeModal();
+      });
+    });
+
+    
+</script>

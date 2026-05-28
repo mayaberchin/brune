@@ -1,3 +1,39 @@
+<<<<<<< HEAD
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title> {{ page_title }} </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='vite/assets/index.css') }}">
+  </head>
+
+  <body>
+    <div class="container fluid px-0">
+
+      <nav class="mb-4">
+        <a href="/announcements" class="me-3"> Announcements </a>
+        <a href="/questions" class="me-3"> Questions </a>
+        <a href="/chat" class="me-3"> Chat </a>
+        <a href="/notes_resources" class="me-3"> Notes / Resources </a>
+      </nav>
+
+      <div
+        id="root"
+        data-post-type="{{ selected_post_type }}"
+        data-page-title="{{ page_title }}"
+        data-page-description="{{ page_description }}"
+        data-new-post-label="{{ new_post_label }}"
+      ></div>
+
+    </div>
+
+   <!-- built Vite js -->
+   <script type="module" src="{{ url_for('static', filename='vite/assets/index.js') }}"></script>
+
+ </body>
+</html>
+=======
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -33,3 +69,4 @@
 
  </body>
 </html>
+>>>>>>> 4c0eb482d6c4ba0fc2bbbd73e99ca15fb8291a27
