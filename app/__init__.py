@@ -141,7 +141,8 @@ def announcements():
 def pinned():
     if 'email' not in session:
         return redirect(url_for('login'))
-    return render_post_page("pinned")
+    return render_template("pinned.html")
+    #return render_post_page("pinned")
 
 
 @app.route("/questions")
