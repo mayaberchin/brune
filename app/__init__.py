@@ -87,12 +87,12 @@ def home():
     return render_template("homepage.html")
 
     # get all posts
-    post_ids = data.get_homepage_posts('email',20)
-    posts = []
-    for post_id in post_ids:
-        post_data = data.get_post_data(post_id)
-        posts.append(post_data)
-    posts.reverse()
+    homepage_post_ids = data.get_homepage_posts('email',20)
+    homepage_posts = []
+    for post_id in homepage_post_ids:
+        homepage_post_data = data.get_post_data(post_id)
+        homepage_posts.append(post_data)
+    homepage_posts.reverse()
     
     # get courses
     for class_id in class_ids:
@@ -101,7 +101,7 @@ def home():
 
     return render_template(
         "homepage.html",
-        posts=posts,
+        homepage_posts=homepage_posts,
         classes=classes,
         get_user_name=data.get_user_name
     )
