@@ -530,13 +530,13 @@
         <a class="btn-ask" href="{{ url_for('questions') }}">Ask Question</a>
       </div>
       <div class="feed-tabs">
-        <div class="tab active" onclick="show_newest_posts()">Newest</div>
+        <div class="tab active" id="newest_post_tab"onclick="show_newest_posts()">Newest</div>
         <span class="tab-sep">|</span>
-        <div class="tab" onclick="show_updated_posts()">Updated</div>
+        <div class="tab" id="updated_post_tab"onclick="show_updated_posts()">Updated</div>
         <span class="tab-sep">|</span>
-        <div class="tab" onclick="show_unresolved_posts()">Unresolved</div>
+        <div class="tab" id="unresolved_post_tab" onclick="show_unresolved_posts()">Unresolved</div>
         <span class="tab-sep">|</span>
-        <div class="tab" onclick="show_instructors_posts()">Instructors' Posts</div>
+        <div class="tab" id="instructors_post_tab" onclick="show_instructors_posts()">Instructors' Posts</div>
       </div>
     </div>
     <div class="filter-row"><span>Filter by ∨</span></div>
@@ -586,7 +586,7 @@
       {% endfor %}
     </div>
     <div class="posts" id="instructors_posts" style="display:none;">
-      {% for post in instructors_posts %}
+      {% for post in instructors_posts %}tab
         <div class="post-card">
           <div class="post-head">
             <div class="post-title">{{ post['title'] }} <span>{{ get_user_name(post['author_email']) }}</span></div>
@@ -615,7 +615,7 @@
       <div class="section-header-row">
         <div class="section-title">Courses</div>
         <button onclick="join_create_class_display()"class="btn-join">Join/Create</button>
-      </div>
+      </div>tab
 
       <!--
       <div class="course-card">
@@ -632,7 +632,7 @@
             <div class="course-body">
             { % for post in unread_posts  % }
             <div class="course-item">- {{ post['title'] }}
-              <!-- - <span class="due">due mm/dd/yy</span> -->
+              <!-- - <span class="due">due mm/dd/yy</span> -->tab
             </div>
             { % endfor % }
             </div>
@@ -649,7 +649,7 @@
   </aside>
 </div>
 
-<!-- JOIN / CREATE CLASS POPOUT -->
+<!-- join/create class popout -->
 
 <div id="classPopupOverlay" class="popup-overlay" style="display:none;">
 
@@ -673,7 +673,7 @@
           Join a Class
         </button>
 
-        <button class="popup-main-btn create-btn" onclick="window.location.href='/create_class'">
+        <button class="popup-main-btn" onclick="window.location.href='/create_class'">
           Create a Class
         </button>
 
@@ -722,13 +722,6 @@
 
 </div>
 
-<script>
-
-
-
-</script>
-</body>
-</html>
 
 <script>
 
@@ -751,16 +744,48 @@
     }
 
     function show_newest_posts(){
+      document.getElementById("homepage_posts").style.display = "flex";
+      document.getElementById("unresolved_posts").style.display="none";
+      document.getElementById("updated_posts").style.display = "none";
+      document.getElementById("instructors_posts").style.display = "none";
 
+      document.getElementById("newest_post_tab").classList.add("active");
+      document.getElementById("unresolved_post_tab").classList.remove("active");
+      document.getElementById("updated_post_tab").classList.remove("active");
+      document.getElementById("instructors_post_tab").classList.remove("active");
     }
     function show_unresolved_posts(){
+      document.getElementById("homepage_posts").style.display = "none";
+      document.getElementById("unresolved_posts").style.display="flex";
+      document.getElementById("updated_posts").style.display = "none";
+      document.getElementById("instructors_posts").style.display = "none";
 
+      document.getElementById("newest_post_tab").classList.remove("active");
+      document.getElementById("unresolved_post_tab").classList.add("active");
+      document.getElementById("updated_post_tab").classList.remove("active");
+      document.getElementById("instructors_post_tab").classList.remove("active");
     }
     function show_updated_posts(){
+      document.getElementById("homepage_posts").style.display = "none";
+      document.getElementById("unresolved_posts").style.display="none";
+      document.getElementById("updated_posts").style.display = "flex";
+      document.getElementById("instructors_posts").style.display = "none";
 
+      document.getElementById("newest_post_tab").classList.remove("active");
+      document.getElementById("unresolved_post_tab").classList.remove("active");
+      document.getElementById("updated_post_tab").classList.add("active");
+      document.getElementById("instructors_post_tab").classList.remove("active");
     }
     function show_instructors_posts(){
+      document.getElementById("homepage_posts").style.display = "none";
+      document.getElementById("unresolved_posts").style.display="none";
+      document.getElementById("updated_posts").style.display = "none";
+      document.getElementById("instructors_posts").style.display = "flex";
 
+      document.getElementById("newest_post_tab").classList.remove("active");
+      document.getElementById("unresolved_post_tab").classList.remove("active");
+      document.getElementById("updated_post_tab").classList.remove("active");
+      document.getElementById("instructors_post_tab").classList.add("active");
     }
 
   // close if user clicks the dark background
@@ -790,3 +815,6 @@
 
 
 </script>
+</body>
+
+</html>

@@ -86,13 +86,28 @@ def home():
         return redirect(url_for('login'))
     return render_template("homepage.html")
 
-    # get all posts
-    post_ids = data.get_homepage_posts('email',20)
-    posts = []
-    for post_id in post_ids:
+    # get homepage posts
+    homepage_post_ids = data.get_homepage_posts('email',20)
+    homepage_posts = []
+    for post_id in homepage_post_ids:
         post_data = data.get_post_data(post_id)
-        posts.append(post_data)
-    posts.reverse()
+        homepage_posts.append(post_data)
+    homepage_posts.reverse()
+
+    # get updated posts ============================need to do
+
+    # get unresolved posts
+    unresolved_post_ids = data.get_all_unresolved()
+    unresolved_posts = []
+    for post_id in unresolved_post_ids:
+        post_data = data.get_post_data(post_id)
+        unresolved_posts.append(post_data)
+    unresolved_posts.reverse()
+
+
+    # get instructors posts ===========================need to do
+
+
 
     # get courses
     for class_id in class_ids:
@@ -101,7 +116,8 @@ def home():
 
     return render_template(
         "homepage.html",
-        posts=posts,
+        homepage_posts=homepage_posts,
+        unresolved_posts=unresolved_posts,
         classes=classes,
         get_user_name=data.get_user_name
     )
