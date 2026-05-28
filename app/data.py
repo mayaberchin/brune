@@ -640,13 +640,13 @@ def get_post_followups(post_id):
             teacher_responses += [post]
         else:
             other += [post]
-    teacher_answers = order_by_upvotes(teacher_answers)
-    answers = order_by_upvotes(answers)
+    #teacher_answers = order_by_upvotes(teacher_answers)
+    #answers = order_by_upvotes(answers)
     answers = teacher_answers + answers
     followups['answers'] = answers
-    teacher_responses = order_by_upvotes(teacher_responses)
+    #teacher_responses = order_by_upvotes(teacher_responses)
     followups['teacher_responses'] = teacher_responses
-    other = order_by_upvotes(other)
+    #other = order_by_upvotes(other)
     followups['other'] = other
     return followups
 
@@ -899,10 +899,12 @@ def create_followup(author_email, post_id, body, is_anonymous='no'):
 
 def delete_post(post_id):
     # remove followups
-    followups = get_post_followups(post_id)
+    followups_dict = get_post_followups(post_id)
+    followups = followups_dict['answers'] + followups_dict['teacher_responses'] + followup_dict['other']
     for f in followups:
         if get_post_depth(f) < 2:   # possibility that this followup has more followups
-            double_followups = get_post_followups(f)
+            d_followups_dict = get_post_followups(f)
+            double_followups = d_followups_dict['answers'] + d_followups_dict['teacher_responses'] + d_followup_dict['other']
             for d in double_followups:
                 delete_post_trace(d)
         delete_post_trace(f)
