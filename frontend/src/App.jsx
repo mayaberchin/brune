@@ -48,12 +48,27 @@ function App() {
 
     if (!response.ok) {
       alert(data.error);
-      return;
+      return null;
     }
 
     // crete array w/ newest post in front
-    setPosts([data.post, ...posts]);
+    setPosts((currentPosts) => [data.post, ...currentPosts]);
     setShowPostEditor(false);
+    return data.post;
+  }
+
+  function addLivePost(post) {
+    setPosts((currentPosts) => {
+      const alreadyLoaded = currentPosts.some(
+        (currentPost) => currentPost.post_id === post.post_id
+      );
+
+      if (alreadyLoaded) {
+        return currentPosts;
+      }
+
+      return [post, ...currentPosts];
+    });
   }
 
   if (selectedPostType === "chat") {
@@ -64,6 +79,7 @@ function App() {
         selectedPostType={selectedPostType}
         currentUserEmail={currentUserEmail}
         addPost={addPost}
+        addLivePost={addLivePost}
       />
     );
   }
