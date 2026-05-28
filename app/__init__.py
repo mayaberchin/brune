@@ -93,7 +93,7 @@ def home():
         post_data = data.get_post_data(post_id)
         posts.append(post_data)
     posts.reverse()
-    
+
     # get courses
     for class_id in class_ids:
         class_data = data.get_class_data(class_id)
@@ -117,13 +117,15 @@ def render_post_page(page):
         return redirect(url_for('login'))
 
     page_info = POST_PAGE_INFO[page]
+    can_post = page != "announcements" or data.is_teacher(session["email"])
     return render_template(
         "post_page.html",
         classes=TEST_CLASSES,
         page_title=page_info["page_title"],
         page_description=page_info["page_description"],
         selected_post_type=page_info["selected_post_type"],
-        new_post_label=page_info["new_post_label"]
+        new_post_label=page_info["new_post_label"],
+        can_post=can_post
     )
 
 @app.route("/announcements")
@@ -186,7 +188,7 @@ def api_posts():
         post = data.get_post_data(post_id)
         post = add_display_author(post)
 
-        if category == "" or post["category"] == category:
+        if post["parent_id"] == "" and (category == "" or post["category"] == category):
             posts.append(post)
 
     posts.reverse() # newest posts first
@@ -220,6 +222,31 @@ def api_create_post():
     saved_post = data.get_post_data(post_id)
     saved_post = add_display_author(saved_post)
     return jsonify({"post": saved_post})
+
+@app.route("/api/posts/<post_id>/followups")
+def api_followups(post_id):
+    followups = []
+
+    for followup_id in data.get_post_followups(post_id):
+        followup = data.get_post_data(followup_id)
+        followup = add_display_author(followup)
+        followups.append(followup)
+
+    return jsonify({"followups": followups})
+
+@app.route("/api/posts/<post_id>/followups", methods=["POST"])
+def api_create_followup(post_id):
+    post = request.get_json() or {}
+    body = post.get("body", "").strip()
+    is_anonymous = "yes" if post.get("isAnonymous") else "no"
+
+    if body == "":
+        return jsonify({"error": "Missing followup body"}), 400
+
+    followup_id = data.create_followup(session["email"], post_id, body, is_anonymous)
+    followup = data.get_post_data(followup_id)
+    followup = add_display_author(followup)
+    return jsonify({"followup": followup})
 
 def add_display_author(post):
     if post["is_anonymous"] == "yes":

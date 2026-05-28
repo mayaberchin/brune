@@ -10,6 +10,7 @@ const selectedPostType = root.dataset.postType;
 const pageTitle = root.dataset.pageTitle;
 const pageDescription = root.dataset.pageDescription;
 const newPostLabel = root.dataset.newPostLabel;
+const canPost = root.dataset.canPost === "yes";
 
 // get classes from flask later!
 const testClasses = [
@@ -63,6 +64,7 @@ function App() {
       posts={posts}
       selectedPost={selectedPost}
       showPostEditor={showPostEditor}
+      canPost={canPost}
       setSelectedPost={setSelectedPost}
       setShowPostEditor={setShowPostEditor}
       addPost={addPost}

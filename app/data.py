@@ -189,9 +189,9 @@ def get_top_n_gc(email, n):
 
 # returns a dictionary of stuff to display on the homepage
 def get_homepage_posts(email, n):
-    # get a list of pinged posts 
+    # get a list of pinged posts
     pinged = get_top_n_pinged(email, n)
-    # get a list of unread posts if there aren't enough pinged posts 
+    # get a list of unread posts if there aren't enough pinged posts
     unread = []
     if len(pinged) < n:
         unread = get_top_n_unread(email, n-len(pinged))
@@ -485,7 +485,7 @@ def add_class_member(class_id, email):
     users_updated = add_to_list(users, email)
     update_classes_row(class_id, 'member_email', users_updated)
     return 'oke'
-    
+
 
 
 # promote a class member to a teacher for that class
@@ -514,7 +514,7 @@ def demote_owner(class_id, email, leave_as_teacher=True):
     owners = get_class_owners(class_id)
     owners_str = remove_from_list(owners, email)
     update_classes_row(class_id, 'owner_email', owners_str)
-    # demote from teacher role too 
+    # demote from teacher role too
     if (not leave_as_teacher):
         demote_teacher(class_id, email)
 
@@ -539,7 +539,7 @@ def remove_member(class_id, email, purge_posts=False):
     user_classes = get_user_classes(email)
     new_user_classes = remove_from_list(user_classes, class_id)
     update_users_row(email, 'class_id', new_user_classes)
-    # remove posts from this class in the user's table 
+    # remove posts from this class in the user's table
     posts = get_class_posts(class_id)
     for post in posts:
         mark_as_read(email, post)
@@ -620,37 +620,34 @@ def get_post_followups(post_id):
     responses = [post for post in get_all_posts() if get_post_parent(post) == post_id]
     followups = {}
     # don't order these posts at all if these are followups to followups--leave a thread ordered by post creation time
-    if (get_post_depth() > 1):
+    if (get_post_depth(post_id) > 1):
         followups['answers'] = []
         followups['teacher_responses'] = []
         followups['other'] = responses
-        return followups
+        return followups['other']
     teacher_answers = []
     answers = []
     teacher_responses = []
     other = []
-    for post in all_posts:
-        if is_answer(post):
-            if is_class_teacher(get_post_author(post_id)):
+    for post in responses:
+        if post_is_answer(post):
+            if is_class_teacher(get_post_class(post), get_post_author(post)):
                 teacher_answers += [post]
             else:
                 answers += [post]
-        elif is_class_teacher(get_post_author(post_id)):
+        elif is_class_teacher(get_post_class(post), get_post_author(post)):
             teacher_responses += [post]
         else:
             other += [post]
-    # posts marked as answers, ordered by upvotes
-    teacher_answers = order_by_upvotes(teacher_answers)
-    answers = order_by_upvotes(answers)
+    # teacher_answers = order_by_upvotes(teacher_answers)
+    # answers = order_by_upvotes(answers)
     answers = teacher_answers + answers
     followups['answers'] = answers
-    # teacher responses, ordered by upvotes 
-    teacher_responses = order_by_upvotes(teacher_responses)
+    # teacher_responses = order_by_upvotes(teacher_responses)
     followups['teacher_responses'] = teacher_responses
-    # other followups, ordered by upvotes
-    other = order_by_upvotes(other)
+    # other = order_by_upvotes(other)
     followups['other'] = other
-    return followups
+    return followups['answers'] + followups['teacher_responses'] + followups['other']
 
 
 def get_post_depth(post_id):
@@ -859,11 +856,11 @@ def create_post(author_email, class_id, title, body, category, show_dojo, attach
     to_ping = author_email
     add_posts_row([post_id, author_email, class_id, parent_id, title, body, attachments, category, is_resolved, is_answer, time, time, upvotes, upvoters, to_ping, show_dojo, is_anonymous])
     ping_post = get_top_parent(post_id)
-    # add to classes table 
+    # add to classes table
     class_posts = get_class_posts(class_id)
     posts_str = add_to_list(class_posts, ping_post)
     update_classes_row(class_id, 'posts', posts_str)
-    # add as unread post 
+    # add as unread post
     readers = get_class_members(class_id)
     if (show_dojo == 'yes'):
         readers += get_all_dojo()
@@ -885,11 +882,25 @@ def create_post(author_email, class_id, title, body, category, show_dojo, attach
         ping(post_id, ping_list)
     return post_id
 
+def create_followup(author_email, post_id, body, is_anonymous='no'):
+    followup_id = unique_id(get_all_posts(), 16)
+    class_id = get_post_class(post_id)
+    category = get_post_category(post_id)
+    show_dojo = get_posts_field(post_id, 'show_dojo')
+    is_resolved = 'no'
+    is_answer = 'no'
+    time = str(datetime.now())
+    upvotes = 0
+    upvoters = ''
+    ping = author_email
+    add_posts_row([followup_id, author_email, class_id, post_id, '', body, '', category, is_resolved, is_answer, time, time, upvotes, upvoters, ping, show_dojo, is_anonymous])
+    return followup_id
+
 def delete_post(post_id):
     # remove followups
     followups = get_post_followups(post_id)
     for f in followups:
-        if get_post_depth(f) < 2:   # possibility that this followup has more followups 
+        if get_post_depth(f) < 2:   # possibility that this followup has more followups
             double_followups = get_post_followups(f)
             for d in double_followups:
                 delete_post_trace(d)
@@ -935,7 +946,7 @@ def delete_post_trace(post_id):
     class_posts = get_class_posts(class_id)
     c_posts_str = remove_from_list(class_posts, post_id)
     update_classes_row(class_id, 'posts', c_posts_str)
-    # remove from users table 
+    # remove from users table
     readers = get_class_members(class_id)
     if (show_dojo(post_id)):
         readers += get_all_dojo()
@@ -1164,7 +1175,7 @@ def sqlite_fetchall(command, vals=()):
 if __name__ == "__main__":
 
     create_tables()
-    
+
     add_user("mayaberchin@gmail.com", "hello", "Maya Berchin")
     add_user("other@gmail.com", "other", "Other Student")
     #print(str(get_all_users()))
@@ -1196,7 +1207,7 @@ if __name__ == "__main__":
     print("Classes Maya owns: " + str(get_owned_classes("mayaberchin@gmail.com")))
     print("Classes Other owns: " + str(get_owned_classes("other@gmail.com")))
     '''
-    
+
     for i in range(15):
         add_user(f"{i}@gmail.com", "b", "b b")
         add_class_member(class_id, f'{i}@gmail.com')
