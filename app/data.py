@@ -337,7 +337,7 @@ def update_users_row(email, col_name, col_val):
 
 def get_active_classes():
     classes = get_all_classes_archived()
-    return [c for c in classes if ! is_archived(c)]
+    return [c for c in classes if not is_archived(c)]
 
 def get_all_classes():
     data = get_col('classes', 'class_id')
@@ -482,7 +482,7 @@ def demote_owner(class_id, email, leave_as_teacher=False):
     owners_str = remove_from_list(owners, email)
     update_classes_row(class_id, 'owner_email', owners_str)
     # demote from teacher role too 
-    if (! leave_as_teacher):
+    if (not leave_as_teacher):
         demote_teacher(class_id, email)
 
 
@@ -805,7 +805,7 @@ def delete_post(post_id):
             double_followups = get_post_followups(f)
             for d in double_followups:
                 delete_post_trace(d)
-       delete_post_trace(f)
+        delete_post_trace(f)
     delete_post_trace(post_id)
 
 
