@@ -12,6 +12,7 @@ function PostLayout({
   posts,
   selectedPost,
   showPostEditor,
+  canPost,
   setSelectedPost,
   setShowPostEditor,
   addPost,
@@ -33,7 +34,7 @@ function PostLayout({
 
             {selectedPost === null ? (
               <p className="text-muted mb-0">{pageDescription}</p>
-            ) : (
+            ) : canPost && (
               <button
                 type="button"
                 className="btn btn-primary btn-sm mt-2"
@@ -44,7 +45,7 @@ function PostLayout({
             )}
             </div>
 
-            {selectedPost === null && (
+            {selectedPost === null && canPost && (
             <button
               type="button"
               className="btn btn-primary"
@@ -55,7 +56,7 @@ function PostLayout({
           )}
         </div>
 
-        {showPostEditor && (
+        {showPostEditor && canPost && (
           <PostEditor
             selectedPostType={selectedPostType}
             classes={classes}

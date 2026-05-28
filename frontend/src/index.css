@@ -136,6 +136,35 @@
   overflow-wrap: anywhere;
 }
 
+.followups {
+  margin-top: 32px;
+}
+
+.followups h3 {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+}
+
+.followup {
+  border-top: 1px solid #ddd;
+  padding: 12px 0;
+}
+
+.followup-meta {
+  color: gray;
+  margin-bottom: 6px;
+}
+
+.followup-body {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.followup-form {
+  margin-top: 16px;
+}
+
 /* --------------------------------------------------------- */
 /* Post Editor:  */
 /* --------------------------------------------------------- */
