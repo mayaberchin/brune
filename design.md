@@ -186,7 +186,7 @@ _classes_
 | TEXT          | owner_email   | NOT NULL FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 | TEXT          | teacher_email | NOT NULL FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 | TEXT          | member_email  | NOT NULL FOREIGN KEY references user_id (can have multiple, comma-separated)    |
-| TEXT          | banned_email  | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | banned_email  | FOREIGN KEY references user_id (can have multiple, comma-separated)             |
 | TEXT          | posts         | FOREIGN KEY references post_id, followup_id                                     |
 | TEXT          | is_archived   | NOT NULL                                                                        |
 
@@ -211,6 +211,7 @@ _posts_
 | INTEGER       | upvotes       | NOT NULL                                                               |
 | TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 | TEXT          | ping          | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | show_dojo     | NOT NULL                                                               |
 
 <br>
 

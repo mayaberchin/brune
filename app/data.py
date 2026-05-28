@@ -9,7 +9,7 @@ DB_FILE="data.db"
 
 #=============================[GLOBALS]=============================#
 
-USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_teacher', 'class_id', 'unread_posts']
+USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_class_teacher', 'class_id', 'unread_posts']
 CLASSES_COLS = ['class_id', 'name', 'teacher_email', 'posts', 'is_archived']
 POSTS_COLS = ['post_id', 'author_email', 'class_id', 'title', 'body', 'attachments', 'category', 'is_resolved', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
 FOLLOWUPS_COLS = ['followup_id', 'author_email', 'post_id', 'body', 'attachments', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
@@ -28,7 +28,7 @@ def create_users_table():
                     password_hash   TEXT        NOT NULL,
                     is_dojo         TEXT        NOT NULL                                DEFAULT 'no',
                     is_sensei       TEXT        NOT NULL                                DEFAULT 'no',
-                    is_teacher      TEXT        NOT NULL                                DEFAULT 'no',
+                    is_class_teacher      TEXT        NOT NULL                                DEFAULT 'no',
                     class_id        TEXT,
                     unread_posts    TEXT,
                     pinged_posts    TEXT
@@ -68,7 +68,8 @@ def create_posts_table():
                     updated_at      TEXT        NOT NULL                                DEFAULT CURRENT_TIMESTAMP,
                     upvotes         INTEGER     NOT NULL,
                     upvoters        TEXT,
-                    ping            TEXT
+                    ping            TEXT,
+                    show_dojo       TEXT        NOT NULL
                 )"""
     sqlite(command)
     # add attachement in
@@ -101,7 +102,7 @@ def get_all_senseis():
     return [user for user in get_all_users() if is_sensei(user)]
 
 def get_all_teachers():
-    return [user for user in get_all_users() if is_teacher(user)]
+    return [user for user in get_all_users() if is_class_teacher(user)]
 
 
 
@@ -240,7 +241,7 @@ def is_sensei(email):
     return sensei == 'yes'
 
 def is_teacher(email):
-    teacher = get_users_field(email, 'is_teacher')
+    teacher = get_users_field(email, 'is_class_teacher')
     return teacher == 'yes'
 
 
@@ -258,11 +259,11 @@ def add_user(email, password, name, github=''):
     password = str(hashlib.sha256(password).hexdigest())
     is_dojo = 'no'
     is_sensei = 'no'
-    is_teacher = 'no'
+    is_class_teacher = 'no'
     class_id = ''
     unread_posts = ''
     pinged_posts = ''
-    add_users_row([email, github, name, password, is_dojo, is_senpai, is_sensei, is_teacher, class_id, unread_posts, pinged_posts])
+    add_users_row([email, github, name, password, is_dojo, is_senpai, is_sensei, is_class_teacher, class_id, unread_posts, pinged_posts])
     return 'success'
 
 
@@ -274,10 +275,15 @@ def add_sensei(email):
     update_users_row(email, 'is_sensei', 'yes')
 
 def add_teacher(email):
-    update_users_row(email, 'is_teacher', 'yes')
+    update_users_row(email, 'is_class_teacher', 'yes')
 
 def mark_read(email, post_id):
+    pinged_posts = get_pinged_posts(email)
     unread_posts = get_unread_posts(email)
+    if (post_id in pinged_posts):
+        pinged_posts = pinged_posts.remove(post_id)
+        pinged_str = merge_list(pinged_posts)
+        update_users_row(email, 'pinged_posts', pinged_posts)
     if (post_id in unread_posts):
         unread_posts = unread_posts.remove(post_id)
         unread_str = merge_list(unread_posts)
@@ -386,10 +392,10 @@ def get_class_data(class_id):
 def is_archived(class_id):
     return get_classes_field(class_id, 'is_archived') == 'yes'
 
-def is_teacher(class_id, email):
+def is_class_teacher(class_id, email):
     return email in get_class_teachers(class_id)
 
-def is_owner(class_id, email):
+def is_class_owner(class_id, email):
     return email in get_class_owners(class_id)
 
 def is_banned(class_id, email):
@@ -483,12 +489,12 @@ def demote_owner(class_id, email, leave_as_teacher=False):
 
 def remove_member(class_id, email, purge_posts=False):
     # remove email from class owners list
-    if (is_owner(class_id, email)):
+    if (is_class_owner(class_id, email)):
         class_owners = get_class_owners(email)
         new_class_owners = remove_from_list(class_owners, email)
         update_classes_row(class_id, 'owner_email', new_class_owners)
     # remove email from class teachers list
-    if (is_teacher(class_id, email)):
+    if (is_class_teacher(class_id, email)):
         class_teachers = get_class_teachers(email)
         new_class_teachers = remove_from_list(class_teachers, email)
         update_classes_row(class_id, 'teacher_email', new_class_teachers)
@@ -534,15 +540,84 @@ def update_classes_row(class_id, col_name, col_val):
 
 #---------[accessors]---------#
 
+
 def get_all_posts():
     data = get_col('posts', 'post_id')
     return data
 
+# returns a dictionary of different types of followups
+def get_post_followups(post_id):
+    responses = [post for post in get_all_posts() if get_post_parent(post) == post_id]
+    followups = {}
+    # don't order these posts at all if these are followups to followups--leave a thread ordered by post creation time
+    if (get_post_depth() > 1):
+        followups['answers'] = []
+        followups['teacher_responses'] = []
+        followups['other'] = responses
+        return followups
+    teacher_answers = []
+    answers = []
+    teacher_responses = []
+    other = []
+    for post in all_posts:
+        if is_answer(post):
+            if is_class_teacher(get_post_author(post_id)):
+                teacher_answers += [post]
+            else:
+                answers += [post]
+        elif is_class_teacher(get_post_author(post_id)):
+            teacher_responses += [post]
+        else:
+            other += [post]
+    # posts marked as answers, ordered by upvotes
+    teacher_answers = order_by_upvotes(teacher_answers)
+    answers = order_by_upvotes(answers)
+    answers = teacher_answers + answers
+    followups['answers'] = answers
+    # teacher responses, ordered by upvotes 
+    teacher_responses = order_by_upvotes(teacher_responses)
+    followups['teacher_responses'] = teacher_responses
+    # other followups, ordered by upvotes
+    other = order_by_upvotes(other)
+    followups['other'] = other
+    return followups
+
+
+def get_post_depth(post_id):
+    post = post_id
+    parent = get_post_parent(post_id)
+    depth = 0
+    while parent:
+        depth += 1
+        parent = get_post_parent(post_id)
+    return depth
+
+
+
 def get_post_author(post_id):
     return get_posts_field(post_id, 'author_email')
 
+def get_post_parent(post_id):
+    return get_posts_field(post_id, 'parent_id')
+
+def get_top_parent(post_id):
+    parent = get_post_parent(post_id)
+    if (not parent):
+        return post_id
+    grandparent = get_post_parent(parent)
+    if (not grandparent):
+        return parent 
+    return grandparent
+
+
+
 def get_post_class(post_id):
     return get_posts_field(post_id, 'class_id')
+
+def get_post_category(post_id):
+    return get_posts_field(post_id, 'category')
+
+
 
 def get_post_title(post_id):
     return get_posts_field(post_id, 'title')
@@ -550,18 +625,33 @@ def get_post_title(post_id):
 def get_post_body(post_id):
     return get_posts_field(post_id, 'body')
 
-def get_post_category(post_id):
-    return get_posts_field(post_id, 'category')
+def get_post_attachments(post_id):
+    attachments = get_posts_field(post_id, 'attachments')
+    return make_list(attachments)
 
-def post_is_is_resolved(post_id):
+
+
+def post_is_resolved(post_id):
     is_resolved = get_posts_field(post_id, 'is_resolved')
     return is_resolved == 'yes'
+
+def post_is_answer(post_id):
+    is_answer = get_post_field(post_id, 'is_answer')
+    return is_answer == 'yes'
+
+def show_dojo(post_id):
+    dojo_sees = get_post_field(post_id, 'show_dojo')
+    return dojo_sees == 'yes'
+
+
 
 def get_post_ctime(post_id):
     return get_posts_field(post_id, 'created_at')
 
 def get_post_utime(post_id):
     return get_posts_field(post_id, 'updated_at')
+
+
 
 def get_post_upvotes(post_id):
     return get_posts_field(post_id, 'upvotes')
@@ -574,12 +664,19 @@ def get_post_upvoters(post_id):
 def get_post_pingees(post_id):
     ping = get_posts_field(post_id, 'ping')
     ping_lst = make_list(ping)
-    return ping_lst
+    # remove users who have been deleted since the last time this list was accessed
+    ping_filtered = [user for user in ping_lst if user_exists(user)]
+    ping_str = merge_list(ping_filtered)
+    update_posts_row(post_id, 'ping', ping_str)
+    return ping_filtered
+
+
 
 def get_post_data(post_id):
     keys = POSTS_COLS
     values = get_row('posts', 'post_id', post_id)
     d = list_to_dict(keys, values)
+    d['attachments'] = make_list(d['attachments'])
     d['upvoters'] = make_list(d['upvoters'])
     d['ping'] = make_list(d['ping'])
     return d
@@ -589,11 +686,14 @@ def get_post_data(post_id):
 #---------[modifiers]---------#
 
 
+
 def change_post_title(post_id, new_title):
     update_posts_row(post_id, 'title', new_title)
 
 def change_post_body(post_id, new_body):
     update_posts_row(post_id, 'body', new_body)
+
+
 
 def resolve_post(post_id):
     update_posts_row(post_id, 'is_resolved', 'yes')
@@ -601,9 +701,21 @@ def resolve_post(post_id):
 def unresolve_post(post_id):
     update_posts_row(post_id, 'is_resolved', 'no')
 
+
+
+def mark_post_as_answer(post_id):
+    update_posts_row(post_id, 'is_answer', 'yes')
+
+def unmark_post_as_answer(post_id):
+    update_posts_row(post_id, 'is_answer', 'no')
+
+
+
 def update_post_time(post_id):
     time = str(datetime.now())
     update_posts_row(post_id, 'updated_at', time)
+
+
 
 def increment_post_upvotes(post_id, inc):     # inc can be positive or negative
     upvotes = get_post_upvotes(post_id)
@@ -625,6 +737,8 @@ def remove_post_upvoter(post_id, email):
     increment_post_upvotes(post_id, -1)
     remove_post_pingee(post_id, email)
 
+
+
 def add_post_pingee(post_id, email):
     pingees = get_post_pingees(post_id)
     if email not in pingees:
@@ -639,27 +753,99 @@ def remove_post_pingee(post_id, email):
         pingees_new = merge_list(pingees)
         update_posts_row(post_id, 'ping', pingees_new)
 
+def ping(post_id, pingees=[]):
+    if len(pingees) == 0:
+        pingees = get_post_pingees(post_id)
+    for user in pingees:
+        if not user_exists(user):
+            remove_users += [user]
+        else:
+            pinged_posts = get_pinged_posts(email)
+            pinged_str = add_to_list(pinged_posts, post_id)
+            update_users_row(user, 'pinged_posts', pinged_str)
+
 
 
 #---------[creation-deletion]---------#
 
 
-def create_post(author_email, class_id, title, body, category):
+def create_post(author_email, class_id, title, body, category, attachments, show_dojo, parent_id=''):
     post_id = unique_id(get_all_posts(), 16)
     is_resolved = 'no'
     time = str(datetime.now())
     upvotes = 0
     upvoters = ''
-    ping = f'{author_email}'
-    add_posts_row([post_id, author_email, class_id, title, body, category, is_resolved, time, time, upvotes, upvoters, ping])
+    ping = author_email
+    add_posts_row([post_id, author_email, class_id, parent_id, title, body, attachments, category, is_resolved, time, time, upvotes, upvoters, ping, show_dojo])
+    ping_post = get_top_parent(post_id)
+    # add to classes table 
+    class_posts = get_class_posts(class_id)
+    posts_str = add_to_list(class_posts, ping_post)
+    update_classes_row(class_id, 'posts', posts_str)
+    # add as unread post 
+    readers = get_class_members(class_id)
+    if (show_dojo == 'yes'):
+        readers += get_all_dojo()
+    readers = readers.remove(author_email)
+    for reader in readers:
+        unread = get_unread_posts(reader)
+        unread_str = add_to_list(unread, ping_post)
+        update_users_row(reader, 'unread_posts', unread_str)
+    # ping necessary people
+    if (parent_id != ''):
+        ping(parent_id)
+        add_post_pingee(parent_id, author_email)
     return post_id
 
 def delete_post(post_id):
-    delete_row('posts', 'post_id', post_id)
+    # remove followups
+    followups = get_post_followups(post_id)
+    for f in followups:
+        if get_post_depth(f) < 2:   # possibility that this followup has more followups 
+            double_followups = get_post_followups(f)
+            for d in double_followups:
+                delete_post_trace(d)
+       delete_post_trace(f)
+    delete_post_trace(post_id)
 
 
 
 #---------[posts-helpers]---------#
+
+
+def order_by_upvotes(posts):
+    upvotes = [get_post_upvotes(post) for post in posts]
+    ordered = []
+    num_posts = len(posts)
+    for i in range(num_posts):
+        min_ind = 0
+        min_val = upvotes[0]
+        for j in range(1, len(posts)):
+            if upvotes[j] < min_val:
+                min_ind = j
+                min_val = upvotes[j]
+        ordered += posts[min_ind]
+        posts = posts.remove(min_ind)
+        upvotes = upvotes.remove(min_ind)
+    return ordered
+
+
+# deletes all traces of a post from all tables
+def delete_post_trace(post_id):
+    # remove from classes table
+    class_id = get_post_class(post_id)
+    class_posts = get_class_posts(class_id)
+    c_posts_str = remove_from_list(class_posts, post_id)
+    update_classes_row(class_id, 'posts', c_posts_str)
+    # remove from users table 
+    readers = get_class_members(class_id)
+    if (show_dojo(post_id)):
+        readers += get_all_dojo()
+    for reader in readers:
+        mark_as_read(reader, post_id)    # removes the post from unread/ping
+    # remove from posts table
+    delete_row('posts', 'post_id', post_id)
+
 
 
 def get_posts_field(post_id, field_name):
