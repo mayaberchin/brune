@@ -182,7 +182,9 @@ _classes_
 |---------------|---------------|---------------------------------------------------------------------------------|
 | TEXT          | class_id      | PRIMARY KEY                                                                     |
 | TEXT          | name          | NOT NULL                                                                        |
-| TEXT          | teacher_id    | NOT NULL FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | owner_email   | NOT NULL FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | teacher_email | NOT NULL FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | member_email  | NOT NULL FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 | TEXT          | posts         | FOREIGN KEY references post_id, followup_id                                     |
 | TEXT          | is_archived   | NOT NULL                                                                        |
 

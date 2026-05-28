@@ -40,7 +40,9 @@ def create_classes_table():
                 CREATE TABLE IF NOT EXISTS classes (
                     class_id        TEXT        NOT NULL    PRIMARY KEY,
                     name            TEXT        NOT NULL,
+                    owner_email     TEXT        NOT NULL,
                     teacher_email   TEXT        NOT NULL,
+                    member_email    TEXT        NOT NULL,
                     posts           TEXT,
                     is_archived     TEXT        NOT NULL
                 )"""
@@ -153,6 +155,12 @@ def get_teaching_classes(email):
     teaches = [c for c in classes if email in get_teachers(c)]
     return teaches
 
+# get the classes someone owns
+def get_owned_classes(email):
+    classes = get_user_classes(email)
+    owned = [c for c in classes if email in get_owners(c)]
+    return owned
+
 
 def get_user_data(email):
     keys = USERS_COLS
@@ -261,28 +269,44 @@ def update_users_row(email, col_name, col_val):
 #---------[accessors]---------#
 
 
-def get_all_classes():
+def get_active_classes():
     classes = get_all_classes_archived()
     return [c for c in classes if ! is_archived(c)]
 
-def get_all_classes_archived():
+def get_all_classes():
     data = get_col('classes', 'class_id')
     return data
 
 def get_class_name(class_id):
-    return get_field('classes', 'class_id', class_id, 'name')
+    return get_classes_field(class_id, 'name')
+
+def get_class_members(class_id):
+    members_str = get_classes_field(class_id, 'member_email')
+    members = make_list(members_str)
+    return members
 
 # get the teachers of a class
-def get_teachers(class_id):
-    teachers_str = get_field('classes', 'class_id', class_id, 'teacher_email')
+def get_class_teachers(class_id):
+    teachers_str = get_classes_field(class_id, 'teacher_email')
     teachers = make_list(teachers_str)
     return teachers
+
+def get_class_owners(class_id):
+    owners_str = get_classes_field(class_id, 'owner_email')
+    owners = make_list(owners_str)
+    return owners
+
+def get_class_posts(class_id):
+    data = get_classes_field(class_id, 'posts')
+    posts = make_list(data)
+    return posts
 
 def get_class_data(class_id):
     keys = CLASSES_COLS
     values = get_row('classes', 'class_id', class_id)
     d = list_to_dict(keys, values)
     d['teacher_email'] = make_list(d['teacher_email'])
+    d['posts'] = make_list(d['posts'])
     return d
 
 
@@ -290,6 +314,9 @@ def get_class_data(class_id):
 def is_archived(class_id):
     return get_classes_field(class_id, 'is_archived') == 'yes'
 
+def is_teacher 
+
+def is_owner
 
 
 
@@ -299,7 +326,11 @@ def is_archived(class_id):
 def create_class(teacher_email, class_name):
     # add the class to classes table
     class_id = unique_id(get_all_classes(), 3)
-    add_classes_row([class_id, class_name, teacher_email])
+    owner = teacher_email
+    members = teacher_email
+    posts = ''
+    is_archived = 'no'
+    add_classes_row([class_id, class_name, owner, teacher_email, members, posts, is_archived])
     # add the class to teacher's users table
     teacher_classes = get_user_classes(teacher_email)
     teacher_classes_str = add_to_list(teacher_classes, class_id)
@@ -308,20 +339,44 @@ def create_class(teacher_email, class_name):
 
 
 
-#---------[member-focused-modifiers]---------#
+#---------[modifiers]---------#
+
+def change_class_name(class_id, new_name):
+    update_classes_row(class_id, 'name', new_name)
+
+
+def archive_class(class_id)
+
+
+def
 
 
 # add a user to a class as a student
 def join_class(email, class_id):
     classes = get_user_classes(email)
-    classes_str = add_to_list(classes, class_id)
-    update_users_row(email, 'class_id', classes_str)
+    classes_updated = add_to_list(classes, class_id)
+    update_users_row(email, 'class_id', classes_updated)
+    users = get_class_members(class_id)
+    users_updated = add_to_list(users, email)
+    update_classes_row(class_id, 'member_email', users_updated)
 
 # promote a class member to a teacher for that class
 def add_teacher(class_id, email):
     teachers = get_teachers(class_id)
     teachers_str = add_to_list(teachers, email)
     update_classes_row(class_id, 'teacher_email', teachers_str)
+
+
+def remove_teacher(class_id, email)
+
+
+def add_owner
+
+
+def remove_owner
+
+
+def delete_class
 
 
 
