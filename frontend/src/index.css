@@ -137,17 +137,24 @@
 }
 
 .followups {
-  margin-top: 32px;
+  margin-top: 24px;
 }
 
 .followups h3 {
   font-size: 1.2rem;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .followup {
   border-top: 1px solid #ddd;
-  padding: 12px 0;
+  padding: 18px 0;
+}
+
+.followup-replies {
+  border-left: 2px solid #ddd;
+  margin-left: 22px;
+  margin-top: 16px;
+  padding-left: 18px;
 }
 
 .followup-meta {
@@ -162,7 +169,19 @@
 }
 
 .followup-form {
-  margin-top: 16px;
+  margin: 16px 0 20px;
+}
+
+.followup-form textarea {
+  min-height: 74px;
+}
+
+.followup-form-actions {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 10px;
 }
 
 /* --------------------------------------------------------- */

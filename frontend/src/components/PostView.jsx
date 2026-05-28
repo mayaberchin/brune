@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
+import Followup, { FollowupForm } from "./Followup";
 
 function PostView({ postData, onBack, showClass }) {
   const [followups, setFollowups] = useState([]);
-  const [body, setBody] = useState("");
-  const [isAnonymous, setIsAnonymous] = useState(false);
 
   useEffect(() => {
     async function loadFollowups() {
@@ -15,13 +14,7 @@ function PostView({ postData, onBack, showClass }) {
     loadFollowups();
   }, [postData.post_id]);
 
-  async function addFollowup(event) {
-    event.preventDefault();
-
-    if (body.trim() === "") {
-      return;
-    }
-
+  async function addFollowup(body, isAnonymous) {
     const response = await fetch(`/api/posts/${postData.post_id}/followups`, {
       method: "POST",
       headers: {
@@ -40,8 +33,6 @@ function PostView({ postData, onBack, showClass }) {
     }
 
     setFollowups([...followups, data.followup]);
-    setBody("");
-    setIsAnonymous(false);
   }
 
   return (
@@ -66,42 +57,18 @@ function PostView({ postData, onBack, showClass }) {
       <section className="followups">
         <h3>Followups</h3>
 
+        <FollowupForm
+          onSubmit={addFollowup}
+          placeholder="Write a followup..."
+        />
+
         {followups.length === 0 ? (
           <p className="text-muted">No followups yet.</p>
         ) : (
           followups.map((followup) => (
-            <div className="followup" key={followup.post_id}>
-              <p className="followup-meta">By {followup.display_author}</p>
-              <p className="followup-body">{followup.body}</p>
-            </div>
+            <Followup key={followup.post_id} followup={followup} />
           ))
         )}
-
-        <form className="followup-form" onSubmit={addFollowup}>
-          <textarea
-            className="form-control"
-            value={body}
-            onChange={(event) => setBody(event.target.value)}
-            placeholder="Write a followup..."
-          ></textarea>
-
-          <div className="form-check mt-2">
-            <input
-              id="followupAnonymous"
-              type="checkbox"
-              className="form-check-input"
-              checked={isAnonymous}
-              onChange={(event) => setIsAnonymous(event.target.checked)}
-            />
-            <label htmlFor="followupAnonymous" className="form-check-label">
-              Post Anonymously
-            </label>
-          </div>
-
-          <button type="submit" className="btn btn-primary btn-sm mt-2">
-            Reply
-          </button>
-        </form>
       </section>
     </div>
   );
