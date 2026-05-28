@@ -169,13 +169,13 @@ def notes_rsrc():
 def account():
     if 'email' not in session:
         return redirect(url_for('login'))
-    return render_template("account")
+    return render_template("account.html")
 
 @app.route("/settings")
 def settings():
     if 'email' not in session:
         return redirect(url_for('login'))
-    return render_template("settings")
+    return render_template("settings.html")
 
 # ------------------ REACT POST API ROUTES ------------------
 
