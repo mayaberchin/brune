@@ -620,7 +620,7 @@ def get_post_followups(post_id):
     responses = [post for post in get_all_posts() if get_post_parent(post) == post_id]
     followups = {}
     # don't order these posts at all if these are followups to followups--leave a thread ordered by post creation time
-    if (get_post_depth(post_id) > 1):
+    if (get_post_depth(post_id) > 1 or len(responses) == 0):
         followups['answers'] = []
         followups['teacher_responses'] = []
         followups['other'] = responses
@@ -630,6 +630,7 @@ def get_post_followups(post_id):
     teacher_responses = []
     other = []
     for post in responses:
+        print(post)
         if post_is_answer(post):
             if is_class_teacher(get_post_class(post), get_post_author(post)):
                 teacher_answers += [post]
@@ -647,14 +648,14 @@ def get_post_followups(post_id):
     followups['teacher_responses'] = teacher_responses
     # other = order_by_upvotes(other)
     followups['other'] = other
-    return followups['answers'] + followups['teacher_responses'] + followups['other']
+    return followups
 
 
 def get_post_depth(post_id):
     post = post_id
     parent = get_post_parent(post_id)
     depth = 0
-    while parent:
+    while str(parent) != 'None':
         depth += 1
         parent = get_post_parent(post_id)
     return depth
@@ -703,7 +704,7 @@ def post_is_resolved(post_id):
     return is_resolved == 'yes'
 
 def post_is_answer(post_id):
-    is_answer = get_post_field(post_id, 'is_answer')
+    is_answer = get_posts_field(post_id, 'is_answer')
     return is_answer == 'yes'
 
 def show_dojo(post_id):
@@ -1265,6 +1266,13 @@ if __name__ == "__main__":
     print(str(get_unread_posts('0@gmail.com')))
     print(str(get_pinged_posts('0@gmail.com')))
     print(str(get_unresolved_posts(class_id)))
+    
+    create_followup('b@b.com', announcement_id, "huhhh???")
+    create_followup('0@gmail.com', announcement_id, "lolll i get it")
+    f_id = create_followup('0@gmail.com', announcement_id, ":)")
+    print("parent: " + get_post_parent(f_id))
+    add_post_upvoter(f_id, "b@b.com")
+    print(str(get_post_followups(announcement_id)))
 
     '''
     print("\n----------------------------------\n")
