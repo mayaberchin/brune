@@ -691,7 +691,7 @@ def post_is_resolved(post_id):
     return is_resolved == 'yes'
 
 def post_is_answer(post_id):
-    is_answer = get_post_field(post_id, 'is_answer')
+    is_answer = get_posts_field(post_id, 'is_answer')
     return is_answer == 'yes'
 
 def show_dojo(post_id):
