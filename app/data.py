@@ -30,7 +30,8 @@ def create_users_table():
                     is_sensei       TEXT        NOT NULL                                DEFAULT 'no',
                     is_teacher      TEXT        NOT NULL                                DEFAULT 'no',
                     class_id        TEXT,
-                    unread_posts    TEXT
+                    unread_posts    TEXT,
+                    pinged_posts    TEXT
                 )"""
     sqlite(command)
 
@@ -114,6 +115,31 @@ def get_user_github(email):
     get_users_field(email, 'github')
 
 
+def get_pinged_posts(email):
+    pinged_posts_str = get_users_field(email, 'pinged_posts')
+    pinged_posts = make_list(pinged_posts_str)
+    return pinged_posts.reverse()
+
+# returns unread posts from announcements, questions, and notes (but not groupchat) from any class
+def get_top_n_pinged(email, n):
+    all = get_pinged_posts(email)
+    # prioritize announcements, then questions, then notes (don't get gc)
+    announcements = []
+    questions = []
+    notes = []
+    for post in all:
+        type = get_post_category(post)
+        if type == 'announcement':
+            announcements += [post]
+        elif type == 'question':
+            questions += [post]
+        elif type == 'notes':
+            notes += [post]
+    ordered = announcements[:n]
+    ordered += questions[:n-len(ordered)]
+    ordered += notes[:n-len(ordered)]
+    return ordered
+
 
 def get_unread_posts(email):
     unread_posts_str = get_users_field(email, 'unread_posts')
@@ -123,7 +149,23 @@ def get_unread_posts(email):
 # returns unread posts from announcements, questions, and notes (but not groupchat) from any class
 def get_top_n_unread(email, n):
     all = get_unread_posts(email)
-    return all[-1*n:].reverse()
+    # prioritize announcements, then questions, then notes (don't get gc)
+    announcements = []
+    questions = []
+    notes = []
+    for post in all:
+        type = get_post_category(post)
+        if type == 'announcement':
+            announcements += [post]
+        elif type == 'question':
+            questions += [post]
+        elif type == 'notes':
+            notes += [post]
+    ordered = announcements[:n]
+    ordered += questions[:n-len(ordered)]
+    ordered += notes[:n-len(ordered)]
+    return ordered
+
 
 # returns at most one message (if there is an unread one) from the groupchat of at most n classes
 def get_top_n_gc(email, n):
@@ -138,6 +180,21 @@ def get_top_n_gc(email, n):
             messages += [{gc[-1]: msg_class}]
             gc = gc.remove(gc[-1])
     return messages.reverse()
+
+
+# returns a dictionary of stuff to display on the homepage
+def get_homepage_posts(email, n):
+    # get a list of pinged posts 
+    pinged = get_top_n_pinged(email, n)
+    # get a list of unread posts if there aren't enough pinged posts 
+    unread = []
+    if len(pinged) < n:
+        unread = get_top_n_unread(email, n-len(pinged))
+    posts = {}
+    posts['pinged'] = pinged
+    posts['unread'] = unread
+    return posts
+
 
 def filter_by_class(posts, class_id):
     return [post for post in posts if get_post_class(post_id) == class_id]
@@ -169,6 +226,7 @@ def get_user_data(email):
     d = list_to_dict(keys, values)
     d['class_id'] = make_list(d['class_id'])
     d['unread_posts'] = make_list(d['unread_posts'])
+    d['pinged_posts'] = make_list(d['pinged_posts'])
     return d
 
 
@@ -203,7 +261,8 @@ def add_user(email, password, name, github=''):
     is_teacher = 'no'
     class_id = ''
     unread_posts = ''
-    add_users_row([email, github, name, password, is_dojo, is_senpai, is_sensei, is_teacher, class_id, unread_posts])
+    pinged_posts = ''
+    add_users_row([email, github, name, password, is_dojo, is_senpai, is_sensei, is_teacher, class_id, unread_posts, pinged_posts])
     return 'success'
 
 
@@ -963,7 +1022,8 @@ def sqlite_fetchall(command, vals=()):
 if __name__ == "__main__":
 
     create_tables()
-
+    
+    '''
     add_user("mayaberchin@gmail.com", "hello", "Maya Berchin")
     add_user("other@gmail.com", "other", "Other Student")
     print(str(get_all_users()))
@@ -1011,3 +1071,4 @@ if __name__ == "__main__":
     print("\n----------------------------------\n")
     add_senpai("mayaberchin@gmail.com")
     print(str(get_all_dojo()))
+    '''
