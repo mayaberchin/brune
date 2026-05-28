@@ -1,22 +1,19 @@
 import { useState } from "react";
 
-function PostPreview({ postData, onOpen }) {
+function PostPreview({ postData, onOpen, isSelected }) {
+  const previewClassName = isSelected
+    ? "post-preview selected"
+    : "post-preview";
 
   return (
-    <div className="card mb-3 post-preview" onClick={() => onOpen(postData)}>
-      <div className="card-body">
-        <div className="d-flex justify-content-between align-items-start gap-3">
+    <div className={previewClassName} onClick={() => onOpen(postData)}>
+      <h2 className="post-preview-title">{postData.title}</h2>
 
-          <div>
-            <h5 className="mb-1">{postData.title}</h5>
-            <p className="text-muted mb-2">
-              Type: {postData.category} | Class: {postData.class_id}
-            </p>
-            <p className="mb-0">{postData.body}</p>
-          </div>
+      <p className="post-preview-meta">
+        By {postData.display_author} | Type: {postData.category} | Class: {postData.class_id}
+      </p>
 
-        </div>
-      </div>
+      <p className="post-preview-body">{postData.body}</p>
     </div>
   );
 }

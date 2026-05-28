@@ -11,7 +11,7 @@ DB_FILE="data.db"
 
 USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_class_teacher', 'class_id', 'unread_posts']
 CLASSES_COLS = ['class_id', 'name', 'teacher_email', 'posts', 'is_archived']
-POSTS_COLS = ['post_id', 'author_email', 'class_id', 'title', 'body', 'attachments', 'category', 'is_resolved', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
+POSTS_COLS = ['post_id', 'author_email', 'class_id', 'parent_id', 'title', 'body', 'attachments', 'category', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping', 'show_dojo', 'is_anonymous']
 FOLLOWUPS_COLS = ['followup_id', 'author_email', 'post_id', 'body', 'attachments', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
 
 
@@ -69,7 +69,8 @@ def create_posts_table():
                     upvotes         INTEGER     NOT NULL,
                     upvoters        TEXT,
                     ping            TEXT,
-                    show_dojo       TEXT        NOT NULL
+                    show_dojo       TEXT        NOT NULL,
+                    is_anonymous    TEXT        NOT NULL
                 )"""
     sqlite(command)
     # add attachement in
@@ -826,14 +827,15 @@ def ping(post_id, pingees=[]):
 #---------[creation-deletion]---------#
 
 
-def create_post(author_email, class_id, title, body, category, attachments, show_dojo, parent_id=''):
+def create_post(author_email, class_id, title, body, category, attachments, show_dojo, is_anonymous='no', parent_id=''):
     post_id = unique_id(get_all_posts(), 16)
     is_resolved = 'no'
+    is_answer = 'no'
     time = str(datetime.now())
     upvotes = 0
     upvoters = ''
     ping = author_email
-    add_posts_row([post_id, author_email, class_id, parent_id, title, body, attachments, category, is_resolved, time, time, upvotes, upvoters, ping, show_dojo])
+    add_posts_row([post_id, author_email, class_id, parent_id, title, body, attachments, category, is_resolved, is_answer, time, time, upvotes, upvoters, ping, show_dojo, is_anonymous])
     ping_post = get_top_parent(post_id)
     # add to classes table 
     class_posts = get_class_posts(class_id)
@@ -843,7 +845,8 @@ def create_post(author_email, class_id, title, body, category, attachments, show
     readers = get_class_members(class_id)
     if (show_dojo == 'yes'):
         readers += get_all_dojo()
-    readers.remove(author_email)
+    if author_email in readers:
+        readers.remove(author_email)
     for reader in readers:
         unread = get_unread_posts(reader)
         unread_str = add_to_list(unread, ping_post)

@@ -93,7 +93,7 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
           <label htmlFor="postClass" className="form-label"> Class </label>
           <select
             id="postClass"
-            name="classId"
+            name="class_id"
             className="form-select"
             value={postClass}
             onChange={(event) => setPostClass(event.target.value)}

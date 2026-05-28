@@ -43,6 +43,11 @@ function App() {
     });
     const data = await response.json();
 
+    if (!response.ok) {
+      alert(data.error);
+      return;
+    }
+
     // crete array w/ newest post in front
     setPosts([data.post, ...posts]);
     setShowPostEditor(false);
