@@ -113,6 +113,9 @@ def home():
 # ------------------ POST PAGES ------------------
 
 def render_post_page(page):
+    if 'email' not in session:
+        return redirect(url_for('login'))
+
     page_info = POST_PAGE_INFO[page]
     return render_template(
         "post_page.html",
@@ -181,6 +184,7 @@ def api_posts():
 
     for post_id in data.get_all_posts(): # list of all post IDs in db
         post = data.get_post_data(post_id)
+        post = add_display_author(post)
 
         if category == "" or post["category"] == category:
             posts.append(post)
@@ -191,22 +195,38 @@ def api_posts():
 # ceates and saves a new post
 @app.route("/api/posts", methods=["POST"])
 def api_create_post():
-    post = request.get_json()
+    post = request.get_json() or {}
 
     title = post.get("title", "").strip()
     class_id = post.get("class_id", "").strip()
     body = post.get("body", "").strip()
     category = post.get("category", "").strip()
+    show_dojo = "yes" if post.get("shareWithDojo") else "no"
+    is_anonymous = "yes" if post.get("isAnonymous") else "no"
+
+    if category == "announcement" and not data.is_class_teacher(class_id, session["email"]):
+        return jsonify({"error": "Only teachers can post announcements"}), 403
 
     post_id = data.create_post( # returns new post_id
         session["email"],
         class_id,
         title,
         body,
-        category
+        category,
+        "", # attachments
+        show_dojo,
+        is_anonymous
     )
     saved_post = data.get_post_data(post_id)
+    saved_post = add_display_author(saved_post)
     return jsonify({"post": saved_post})
+
+def add_display_author(post):
+    if post["is_anonymous"] == "yes":
+        post["display_author"] = "Anonymous"
+    else:
+        post["display_author"] = data.get_user_name(post["author_email"])
+    return post
 
 #handling data
 #@app.route('/data')
