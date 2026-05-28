@@ -595,17 +595,24 @@ def get_announcements_by(email):
 
 def get_all_questions():
     posts = get_all_posts()
-    return [post for post in posts if get_post_category(post) == 'announcement']
+    return [post for post in posts if get_post_category(post) == 'question']
 
 def get_questions_by(email):
     return [post for post in get_all_quesetions() if get_post_author(post) == email]
 
 def get_all_notes():
     posts = get_all_posts()
-    return [post for post in posts if get_post_category(post) == 'announcement']
+    return [post for post in posts if get_post_category(post) == 'note']
 
 def get_notes_by(email):
     return [post for post in get_all_notes() if get_post_author(post) == email]
+
+
+def get_all_unresolved():
+    return [post for post in get_all_questions() if not post_is_resolved(post)]
+
+def get_unresolved_posts(class_id):
+    return [post for post in get_all_unresolved() if get_post_class(post) == class_id]
 
 
 # returns a dictionary of different types of followups
@@ -1246,6 +1253,7 @@ if __name__ == "__main__":
     print(announcement_id)
     print(str(get_unread_posts('0@gmail.com')))
     print(str(get_pinged_posts('0@gmail.com')))
+    print(str(get_unresolved_posts(class_id)))
 
     '''
     print("\n----------------------------------\n")
