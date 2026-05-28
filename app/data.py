@@ -263,7 +263,7 @@ def add_user(email, password, name, github=''):
     class_id = ''
     unread_posts = ''
     pinged_posts = ''
-    add_users_row([email, github, name, password, is_dojo, is_senpai, is_sensei, is_class_teacher, class_id, unread_posts, pinged_posts])
+    add_users_row([email, github, name, password, is_dojo, is_sensei, is_class_teacher, class_id, unread_posts, pinged_posts])
     return 'success'
 
 
