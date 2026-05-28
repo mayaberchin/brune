@@ -375,3 +375,13 @@ DD+DB OVERHAUL
 - Edit tables in DD to be more similar to current vision of site
 - Add/modify a bunch of user-related functions to comply with new database needs (needs testing)
 - Begin modifying class-related middleware too
+
+mayaB -- 2026-05-28 06:09
+COMPLETE(ish) DB OVERHAUL
+- Been quite a while since last log lol! Only worked on smaller things so didn't update
+- Today finished DB overhaul 
+  - Posts are now one big table with followups
+	- Added necessary columns to users/classes table I hadn't thought of before, like banned users 
+- Whole team was working to get product for demo today!!
+- Pawned off working on attachments to posts on our future selves lol
+- BUT data.py is now 1.2k lines :') and most of that is tested soooo
