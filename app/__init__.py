@@ -215,8 +215,8 @@ def api_create_post():
         title,
         body,
         category,
-        "", # attachments
         show_dojo,
+        "", # attachments
         is_anonymous
     )
     saved_post = data.get_post_data(post_id)

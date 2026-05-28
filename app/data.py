@@ -654,9 +654,10 @@ def get_post_depth(post_id):
     post = post_id
     parent = get_post_parent(post_id)
     depth = 0
-    while parent:
+    while str(parent) != 'None' and parent != '':
         depth += 1
-        parent = get_post_parent(post_id)
+        post = parent
+        parent = get_post_parent(post)
     return depth
 
 
