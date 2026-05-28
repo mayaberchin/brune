@@ -413,7 +413,8 @@ def create_class(teacher_email, class_name):
     members = teacher_email
     posts = ''
     is_archived = 'no'
-    add_classes_row([class_id, class_name, owner, teacher_email, members, posts, is_archived])
+    banned = ''
+    add_classes_row([class_id, class_name, owner, teacher_email, members, banned, posts, is_archived])
     # add the class to teacher's users table
     teacher_classes = get_user_classes(teacher_email)
     teacher_classes_str = add_to_list(teacher_classes, class_id)
@@ -445,7 +446,7 @@ def un_archive_class(class_id):
 
 
 # add a user to a class as a student
-def add_member(email, class_id):
+def add_class_member(email, class_id):
     classes = get_user_classes(email)
     classes_updated = add_to_list(classes, class_id)
     update_users_row(email, 'class_id', classes_updated)
@@ -468,7 +469,7 @@ def promote_to_owner(class_id, email):
     update_classes_row(class_id, 'owner_email', owners_str)
     # add them to teachers list if they aren't there yet
     if email not in get_class_teachers(class_id):
-        add_teacher(class_id, email)
+        add_class_teacher(class_id, email)
 
 
 
@@ -952,7 +953,7 @@ def remove_from_list(lst, item):
 
 
 def unique_id(others, byte_nums):
-    id = gen_id()
+    id = gen_id(byte_nums)
     while id in others:
         id = gen_id(byte_nums)
     return id
@@ -1059,7 +1060,6 @@ if __name__ == "__main__":
 
     create_tables()
     
-    '''
     add_user("mayaberchin@gmail.com", "hello", "Maya Berchin")
     add_user("other@gmail.com", "other", "Other Student")
     print(str(get_all_users()))
@@ -1071,21 +1071,21 @@ if __name__ == "__main__":
     print("\n" + str(get_all_classes()))
     print("Class teachers: " + str(get_class_teachers(class_id)))
 
-    join_class("other@gmail.com", class_id)
+    add_class_member("other@gmail.com", class_id)
     print("\nClasses Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
     print("Classes Other is in: " + str(get_user_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
 
     print("\nPromoting Other...")
-    add_teacher(class_id, 'other@gmail.com')
+    promote_to_teacher(class_id, 'other@gmail.com')
     print("Class teachers: " + str(get_class_teachers(class_id)))
     print("Classes Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
     print("Classes Other is in: " + str(get_user_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
 
-
+    '''
     print("\n----------------------------------\n")
     post_id = create_post("mayaberchin@gmail.com", class_id, "test_post", "this is the body of the test post", "question")
     print(get_all_posts())
