@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ClassFilter, { MobileClassFilter } from "../components/ClassFilter";
 
 function ChatLayout({
   classes,
@@ -42,6 +43,13 @@ function ChatLayout({
   return (
     <main className="chat-layout">
       <section className="chat-panel">
+        <MobileClassFilter
+          classes={classes}
+          selectedClassId={selectedClassId}
+          setSelectedClassId={setSelectedClassId}
+          showAll={false}
+        />
+
         <div className="chat-messages">
           {messages.map((post) => {
             const isMine = post.author_email === currentUserEmail;
@@ -77,24 +85,12 @@ function ChatLayout({
       </section>
 
       <aside className="post-side-panel">
-        <div className="class-filter-panel">
-          <h2 className="h4">Courses</h2>
-
-          {classes.map((classInfo) => (
-            <button
-              key={classInfo.class_id}
-              type="button"
-              className={
-                selectedClassId === String(classInfo.class_id)
-                  ? "class-filter active"
-                  : "class-filter"
-              }
-              onClick={() => setSelectedClassId(String(classInfo.class_id))}
-            >
-              {classInfo.name}
-            </button>
-          ))}
-        </div>
+        <ClassFilter
+          classes={classes}
+          selectedClassId={selectedClassId}
+          setSelectedClassId={setSelectedClassId}
+          showAll={false}
+        />
       </aside>
     </main>
   );

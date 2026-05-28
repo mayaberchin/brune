@@ -117,6 +117,23 @@
   font-weight: 600;
 }
 
+.mobile-class-filter {
+  display: none;
+  margin-bottom: 16px;
+}
+
+.mobile-class-filter summary {
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-block;
+  padding: 8px 10px;
+}
+
+.mobile-class-filter .class-filter-panel {
+  margin-top: 10px;
+}
+
 /* --------------------------------------------------------- */
 /* Opened post view                                          */
 /* --------------------------------------------------------- */
@@ -278,6 +295,14 @@
     display: block;
   }
 
+  .mobile-class-filter {
+    display: block;
+  }
+
+  .mobile-class-filter .class-filter-panel h2 {
+    display: none;
+  }
+
   .post-list-panel {
     border-right: none;
     padding: 16px;
@@ -289,6 +314,24 @@
 
   .post-layout:not(.has-open-post) .post-side-panel {
     display: none;
+  }
+
+  .chat-layout {
+    display: block;
+    height: calc(100vh - 56px);
+  }
+
+  .chat-layout .post-side-panel {
+    display: none;
+  }
+
+  .chat-panel {
+    border-right: none;
+    height: 100%;
+  }
+
+  .chat-panel .mobile-class-filter {
+    padding: 12px 16px 0;
   }
 
 }
