@@ -179,7 +179,7 @@ def get_top_n_gc(email, n):
         if msg_class not in classes:
             classes += msg_class
             messages += [{gc[-1]: msg_class}]
-            gc = gc.remove(gc[-1])
+            gc.remove(gc[-1])
     return messages.reverse()
 
 
@@ -217,7 +217,7 @@ def get_teaching_classes(email):
 # get the classes someone owns
 def get_owned_classes(email):
     classes = get_user_classes(email)
-    owned = [c for c in classes if email in get_owners(c)]
+    owned = [c for c in classes if email in get_class_owners(c)]
     return owned
 
 
@@ -281,11 +281,11 @@ def mark_read(email, post_id):
     pinged_posts = get_pinged_posts(email)
     unread_posts = get_unread_posts(email)
     if (post_id in pinged_posts):
-        pinged_posts = pinged_posts.remove(post_id)
+        pinged_posts.remove(post_id)
         pinged_str = merge_list(pinged_posts)
         update_users_row(email, 'pinged_posts', pinged_posts)
     if (post_id in unread_posts):
-        unread_posts = unread_posts.remove(post_id)
+        unread_posts.remove(post_id)
         unread_str = merge_list(unread_posts)
         update_users_row(email, 'unread_posts', unread_posts)
 
@@ -413,7 +413,8 @@ def create_class(teacher_email, class_name):
     members = teacher_email
     posts = ''
     is_archived = 'no'
-    add_classes_row([class_id, class_name, owner, teacher_email, members, posts, is_archived])
+    banned = ''
+    add_classes_row([class_id, class_name, owner, teacher_email, members, banned, posts, is_archived])
     # add the class to teacher's users table
     teacher_classes = get_user_classes(teacher_email)
     teacher_classes_str = add_to_list(teacher_classes, class_id)
@@ -445,7 +446,7 @@ def un_archive_class(class_id):
 
 
 # add a user to a class as a student
-def add_member(email, class_id):
+def add_class_member(email, class_id):
     classes = get_user_classes(email)
     classes_updated = add_to_list(classes, class_id)
     update_users_row(email, 'class_id', classes_updated)
@@ -463,12 +464,12 @@ def promote_to_teacher(class_id, email):
 
 # promote a class member to an owner for that class
 def promote_to_owner(class_id, email):
-    owners = get_owners(class_id)
+    owners = get_class_owners(class_id)
     owners_str = add_to_list(owners, email)
     update_classes_row(class_id, 'owner_email', owners_str)
     # add them to teachers list if they aren't there yet
     if email not in get_class_teachers(class_id):
-        add_teacher(class_id, email)
+        promote_to_teacher(class_id, email)
 
 
 
@@ -477,7 +478,7 @@ def demote_teacher(class_id, email):
     teachers_str = remove_from_list(teachers, email)
     update_classes_row(class_id, 'teacher_email', teachers_str)
 
-def demote_owner(class_id, email, leave_as_teacher=False):
+def demote_owner(class_id, email, leave_as_teacher=True):
     owners = get_class_owners(class_id)
     owners_str = remove_from_list(owners, email)
     update_classes_row(class_id, 'owner_email', owners_str)
@@ -731,7 +732,7 @@ def add_post_upvoter(post_id, email):
 
 def remove_post_upvoter(post_id, email):
     upvoters = get_post_upvoters(post_id)
-    upvoters = upvoters.remove(email)
+    upvoters.remove(email)
     upvoters_new = merge_list(upvoters)
     update_posts_row(post_id, 'upvoters', upvoters_new)
     increment_post_upvotes(post_id, -1)
@@ -749,7 +750,7 @@ def remove_post_pingee(post_id, email):
     author = get_post_author(post_id)
     if author != email:
         pingees = get_post_pingees(post_id)
-        pingees= pingees.remove(email)
+        pingees.remove(email)
         pingees_new = merge_list(pingees)
         update_posts_row(post_id, 'ping', pingees_new)
 
@@ -786,7 +787,7 @@ def create_post(author_email, class_id, title, body, category, attachments, show
     readers = get_class_members(class_id)
     if (show_dojo == 'yes'):
         readers += get_all_dojo()
-    readers = readers.remove(author_email)
+    readers.remove(author_email)
     for reader in readers:
         unread = get_unread_posts(reader)
         unread_str = add_to_list(unread, ping_post)
@@ -825,8 +826,8 @@ def order_by_upvotes(posts):
                 min_ind = j
                 min_val = upvotes[j]
         ordered += posts[min_ind]
-        posts = posts.remove(min_ind)
-        upvotes = upvotes.remove(min_ind)
+        posts.remove(min_ind)
+        upvotes.remove(min_ind)
     return ordered
 
 
@@ -943,7 +944,7 @@ def add_to_list(lst, item):
     return new_str
 
 def remove_from_list(lst, item):
-    lst = lst.remove(item)
+    lst.remove(item)
     new_str = merge_list(lst)
     return new_str
 
@@ -952,7 +953,7 @@ def remove_from_list(lst, item):
 
 
 def unique_id(others, byte_nums):
-    id = gen_id()
+    id = gen_id(byte_nums)
     while id in others:
         id = gen_id(byte_nums)
     return id
@@ -1059,7 +1060,6 @@ if __name__ == "__main__":
 
     create_tables()
     
-    '''
     add_user("mayaberchin@gmail.com", "hello", "Maya Berchin")
     add_user("other@gmail.com", "other", "Other Student")
     print(str(get_all_users()))
@@ -1071,21 +1071,24 @@ if __name__ == "__main__":
     print("\n" + str(get_all_classes()))
     print("Class teachers: " + str(get_class_teachers(class_id)))
 
-    join_class("other@gmail.com", class_id)
+    add_class_member("other@gmail.com", class_id)
     print("\nClasses Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
     print("Classes Other is in: " + str(get_user_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
 
-    print("\nPromoting Other...")
-    add_teacher(class_id, 'other@gmail.com')
+    print("\nPromoting Other... also removing Maya as owner")
+    promote_to_owner(class_id, 'other@gmail.com')
+    demote_owner(class_id, "mayaberchin@gmail.com")
     print("Class teachers: " + str(get_class_teachers(class_id)))
     print("Classes Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
     print("Classes Other is in: " + str(get_user_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
+    print("Classes Maya owns: " + str(get_owned_classes("mayaberchin@gmail.com")))
+    print("Classes Other owns: " + str(get_owned_classes("other@gmail.com")))
 
-
+    '''
     print("\n----------------------------------\n")
     post_id = create_post("mayaberchin@gmail.com", class_id, "test_post", "this is the body of the test post", "question")
     print(get_all_posts())
