@@ -243,12 +243,24 @@ def api_create_post():
 
 @app.route("/api/posts/<post_id>/followups")
 def api_followups(post_id):
-    followups = []
+    followup_ids = data.get_post_followups(post_id)
+    if type(followup_ids) == list:
+        followup_ids = {
+            "answers": [],
+            "teacher_responses": [],
+            "other": followup_ids,
+        }
+    followups = {
+        "answers": [],
+        "teacher_responses": [],
+        "other": [],
+    }
 
-    for followup_id in data.get_post_followups(post_id):
-        followup = data.get_post_data(followup_id)
-        followup = add_display_author(followup)
-        followups.append(followup)
+    for group in followups:
+        for followup_id in followup_ids[group]:
+            followup = data.get_post_data(followup_id)
+            followup = add_display_author(followup)
+            followups[group].append(followup)
 
     return jsonify({"followups": followups})
 
@@ -266,11 +278,28 @@ def api_create_followup(post_id):
     followup = add_display_author(followup)
     return jsonify({"followup": followup})
 
+@app.route("/api/posts/<post_id>/upvote", methods=["POST"])
+def api_toggle_upvote(post_id):
+    try:
+        post = data.get_post_data(post_id)
+    except IndexError:
+        return jsonify({"error": "Post not found"}), 404
+
+    if session["email"] in post["upvoters"]:
+        data.remove_post_upvoter(post_id, session["email"])
+    else:
+        data.add_post_upvoter(post_id, session["email"])
+
+    post = data.get_post_data(post_id)
+    post = add_display_author(post)
+    return jsonify({"post": post})
+
 def add_display_author(post):
     if post["is_anonymous"] == "yes":
         post["display_author"] = "Anonymous"
     else:
         post["display_author"] = data.get_user_name(post["author_email"])
+    post["has_upvoted"] = 'email' in session and session["email"] in post["upvoters"]
     return post
 
 #handling data

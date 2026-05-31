@@ -71,6 +71,32 @@ function App() {
     });
   }
 
+  async function votePost(postId) {
+    const response = await fetch(`/api/posts/${postId}/upvote`, {
+      method: "POST",
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.error);
+      return null;
+    }
+
+    setPosts((currentPosts) => (
+      currentPosts.map((post) => (
+        post.post_id === postId ? data.post : post
+      ))
+    ));
+
+    setSelectedPost((currentPost) => (
+      currentPost !== null && currentPost.post_id === postId
+        ? data.post
+        : currentPost
+    ));
+
+    return data.post;
+  }
+
   if (selectedPostType === "chat") {
     return (
       <ChatLayout
@@ -80,6 +106,7 @@ function App() {
         currentUserEmail={currentUserEmail}
         addPost={addPost}
         addLivePost={addLivePost}
+        onVote={votePost}
       />
     );
   }
@@ -98,6 +125,7 @@ function App() {
       setSelectedPost={setSelectedPost}
       setShowPostEditor={setShowPostEditor}
       addPost={addPost}
+      onVote={votePost}
     />
   );
 

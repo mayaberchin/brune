@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 function PostPreview({ postData, onOpen, isSelected, showClass }) {
   const previewClassName = isSelected
     ? "post-preview selected"

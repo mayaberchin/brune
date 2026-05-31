@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 import Followup, { FollowupForm } from "./Followup";
+import UpvoteButton from "./UpvoteButton";
 
-function PostView({ postData, onBack, showClass }) {
-  const [followups, setFollowups] = useState([]);
+const emptyFollowups = {
+  answers: [],
+  teacher_responses: [],
+  other: [],
+};
+
+function PostView({ postData, onBack, showClass, onVote }) {
+  const [followups, setFollowups] = useState(emptyFollowups);
 
   useEffect(() => {
     async function loadFollowups() {
@@ -32,8 +39,42 @@ function PostView({ postData, onBack, showClass }) {
       return;
     }
 
-    setFollowups([...followups, data.followup]);
+    setFollowups((old) => ({
+      ...old,
+      other: [...old.other, data.followup],
+    }));
   }
+
+  async function voteFollowup(postId) {
+    const post = await onVote(postId);
+    setFollowups((old) => updateGroups(old, postId, post));
+    return post;
+  }
+
+  function showGroup(title, group) {
+    if (group.length === 0) {
+      return null;
+    }
+
+    return (
+      <div className="followup-group">
+        <h4>{title}</h4>
+
+        {group.map((followup) => (
+          <Followup
+            key={followup.post_id}
+            followup={followup}
+            onVote={voteFollowup}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  const followupCount =
+    followups.answers.length +
+    followups.teacher_responses.length +
+    followups.other.length;
 
   return (
     <div className="post-view">
@@ -54,6 +95,10 @@ function PostView({ postData, onBack, showClass }) {
 
       <div className="post-view-body">{postData.body}</div>
 
+      <div className="post-view-actions">
+        <UpvoteButton post={postData} onVote={onVote} />
+      </div>
+
       <section className="followups">
         <h3>Followups</h3>
 
@@ -62,16 +107,32 @@ function PostView({ postData, onBack, showClass }) {
           placeholder="Write a followup..."
         />
 
-        {followups.length === 0 ? (
+        {followupCount === 0 ? (
           <p className="text-muted">No followups yet.</p>
         ) : (
-          followups.map((followup) => (
-            <Followup key={followup.post_id} followup={followup} />
-          ))
+          <>
+            {showGroup("Answers", followups.answers)}
+            {showGroup("Teacher Responses", followups.teacher_responses)}
+            {showGroup("Other Followups", followups.other)}
+          </>
         )}
       </section>
     </div>
   );
+}
+
+function updateGroups(groups, postId, post) {
+  return {
+    answers: updateList(groups.answers, postId, post),
+    teacher_responses: updateList(groups.teacher_responses, postId, post),
+    other: updateList(groups.other, postId, post),
+  };
+}
+
+function updateList(followups, postId, post) {
+  return followups.map((followup) => (
+    followup.post_id === postId ? post : followup
+  ));
 }
 
 export default PostView;

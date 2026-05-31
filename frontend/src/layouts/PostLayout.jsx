@@ -17,6 +17,7 @@ function PostLayout({
   setSelectedPost,
   setShowPostEditor,
   addPost,
+  onVote,
 }) {
   const [selectedClassId, setSelectedClassId] = useState("all"); // for course filter
 
@@ -99,6 +100,7 @@ function PostLayout({
             postData={selectedPost}
             onBack={() => setSelectedPost(null)}
             showClass={selectedClassId === "all"}
+            onVote={onVote}
           />
         ) : (
           <ClassFilter
