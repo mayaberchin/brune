@@ -1,5 +1,19 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ClassFilter, { MobileClassFilter } from "../components/ClassFilter";
+
+function getChatWebSocketUrl() {
+  let protocol = "ws:";
+  let host = window.location.host;
+
+  if (window.location.protocol === "https:") {
+    protocol = "wss:";
+  }
+  if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+    host = window.location.hostname + ":3030";
+  }
+
+  return protocol + "//" + host + "/ws/chat";
+}
 
 function ChatLayout({
   classes,
@@ -7,9 +21,57 @@ function ChatLayout({
   selectedPostType,
   currentUserEmail,
   addPost,
+  addLivePost,
 }) {
   const [selectedClassId, setSelectedClassId] = useState(String(classes[0].class_id));
   const [msg, setMsg] = useState("");
+  const socketRef = useRef(null);
+  const selectedClassIdRef = useRef(selectedClassId);
+  selectedClassIdRef.current = selectedClassId;
+
+  useEffect(() => {
+    const socket = new WebSocket(getChatWebSocketUrl());
+    socketRef.current = socket;
+
+    socket.addEventListener("open", () => {
+      socket.send(JSON.stringify({
+        type: "join_class",
+        class_id: selectedClassIdRef.current,
+      }));
+    });
+
+    socket.addEventListener("message", (event) => {
+      let data;
+
+      try {
+        data = JSON.parse(event.data);
+      } catch {
+        return;
+      }
+
+      if (data.type === "new_chat_message") {
+        addLivePost(data.post);
+      }
+    });
+
+    return () => {
+      socket.close();
+      socketRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const socket = socketRef.current;
+
+    if (socket === null || socket.readyState !== WebSocket.OPEN) {
+      return;
+    }
+
+    socket.send(JSON.stringify({
+      type: "join_class",
+      class_id: selectedClassId,
+    }));
+  }, [selectedClassId]);
 
   const messages = posts
     .filter((post) => String(post.class_id) === selectedClassId)
@@ -23,7 +85,7 @@ function ChatLayout({
       return;
     }
 
-    await addPost({
+    const savedPost = await addPost({
       title: "Message",
       category: selectedPostType,
       class_id: selectedClassId,
@@ -31,6 +93,19 @@ function ChatLayout({
       isAnonymous: false,
       shareWithDojo: false,
     });
+
+    if (savedPost === null) {
+      return;
+    }
+
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({
+        type: "chat_message",
+        class_id: selectedClassId,
+        post: savedPost,
+      }));
+    }
+
     setMsg("");
   }
 
