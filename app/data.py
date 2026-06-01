@@ -1241,6 +1241,7 @@ if __name__ == "__main__":
     #print(str(get_all_classes()))
     class_id = create_class("mayaberchin@gmail.com", "testclass")
     create_class("b@b.com", "dontjoin")
+    print(class_id)
     #print("\n" + str(get_all_classes()))
     #print("Class teachers: " + str(get_class_teachers(class_id)))
 
@@ -1316,6 +1317,7 @@ if __name__ == "__main__":
     share_to_dojo(post_id)
     print(str(get_post_data(post_id)))
     
+
     announcement_id = create_post("mayaberchin@gmail.com", class_id, "ann", "important announcement!", "announcement", "no")
     print("\n")
     print(announcement_id)
