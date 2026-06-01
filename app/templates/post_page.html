@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='vite/assets/index.css') }}">
   </head>
 
-  <body>
+  <body class="{{ 'chat-page' if selected_post_type == 'chat' else '' }}">
     <div class="container fluid px-0 page-shell">
 
       <nav class="page-nav">
