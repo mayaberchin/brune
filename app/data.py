@@ -385,6 +385,24 @@ def get_head_posts(class_id):
     posts = sort_by_ctime(posts)
     return posts
 
+def get_teacher_posts(class_id):
+    posts = get_class_posts(class_id)
+    teachers = get_class_teachers(class_id)
+    t_posts = []
+    for post in posts:
+        if get_post_author(post) in teachers:
+            t_posts += [post]
+    return t_posts
+
+def get_teacher_head_posts(class_id):
+    posts = get_head_posts(class_id)
+    teachers = get_class_teachers(class_id)
+    t_posts = []
+    for post in posts:
+        if get_post_author(post) in teachers:
+            t_posts += [post]
+    return t_posts
+
 def get_class_announcements(class_id):
     posts = [post for post in get_head_posts(class_id) if get_post_category(post) == 'announcement']
     posts = sort_by_ctime(posts)
@@ -622,6 +640,7 @@ def get_all_unresolved():
 
 def get_unresolved_posts(class_id):
     return [post for post in get_all_unresolved() if get_post_class(post) == class_id]
+
 
 
 # returns a dictionary of different types of followups
@@ -978,7 +997,7 @@ def sort_by_ctime(posts):
         ctime = datetime.strptime(get_post_ctime(post), "%Y-%m-%d %H:%M:%S.%f")
         ind = 0
         while len(times) > ind and times[ind] >= ctime:
-            ctime += 1
+            ind += 1
         times.insert(ind, ctime)
         sorted.insert(ind, post)
     return sorted
@@ -1316,6 +1335,10 @@ if __name__ == "__main__":
     ffs = get_post_followups(f_id)['other']
     for ff in ffs:
         print(get_post_body(ff))
+    
+    lst = get_teacher_head_posts(class_id)
+    for item in lst:
+        print(get_post_body(item))
 
     '''
     print("\n----------------------------------\n")
