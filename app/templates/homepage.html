@@ -68,6 +68,12 @@
   }
   .nav-btn a {
     color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 8px;
     text-decoration: none;
   }
   .nav-btn:hover { background: #dddddd; color: #000000; }
@@ -512,6 +518,9 @@
   </div>
   <div class="nav-btn">
     <a href="{{ url_for('questions') }}">Questions</a>
+  </div>
+  <div class="nav-btn">
+    <a href="{{ url_for('notes_rsrc') }}">Notes</a>
   </div>
   <!-- <div class="nav-btn"><a href="{{ url_for('pinned') }}">Pinned</a></div> -->
   <!-- <div class="nav-spacer"></div> -->
