@@ -14,25 +14,26 @@ const newPostLabel = root.dataset.newPostLabel;
 const canPost = root.dataset.canPost === "yes";
 const currentUserEmail = root.dataset.currentUserEmail;
 
-// get classes from flask later!
-const testClasses = [
-  { class_id: "1", name: "Software Development" },
-  { class_id: "2", name: "Systems" },
-  { class_id: "3", name: "Cybersecurity" },
-];
-
 function App() {
   const [showPostEditor, setShowPostEditor] = useState(false);
   const [posts, setPosts] = useState([]);
+  const [classes, setClasses] = useState([]);
   const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => { // runs after React renders the pg
+    async function loadClasses() {
+      const response = await fetch("/api/classes");
+      const data = await response.json();
+      setClasses(data.classes);
+    }
+
     async function loadPosts() { // GET request fo Flask
       const response = await fetch(`/api/posts?category=${selectedPostType}`);
       const data = await response.json();
       setPosts(data.posts);
     }
 
+    loadClasses();
     loadPosts();
   }, []);
 
@@ -97,10 +98,15 @@ function App() {
     return data.post;
   }
 
+  const canPostOnPage =
+    selectedPostType === "announcement"
+      ? classes.some((classInfo) => classInfo.is_teacher)
+      : canPost;
+
   if (selectedPostType === "chat") {
     return (
       <ChatLayout
-        classes={testClasses}
+        classes={classes}
         posts={posts}
         selectedPostType={selectedPostType}
         currentUserEmail={currentUserEmail}
@@ -117,11 +123,11 @@ function App() {
       pageDescription={pageDescription}
       newPostLabel={newPostLabel}
       selectedPostType={selectedPostType}
-      classes={testClasses}
+      classes={classes}
       posts={posts}
       selectedPost={selectedPost}
       showPostEditor={showPostEditor}
-      canPost={canPost}
+      canPost={canPostOnPage}
       setSelectedPost={setSelectedPost}
       setShowPostEditor={setShowPostEditor}
       addPost={addPost}

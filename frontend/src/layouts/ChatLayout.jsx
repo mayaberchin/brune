@@ -23,7 +23,7 @@ function ChatLayout({
   addPost,
   addLivePost,
 }) {
-  const [selectedClassId, setSelectedClassId] = useState(String(classes[0].class_id));
+  const [selectedClassId, setSelectedClassId] = useState("");
   const [msg, setMsg] = useState("");
   const [atBottom, setAtBottom] = useState(true);
   const socketRef = useRef(null);
@@ -33,14 +33,22 @@ function ChatLayout({
   selectedClassIdRef.current = selectedClassId;
 
   useEffect(() => {
+    if (selectedClassId === "" && classes.length > 0) {
+      setSelectedClassId(String(classes[0].class_id));
+    }
+  }, [classes, selectedClassId]);
+
+  useEffect(() => {
     const socket = new WebSocket(getChatWebSocketUrl());
     socketRef.current = socket;
 
     socket.addEventListener("open", () => {
-      socket.send(JSON.stringify({
-        type: "join_class",
-        class_id: selectedClassIdRef.current,
-      }));
+      if (selectedClassIdRef.current !== "") {
+        socket.send(JSON.stringify({
+          type: "join_class",
+          class_id: selectedClassIdRef.current,
+        }));
+      }
     });
 
     socket.addEventListener("message", (event) => {
@@ -66,7 +74,7 @@ function ChatLayout({
   useEffect(() => {
     const socket = socketRef.current;
 
-    if (socket === null || socket.readyState !== WebSocket.OPEN) {
+    if (selectedClassId === "" || socket === null || socket.readyState !== WebSocket.OPEN) {
       return;
     }
 
@@ -109,7 +117,7 @@ function ChatLayout({
   async function sendMessage(event) {
     event.preventDefault();
 
-    if (msg.trim() === "") {
+    if (msg.trim() === "" || selectedClassId === "") {
       return;
     }
 
@@ -159,7 +167,9 @@ function ChatLayout({
             ref={messagesRef}
             onScroll={checkScroll}
           >
-            {messages.map((post) => {
+            {classes.length === 0 ? (
+              <p className="text-muted">Join a class to start chatting.</p>
+            ) : messages.map((post) => {
               const isMine = post.author_email === currentUserEmail;
 
               return (
