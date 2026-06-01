@@ -110,6 +110,8 @@ def home():
 
 
     # get courses
+    class_ids = data.get_user_classes(session['email'])
+    classes = []
     for class_id in class_ids:
         class_data = data.get_class_data(class_id)
         classes.append(class_data)
@@ -302,8 +304,12 @@ def add_display_author(post):
     post["has_upvoted"] = 'email' in session and session["email"] in post["upvoters"]
     return post
 
-#handling data
-#@app.route('/data')
+#join/create class:
+@app.route("/join_class", methods=["POST"])
+def join_a_class():
+    code = request.form.get("class_code")
+    data.add_class_member(code, session['email'])
+    return redirect(url_for("home"))
 
 if __name__ == "__main__":
   app.debug = True
