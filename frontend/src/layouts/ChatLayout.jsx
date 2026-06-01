@@ -25,8 +25,11 @@ function ChatLayout({
 }) {
   const [selectedClassId, setSelectedClassId] = useState(String(classes[0].class_id));
   const [msg, setMsg] = useState("");
+  const [atBottom, setAtBottom] = useState(true);
   const socketRef = useRef(null);
+  const messagesRef = useRef(null);
   const selectedClassIdRef = useRef(selectedClassId);
+  const lastClassRef = useRef(selectedClassId);
   selectedClassIdRef.current = selectedClassId;
 
   useEffect(() => {
@@ -76,7 +79,32 @@ function ChatLayout({
   const messages = posts
     .filter((post) => String(post.class_id) === selectedClassId)
     .slice()
-    .reverse();
+    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+  useEffect(() => {
+    if (messagesRef.current === null) {
+      return;
+    }
+
+    if (lastClassRef.current !== selectedClassId || atBottom) {
+      scrollToBottom();
+      setAtBottom(true);
+    }
+
+    lastClassRef.current = selectedClassId;
+  }, [messages.length, selectedClassId]);
+
+  function scrollToBottom() {
+    messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    setAtBottom(true);
+  }
+
+  function checkScroll() {
+    const messageBox = messagesRef.current;
+    const distanceFromBottom = messageBox.scrollHeight - messageBox.scrollTop - messageBox.clientHeight;
+
+    setAtBottom(distanceFromBottom < 20);
+  }
 
   async function sendMessage(event) {
     event.preventDefault();
@@ -125,24 +153,40 @@ function ChatLayout({
           showAll={false}
         />
 
-        <div className="chat-messages">
-          {messages.map((post) => {
-            const isMine = post.author_email === currentUserEmail;
+        <div className="chat-messages-wrap">
+          <div
+            className="chat-messages"
+            ref={messagesRef}
+            onScroll={checkScroll}
+          >
+            {messages.map((post) => {
+              const isMine = post.author_email === currentUserEmail;
 
-            return (
-              <div
-                className={isMine ? "chat-row mine" : "chat-row"}
-                key={post.post_id}
-              >
-                <div className={isMine ? "chat-bubble mine" : "chat-bubble"}>
-                  {!isMine && (
-                    <p className="chat-sender">{post.display_author}</p>
-                  )}
-                  <p>{post.body}</p>
+              return (
+                <div
+                  className={isMine ? "chat-row mine" : "chat-row"}
+                  key={post.post_id}
+                >
+                  <div className={isMine ? "chat-bubble mine" : "chat-bubble"}>
+                    {!isMine && (
+                      <p className="chat-sender">{post.display_author}</p>
+                    )}
+                    <p>{post.body}</p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+
+          {!atBottom && (
+            <button
+              type="button"
+              className="jump-latest-button"
+              onClick={scrollToBottom}
+            >
+              Jump to latest
+            </button>
+          )}
         </div>
 
         <form className="chat-box" onSubmit={sendMessage}>
