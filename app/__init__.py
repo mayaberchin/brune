@@ -6,12 +6,6 @@ app = Flask(__name__)
 app.secret_key = "vsecretandsecurekeyforstuyoverflow"
 data.create_tables()
 
-TEST_CLASSES = [
-    {"class_id": 1, "name": "Software Development"},
-    {"class_id": 2, "name": "Systems"},
-    {"class_id": 3, "name": "Cybersecurity"},
-]
-
 POST_PAGE_INFO = {
     "announcements": {
         "page_title": "Announcements",
@@ -138,7 +132,6 @@ def render_post_page(page):
     can_post = page != "announcements" or data.is_stuy_teacher(session["email"])
     return render_template(
         "post_page.html",
-        classes=TEST_CLASSES,
         page_title=page_info["page_title"],
         page_description=page_info["page_description"],
         selected_post_type=page_info["selected_post_type"],
@@ -197,6 +190,19 @@ def settings():
     return render_template("settings.html")
 
 # ------------------ REACT POST API ROUTES ------------------
+
+@app.route("/api/classes")
+def api_classes():
+    classes = []
+
+    for class_id in data.get_user_classes(session["email"]):
+        classes.append({
+            "class_id": class_id,
+            "name": data.get_class_name(class_id),
+            "is_teacher": data.is_class_teacher(class_id, session["email"]),
+        })
+
+    return jsonify({"classes": classes})
 
 # loads posts
 @app.route("/api/posts")
