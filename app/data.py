@@ -865,6 +865,7 @@ def create_post(author_email, class_id, title, body, category, show_dojo, attach
     readers = get_class_members(class_id)
     if (show_dojo == 'yes'):
         readers += get_all_dojo()
+    readers = unique_only(readers)
     if author_email in readers:
         readers.remove(author_email)
     for reader in readers:
@@ -879,6 +880,7 @@ def create_post(author_email, class_id, title, body, category, show_dojo, attach
         ping_list = get_class_members(class_id)
         if (show_dojo == 'yes'):
             ping_list += get_all_dojo()
+        ping_list = unique_only(ping_list)
         ping_list.remove(author_email)
         ping(post_id, ping_list)
     return post_id
@@ -953,6 +955,7 @@ def delete_post_trace(post_id):
     readers = get_class_members(class_id)
     if (show_dojo(post_id)):
         readers += get_all_dojo()
+    readers = unique_only(readers)
     for reader in readers:
         mark_as_read(reader, post_id)    # removes the post from unread/ping
     # remove from posts table
@@ -1064,6 +1067,14 @@ def remove_from_list(lst, item):
     lst.remove(item)
     new_str = merge_list(lst)
     return new_str
+
+# keep only unique items in the list
+def unique_only(lst):
+    new_lst = []
+    for item in lst:
+        if item not in new_lst:
+            new_lst += [item]
+    return new_lst
 
 
 #---------[id]---------#
