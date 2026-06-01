@@ -135,7 +135,7 @@ def render_post_page(page):
         return redirect(url_for('login'))
 
     page_info = POST_PAGE_INFO[page]
-    can_post = page != "announcements" or data.is_teacher(session["email"])
+    can_post = page != "announcements" or data.is_stuy_teacher(session["email"])
     return render_template(
         "post_page.html",
         classes=TEST_CLASSES,

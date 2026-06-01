@@ -9,7 +9,7 @@ DB_FILE="data.db"
 
 #=============================[GLOBALS]=============================#
 
-USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_teacher', 'class_id', 'unread_posts']
+USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_stuy_teacher', 'class_id', 'unread_posts']
 CLASSES_COLS = ['class_id', 'name', 'teacher_email', 'posts', 'is_archived']
 POSTS_COLS = ['post_id', 'author_email', 'class_id', 'parent_id', 'title', 'body', 'attachments', 'category', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping', 'show_dojo', 'is_anonymous']
 FOLLOWUPS_COLS = ['followup_id', 'author_email', 'post_id', 'body', 'attachments', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
@@ -28,7 +28,7 @@ def create_users_table():
                     password_hash   TEXT        NOT NULL,
                     is_dojo         TEXT        NOT NULL                                DEFAULT 'no',
                     is_sensei       TEXT        NOT NULL                                DEFAULT 'no',
-                    is_teacher      TEXT        NOT NULL                                DEFAULT 'no',
+                    is_stuy_teacher TEXT        NOT NULL                                DEFAULT 'no',
                     class_id        TEXT,
                     unread_posts    TEXT,
                     pinged_posts    TEXT
@@ -103,7 +103,7 @@ def get_all_senseis():
     return [user for user in get_all_users() if is_sensei(user)]
 
 def get_all_teachers():
-    return [user for user in get_all_users() if is_teacher(user)]
+    return [user for user in get_all_users() if is_stuy_teacher(user)]
 
 
 
@@ -240,8 +240,8 @@ def is_sensei(email):
     sensei = get_users_field(email, 'is_sensei')
     return sensei == 'yes'
 
-def is_teacher(email):
-    teacher = get_users_field(email, 'is_teacher')
+def is_stuy_teacher(email):
+    teacher = get_users_field(email, 'is_stuy_teacher')
     return teacher == 'yes'
 
 
@@ -259,11 +259,11 @@ def add_user(email, password, name, github=''):
     password = str(hashlib.sha256(password).hexdigest())
     is_dojo = 'no'
     is_sensei = 'no'
-    is_teacher = 'no'
+    is_stuy_teacher = 'no'
     class_id = ''
     unread_posts = ''
     pinged_posts = ''
-    add_users_row([email, github, name, password, is_dojo, is_sensei, is_teacher, class_id, unread_posts, pinged_posts])
+    add_users_row([email, github, name, password, is_dojo, is_sensei, is_stuy_teacher, class_id, unread_posts, pinged_posts])
     return 'success'
 
 
@@ -275,7 +275,7 @@ def add_sensei(email):
     update_users_row(email, 'is_sensei', 'yes')
 
 def add_teacher(email):
-    update_users_row(email, 'is_teacher', 'yes')
+    update_users_row(email, 'is_stuy_teacher', 'yes')
 
 def mark_read(email, post_id):
     pinged_posts = get_pinged_posts(email)
