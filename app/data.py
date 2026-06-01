@@ -196,8 +196,8 @@ def get_homepage_posts(email, n):
     if len(pinged) < n:
         unread = get_top_n_unread(email, n-len(pinged))
     posts = {}
-    posts['pinged'] = pinged
-    posts['unread'] = unread
+    posts['pinged'] = sort_by_ctime(pinged)
+    posts['unread'] = sort_by_ctime(unread)
     return posts
 
 
@@ -607,6 +607,7 @@ def update_classes_row(class_id, col_name, col_val):
 
 def get_all_posts():
     data = get_col('posts', 'post_id')
+    data = sort_by_ctime(data)
     return data
 
 def get_posts_by(email):

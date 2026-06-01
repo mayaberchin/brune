@@ -84,8 +84,9 @@ def home():
     homepage_posts = []
     for post_id in homepage_post_ids['pinged'] + homepage_post_ids['unread']:
         post_data = data.get_post_data(post_id)
-        homepage_posts.append(post_data)
-    homepage_posts.reverse()
+        if post_data not in homepage_posts:
+            homepage_posts.append(post_data)
+    #homepage_posts.reverse() # data should do this now
 
     # get updated posts ============================need to do
     updated_posts = []
@@ -96,7 +97,7 @@ def home():
     for post_id in unresolved_post_ids:
         post_data = data.get_post_data(post_id)
         unresolved_posts.append(post_data)
-    unresolved_posts.reverse()
+    #unresolved_posts.reverse()
 
 
     # get instructors posts ===========================need to do
@@ -227,7 +228,7 @@ def api_posts():
         if post["parent_id"] == "" and (category == "" or post["category"] == category):
             posts.append(post)
 
-    posts.reverse() # newest posts first
+    #posts.reverse() # newest posts first # data should already do this now
     return jsonify({"posts": posts})
 
 # ceates and saves a new post
