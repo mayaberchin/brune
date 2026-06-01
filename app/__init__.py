@@ -7,9 +7,9 @@ app.secret_key = "vsecretandsecurekeyforstuyoverflow"
 data.create_tables()
 
 TEST_CLASSES = [
-    {"class_id": 1, "name": "Software Development"},
-    {"class_id": 2, "name": "Systems"},
-    {"class_id": 3, "name": "Cybersecurity"},
+    {"class_id": "1", "name": "Software Development"},
+    {"class_id": "2", "name": "Systems"},
+    {"class_id": "3", "name": "Cybersecurity"},
 ]
 
 POST_PAGE_INFO = {
@@ -307,9 +307,24 @@ def add_display_author(post):
 #join/create class:
 @app.route("/join_class", methods=["POST"])
 def join_a_class():
+    print("joining")
     code = request.form.get("class_code")
+    print(data.get_all_classes())
+    if code not in data.get_all_classes():
+        print(data.get_all_classes())
+        flash("Class not found. Ask your teacher for the code.")
+        return redirect(url_for("home"))
     data.add_class_member(code, session['email'])
     return redirect(url_for("home"))
+
+@app.route("/create_class_",methods=["POST"])
+def create_a_class():
+    print("creating")
+    class_name = request.form.get("class_name")
+    data.create_class(session['email'], class_name)
+    print("Class created")
+    return redirect(url_for("home"))
+    
 
 if __name__ == "__main__":
   app.debug = True

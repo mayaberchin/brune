@@ -511,11 +511,11 @@
     <!-- <span class="nav-badge" id="chatNotifs"></span> will inject code -->
   </div>
   <div class="nav-btn">
-    Help
+    <a href="{{ url_for('questions') }}">Questions</a>
   </div>
-  <div class="nav-btn"><a href="{{ url_for('pinned') }}">Pinned</a></div>
-  <div class="nav-spacer"></div>
-  <div class="nav-btn"><a href="{{ url_for('settings') }}">Settings</a></div>
+  <!-- <div class="nav-btn"><a href="{{ url_for('pinned') }}">Pinned</a></div> -->
+  <!-- <div class="nav-spacer"></div> -->
+  <!-- <div class="nav-btn"><a href="{{ url_for('settings') }}">Settings</a></div> -->
   <div class="nav-btn"><a href="{{ url_for('logout') }}">Logout</a></div>
 </nav>
 
@@ -531,15 +531,15 @@
       </div>
       <div class="feed-tabs">
         <div class="tab active" id="newest_post_tab"onclick="show_newest_posts()">Newest</div>
-        <span class="tab-sep">|</span>
-        <div class="tab" id="updated_post_tab"onclick="show_updated_posts()">Updated</div>
+        <!-- <span class="tab-sep">|</span> -->
+        <!-- <div class="tab" id="updated_post_tab"onclick="show_updated_posts()">Updated</div> -->
         <span class="tab-sep">|</span>
         <div class="tab" id="unresolved_post_tab" onclick="show_unresolved_posts()">Unresolved</div>
         <span class="tab-sep">|</span>
         <div class="tab" id="instructors_post_tab" onclick="show_instructors_posts()">Instructors' Posts</div>
       </div>
     </div>
-    <div class="filter-row"><span>Filter by ∨</span></div>
+    <!-- <div class="filter-row"><span>Filter by ∨</span></div> -->
 
     <div class="posts" id="homepage_posts">
       {% for post in homepage_posts %}
@@ -608,7 +608,11 @@
       <div class="search-bar">
         <input type="text" placeholder="Search">
       </div>
-      <div class="profile-icon"><a href="{{ url_for('account') }}">User</a></div>
+      <div class="profile-icon">
+        <!-- <a href="{{ url_for('account') }}"> -->
+          User
+        <!-- </a> -->
+      </div>
     </div>
 
     <div>
@@ -630,11 +634,9 @@
         <div class="course-card">
             <div class="course-head">{{ course['name'] }}</div>
             <div class="course-body">
-            {% for post in unread_posts  %}
-            <div class="course-item">- {{ post['title'] }}
-              <!-- - <span class="due">due mm/dd/yy</span> -->
-            </div>
-            {% endfor %}
+              {% for post in unread_posts %}
+                <div class="course-item">- {{ post['title'] }}</div>
+              {% endfor %}
             </div>
         </div>
       {% endfor %}
@@ -673,7 +675,7 @@
           Join a Class
         </button>
 
-        <button class="popup-main-btn" onclick="window.location.href='/create_class'" type="button">
+        <button class="popup-main-btn" onclick="create_class()" type="button">
           Create a Class
         </button>
 
@@ -689,7 +691,13 @@
       </p>
 
       <form action="/join_class" method="POST">
-
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="error-message">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
         <input
           type="text"
           name="class_code"
@@ -717,7 +725,40 @@
       </form>
 
     </div>
+    <div id="popupCreateScreen" style="display:none;">
 
+      <p class="popup-text">
+        Enter your class name:
+      </p>
+
+      <form action="/create_class_" method="POST">
+        <input
+          type="text"
+          name="class_code"
+          class="popup-input"
+          placeholder="Class code"
+          required
+        >
+
+        <div class="popup-actions">
+
+          <button type="submit" class="popup-main-btn">
+            Join
+          </button>
+
+          <button
+            type="button"
+            class="popup-secondary-btn"
+            onclick="back_to_choice()"
+          >
+            Back
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
   </div>
 
 </div>
@@ -738,6 +779,10 @@
       document.getElementById("popupJoinScreen").style.display = "block";
     }
 
+    function create_class() {
+      document.getElementById("popupChoiceScreen").style.display = "none";
+      document.getElementById("popupCreateScreen").style.display = "block";
+    }
     function back_to_choice() {
       document.getElementById("popupJoinScreen").style.display = "none";
       document.getElementById("popupChoiceScreen").style.display = "block";
