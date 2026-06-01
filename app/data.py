@@ -620,7 +620,7 @@ def get_post_followups(post_id):
     responses = [post for post in get_all_posts() if get_post_parent(post) == post_id]
     followups = {}
     # don't order these posts at all if these are followups to followups--leave a thread ordered by post creation time
-    if (get_post_depth(post_id) > 1 or len(responses) == 0):
+    if (get_post_depth(post_id) > 0 or len(responses) == 0):
         followups['answers'] = []
         followups['teacher_responses'] = []
         followups['other'] = responses
@@ -630,7 +630,6 @@ def get_post_followups(post_id):
     teacher_responses = []
     other = []
     for post in responses:
-        print(post)
         if post_is_answer(post):
             if is_class_teacher(get_post_class(post), get_post_author(post)):
                 teacher_answers += [post]
@@ -640,13 +639,13 @@ def get_post_followups(post_id):
             teacher_responses += [post]
         else:
             other += [post]
-    #teacher_answers = order_by_upvotes(teacher_answers)
-    #answers = order_by_upvotes(answers)
+    teacher_answers = order_by_upvotes(teacher_answers)
+    answers = order_by_upvotes(answers)
     answers = teacher_answers + answers
     followups['answers'] = answers
-    #teacher_responses = order_by_upvotes(teacher_responses)
+    teacher_responses = order_by_upvotes(teacher_responses)
     followups['teacher_responses'] = teacher_responses
-    #other = order_by_upvotes(other)
+    other = order_by_upvotes(other)
     followups['other'] = other
     return followups
 
@@ -930,15 +929,15 @@ def order_by_upvotes(posts):
     ordered = []
     num_posts = len(posts)
     for i in range(num_posts):
-        min_ind = 0
-        min_val = upvotes[0]
+        max_ind = 0
+        max_val = upvotes[0]
         for j in range(1, len(posts)):
-            if upvotes[j] < min_val:
-                min_ind = j
-                min_val = upvotes[j]
-        ordered += [posts[min_ind]]
-        posts.pop(min_ind)
-        upvotes.pop(min_ind)
+            if upvotes[j] > max_val:
+                max_ind = j
+                max_val = upvotes[j]
+        ordered += [posts[max_ind]]
+        posts.pop(max_ind)
+        upvotes.pop(max_ind)
     return ordered
 
 

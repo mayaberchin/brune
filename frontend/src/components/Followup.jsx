@@ -137,17 +137,20 @@ function Followup({ followup, canReply = true, onVote }) {
     <div className="followup">
       <p className="followup-meta">By {shownFollowup.display_author}</p>
       <p className="followup-body">{shownFollowup.body}</p>
-      <UpvoteButton post={shownFollowup} onVote={vote} />
 
-      {canReply && (
-        <button
-          type="button"
-          className="btn btn-outline-primary btn-sm mt-2"
-          onClick={() => setShowReply(!showReply)}
-        >
-          Reply
-        </button>
-      )}
+      <div className="followup-actions">
+        <UpvoteButton post={shownFollowup} onVote={vote} />
+
+        {canReply && (
+          <button
+            type="button"
+            className="btn btn-outline-primary btn-sm"
+            onClick={() => setShowReply(!showReply)}
+          >
+            Reply
+          </button>
+        )}
+      </div>
 
       {showReply && canReply && (
         <FollowupForm
