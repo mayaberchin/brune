@@ -379,7 +379,7 @@ def get_class_posts(class_id):
     posts = sort_by_ctime(posts)
     return posts
 
-# return only top-level posts, not followupss
+# return only top-level posts, not followups
 def get_head_posts(class_id):
     posts = [post for post in get_class_posts(class_id) if get_post_depth(post) == 0]
     posts = sort_by_ctime(posts)
@@ -649,6 +649,8 @@ def get_post_followups(post_id):
     followups = {}
     # don't order these posts at all if these are followups to followups--leave a thread ordered by post creation time
     if (get_post_depth(post_id) > 0 or len(responses) == 0):
+        responses = sort_by_ctime(responses)
+        responses.reverse()
         followups['answers'] = []
         followups['teacher_responses'] = []
         followups['other'] = responses
