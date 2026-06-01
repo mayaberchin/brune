@@ -8,7 +8,7 @@ const emptyFollowups = {
   other: [],
 };
 
-function PostView({ postData, onBack, showClass, onVote }) {
+function PostView({ postData, onBack, showClass, onVote, onDelete }) {
   const [followups, setFollowups] = useState(emptyFollowups);
 
   useEffect(() => {
@@ -51,6 +51,13 @@ function PostView({ postData, onBack, showClass, onVote }) {
     return post;
   }
 
+  async function deleteFollowup(postId) {
+    const deleted = await onDelete(postId);
+    if (deleted) {
+      setFollowups((old) => removeFromGroups(old, postId));
+    }
+  }
+
   function showGroup(title, group) {
     if (group.length === 0) {
       return null;
@@ -65,6 +72,7 @@ function PostView({ postData, onBack, showClass, onVote }) {
             key={followup.post_id}
             followup={followup}
             onVote={voteFollowup}
+            onDelete={deleteFollowup}
           />
         ))}
       </div>
@@ -75,6 +83,12 @@ function PostView({ postData, onBack, showClass, onVote }) {
     followups.answers.length +
     followups.teacher_responses.length +
     followups.other.length;
+
+  function deletePost() {
+    if (confirm("Delete this post?")) {
+      onDelete(postData.post_id);
+    }
+  }
 
   return (
     <div className="post-view">
@@ -97,6 +111,16 @@ function PostView({ postData, onBack, showClass, onVote }) {
 
       <div className="post-view-actions">
         <UpvoteButton post={postData} onVote={onVote} />
+
+        {postData.can_delete && (
+          <button
+            type="button"
+            className="post-delete-button"
+            onClick={deletePost}
+          >
+            Delete
+          </button>
+        )}
       </div>
 
       <section className="followups">
@@ -133,6 +157,18 @@ function updateList(followups, postId, post) {
   return followups.map((followup) => (
     followup.post_id === postId ? post : followup
   ));
+}
+
+function removeFromGroups(groups, postId) {
+  return {
+    answers: removeFromList(groups.answers, postId),
+    teacher_responses: removeFromList(groups.teacher_responses, postId),
+    other: removeFromList(groups.other, postId),
+  };
+}
+
+function removeFromList(followups, postId) {
+  return followups.filter((followup) => followup.post_id !== postId);
 }
 
 export default PostView;

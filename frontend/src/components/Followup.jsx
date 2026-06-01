@@ -51,7 +51,7 @@ function FollowupForm({ onSubmit, placeholder }) {
   );
 }
 
-function Followup({ followup, canReply = true, onVote }) {
+function Followup({ followup, canReply = true, onVote, onDelete }) {
   const [replies, setReplies] = useState(emptyReplies);
   const [showReply, setShowReply] = useState(false);
   const [shownFollowup, setShownFollowup] = useState(followup);
@@ -107,6 +107,19 @@ function Followup({ followup, canReply = true, onVote }) {
     return post;
   }
 
+  async function deleteFollowup() {
+    if (confirm("Delete this followup?")) {
+      await onDelete(shownFollowup.post_id);
+    }
+  }
+
+  async function deleteReply(postId) {
+    const deleted = await onDelete(postId);
+    if (deleted) {
+      setReplies((old) => removeFromGroups(old, postId));
+    }
+  }
+
   function showReplies(title, group) {
     if (group.length === 0) {
       return null;
@@ -122,6 +135,7 @@ function Followup({ followup, canReply = true, onVote }) {
             followup={reply}
             canReply={false}
             onVote={vote}
+            onDelete={deleteReply}
           />
         ))}
       </div>
@@ -140,6 +154,16 @@ function Followup({ followup, canReply = true, onVote }) {
 
       <div className="followup-actions">
         <UpvoteButton post={shownFollowup} onVote={vote} />
+
+        {shownFollowup.can_delete && (
+          <button
+            type="button"
+            className="post-delete-button"
+            onClick={deleteFollowup}
+          >
+            Delete
+          </button>
+        )}
 
         {canReply && (
           <button
@@ -182,6 +206,18 @@ function updateList(replies, postId, post) {
   return replies.map((reply) => (
     reply.post_id === postId ? post : reply
   ));
+}
+
+function removeFromGroups(groups, postId) {
+  return {
+    answers: removeFromList(groups.answers, postId),
+    teacher_responses: removeFromList(groups.teacher_responses, postId),
+    other: removeFromList(groups.other, postId),
+  };
+}
+
+function removeFromList(replies, postId) {
+  return replies.filter((reply) => reply.post_id !== postId);
 }
 
 export { FollowupForm };

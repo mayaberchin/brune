@@ -78,17 +78,17 @@ def logout():
 def home():
     if 'email' not in session:
         return redirect(url_for('login'))
-    return render_template("homepage.html")
 
     # get homepage posts
-    homepage_post_ids = data.get_homepage_posts('email',20)
+    homepage_post_ids = data.get_homepage_posts(session['email'],20)
     homepage_posts = []
-    for post_id in homepage_post_ids:
+    for post_id in homepage_post_ids['pinged'] + homepage_post_ids['unread']:
         post_data = data.get_post_data(post_id)
         homepage_posts.append(post_data)
     homepage_posts.reverse()
 
     # get updated posts ============================need to do
+    updated_posts = []
 
     # get unresolved posts
     unresolved_post_ids = data.get_all_unresolved()
@@ -100,6 +100,7 @@ def home():
 
 
     # get instructors posts ===========================need to do
+    instructors_posts = []
 
 
 
@@ -107,13 +108,22 @@ def home():
     class_ids = data.get_user_classes(session['email'])
     classes = []
     for class_id in class_ids:
-        class_data = data.get_class_data(class_id)
-        classes.append(class_data)
+        classes.append({
+            "class_id": class_id,
+            "name": data.get_class_name(class_id),
+        })
+
+    unread_posts = []
+    for post_id in data.get_unread_posts(session['email']):
+        unread_posts.append(data.get_post_data(post_id))
 
     return render_template(
         "homepage.html",
         homepage_posts=homepage_posts,
+        updated_posts=updated_posts,
         unresolved_posts=unresolved_posts,
+        instructors_posts=instructors_posts,
+        unread_posts=unread_posts,
         classes=classes,
         get_user_name=data.get_user_name
     )
@@ -302,12 +312,30 @@ def api_toggle_upvote(post_id):
     post = add_display_author(post)
     return jsonify({"post": post})
 
+@app.route("/api/posts/<post_id>", methods=["DELETE"])
+def api_delete_post(post_id):
+    try:
+        post = data.get_post_data(post_id)
+    except IndexError:
+        return jsonify({"error": "Post not found"}), 404
+
+    if not data.is_class_teacher(post["class_id"], session["email"]):
+        return jsonify({"error": "Only teachers of this class can delete posts"}), 403
+
+    data.delete_post(post_id)
+    return jsonify({"deleted": post_id})
+
 def add_display_author(post):
     if post["is_anonymous"] == "yes":
         post["display_author"] = "Anonymous"
     else:
         post["display_author"] = data.get_user_name(post["author_email"])
     post["has_upvoted"] = 'email' in session and session["email"] in post["upvoters"]
+    post["can_delete"] = (
+        post["category"] != "chat"
+        and 'email' in session
+        and data.is_class_teacher(post["class_id"], session["email"])
+    )
     return post
 
 #join/create class:
@@ -334,7 +362,7 @@ def create_a_class():
     flash("Class created! Code: " + class_id)
     print("Class created")
     return redirect(url_for("home"))
-    
+
 
 if __name__ == "__main__":
   app.debug = True
