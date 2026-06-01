@@ -586,7 +586,7 @@
       {% endfor %}
     </div>
     <div class="posts" id="instructors_posts" style="display:none;">
-      {% for post in instructors_posts %}tab
+      {% for post in instructors_posts %}
         <div class="post-card">
           <div class="post-head">
             <div class="post-title">{{ post['title'] }} <span>{{ get_user_name(post['author_email']) }}</span></div>
@@ -608,14 +608,14 @@
       <div class="search-bar">
         <input type="text" placeholder="Search">
       </div>
-      <div class="profile-icon"><a href="{{ url_for('account') }}"User</a></div>
+      <div class="profile-icon"><a href="{{ url_for('account') }}">User</a></div>
     </div>
 
     <div>
       <div class="section-header-row">
         <div class="section-title">Courses</div>
         <button onclick="join_create_class_display()"class="btn-join">Join/Create</button>
-      </div>tab
+      </div>
 
       <!--
       <div class="course-card">
@@ -630,11 +630,11 @@
         <div class="course-card">
             <div class="course-head">{{ course['name'] }}</div>
             <div class="course-body">
-            { % for post in unread_posts  % }
+            {% for post in unread_posts  %}
             <div class="course-item">- {{ post['title'] }}
-              <!-- - <span class="due">due mm/dd/yy</span> -->tab
+              <!-- - <span class="due">due mm/dd/yy</span> -->
             </div>
-            { % endfor % }
+            {% endfor %}
             </div>
         </div>
       {% endfor %}
@@ -669,11 +669,11 @@
 
       <div class="popup-actions">
 
-        <button class="popup-main-btn" onclick="join_class()">
+        <button class="popup-main-btn" onclick="join_class()" type="button">
           Join a Class
         </button>
 
-        <button class="popup-main-btn" onclick="window.location.href='/create_class'">
+        <button class="popup-main-btn" onclick="window.location.href='/create_class'" type="button">
           Create a Class
         </button>
 
@@ -792,27 +792,6 @@
     document.getElementById("modal").addEventListener("click", function(e) {
       if (e.target === this) closeModal();
     });
-
-    document.getElementById("post-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      fetch("/api/posts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: document.getElementById("title").value,
-          class_id: document.getElementById("class_id").value,
-          body: document.getElementById("body").value,
-          category: "{{ selected_post_type }}"
-        })
-      })
-      .then(r => r.json())
-      .then(data => {
-        console.log("Post created:", data.post);
-        e.target.reset();
-        closeModal();
-      });
-    });
-
 
 </script>
 </body>
