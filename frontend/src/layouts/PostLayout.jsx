@@ -31,6 +31,18 @@ function PostLayout({
       ? posts // show all posts
       : posts.filter((post) => String(post.class_id) === selectedClassId); // show filtered posts
 
+  function getClassName(classId) {
+    const classInfo = classes.find((classInfo) => (
+      String(classInfo.class_id) === String(classId)
+    ));
+
+    if (classInfo === undefined) {
+      return classId;
+    }
+
+    return classInfo.name;
+  }
+
   return (
     <main className={selectedPost === null ? "post-layout" : "post-layout has-open-post"}>
       <section className="post-list-panel">
@@ -93,6 +105,7 @@ function PostLayout({
                   isSelected={selectedPost?.post_id === post.post_id}
                   showClass={selectedClassId === "all"}
                   onDelete={onDelete}
+                  getClassName={getClassName}
                 />
               ))
             )}
@@ -108,6 +121,7 @@ function PostLayout({
             showClass={selectedClassId === "all"}
             onVote={onVote}
             onDelete={onDelete}
+            getClassName={getClassName}
           />
         ) : (
           <ClassFilter

@@ -8,7 +8,7 @@ const emptyFollowups = {
   other: [],
 };
 
-function PostView({ postData, onBack, showClass, onVote, onDelete }) {
+function PostView({ postData, onBack, showClass, onVote, onDelete, getClassName }) {
   const [followups, setFollowups] = useState(emptyFollowups);
 
   useEffect(() => {
@@ -104,7 +104,7 @@ function PostView({ postData, onBack, showClass, onVote, onDelete }) {
 
       <p className="post-view-meta">
         By {postData.display_author}
-        {showClass && " | Class: " + postData.class_id}
+        {showClass && " | Class: " + getClassName(postData.class_id)}
       </p>
 
       <div className="post-view-body">{postData.body}</div>

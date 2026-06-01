@@ -1,4 +1,4 @@
-function PostPreview({ postData, onOpen, isSelected, showClass, onDelete }) {
+function PostPreview({ postData, onOpen, isSelected, showClass, onDelete, getClassName }) {
   const previewClassName = isSelected
     ? "post-preview selected"
     : "post-preview";
@@ -29,7 +29,7 @@ function PostPreview({ postData, onOpen, isSelected, showClass, onDelete }) {
       </div>
 
       {showClass && (
-        <p className="post-preview-meta">Class: {postData.class_id}</p>
+        <p className="post-preview-meta">Class: {getClassName(postData.class_id)}</p>
       )}
 
       <p className="post-preview-body">{postData.body}</p>
