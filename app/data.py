@@ -784,9 +784,11 @@ def get_post_data(post_id):
 
 def change_post_title(post_id, new_title):
     update_posts_row(post_id, 'title', new_title)
+    update_post_time(post_id)
 
 def change_post_body(post_id, new_body):
     update_posts_row(post_id, 'body', new_body)
+    update_post_time(post_id)
 
 
 
@@ -1339,6 +1341,9 @@ if __name__ == "__main__":
     lst = get_teacher_head_posts(class_id)
     for item in lst:
         print(get_post_body(item))
+    
+    change_post_body(announcement_id, "nvm")
+    print(str(get_post_data(announcement_id)))
 
     '''
     print("\n----------------------------------\n")
