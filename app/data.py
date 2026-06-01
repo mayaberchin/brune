@@ -9,7 +9,7 @@ DB_FILE="data.db"
 
 #=============================[GLOBALS]=============================#
 
-USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_class_teacher', 'class_id', 'unread_posts']
+USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_stuy_teacher', 'class_id', 'unread_posts']
 CLASSES_COLS = ['class_id', 'name', 'teacher_email', 'posts', 'is_archived']
 POSTS_COLS = ['post_id', 'author_email', 'class_id', 'parent_id', 'title', 'body', 'attachments', 'category', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping', 'show_dojo', 'is_anonymous']
 FOLLOWUPS_COLS = ['followup_id', 'author_email', 'post_id', 'body', 'attachments', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
@@ -28,7 +28,7 @@ def create_users_table():
                     password_hash   TEXT        NOT NULL,
                     is_dojo         TEXT        NOT NULL                                DEFAULT 'no',
                     is_sensei       TEXT        NOT NULL                                DEFAULT 'no',
-                    is_class_teacher      TEXT        NOT NULL                                DEFAULT 'no',
+                    is_stuy_teacher TEXT        NOT NULL                                DEFAULT 'no',
                     class_id        TEXT,
                     unread_posts    TEXT,
                     pinged_posts    TEXT
@@ -103,7 +103,7 @@ def get_all_senseis():
     return [user for user in get_all_users() if is_sensei(user)]
 
 def get_all_teachers():
-    return [user for user in get_all_users() if is_class_teacher(user)]
+    return [user for user in get_all_users() if is_stuy_teacher(user)]
 
 
 
@@ -240,8 +240,8 @@ def is_sensei(email):
     sensei = get_users_field(email, 'is_sensei')
     return sensei == 'yes'
 
-def is_teacher(email):
-    teacher = get_users_field(email, 'is_class_teacher')
+def is_stuy_teacher(email):
+    teacher = get_users_field(email, 'is_stuy_teacher')
     return teacher == 'yes'
 
 
@@ -259,11 +259,11 @@ def add_user(email, password, name, github=''):
     password = str(hashlib.sha256(password).hexdigest())
     is_dojo = 'no'
     is_sensei = 'no'
-    is_class_teacher = 'no'
+    is_stuy_teacher = 'no'
     class_id = ''
     unread_posts = ''
     pinged_posts = ''
-    add_users_row([email, github, name, password, is_dojo, is_sensei, is_class_teacher, class_id, unread_posts, pinged_posts])
+    add_users_row([email, github, name, password, is_dojo, is_sensei, is_stuy_teacher, class_id, unread_posts, pinged_posts])
     return 'success'
 
 
@@ -275,7 +275,7 @@ def add_sensei(email):
     update_users_row(email, 'is_sensei', 'yes')
 
 def add_teacher(email):
-    update_users_row(email, 'is_class_teacher', 'yes')
+    update_users_row(email, 'is_stuy_teacher', 'yes')
 
 def mark_read(email, post_id):
     pinged_posts = get_pinged_posts(email)
@@ -384,6 +384,24 @@ def get_head_posts(class_id):
     posts = [post for post in get_class_posts(class_id) if get_post_depth(post) == 0]
     posts = sort_by_ctime(posts)
     return posts
+
+def get_teacher_posts(class_id):
+    posts = get_class_posts(class_id)
+    teachers = get_class_teachers(class_id)
+    t_posts = []
+    for post in posts:
+        if get_post_author(post) in teachers:
+            t_posts += [post]
+    return t_posts
+
+def get_teacher_head_posts(class_id):
+    posts = get_head_posts(class_id)
+    teachers = get_class_teachers(class_id)
+    t_posts = []
+    for post in posts:
+        if get_post_author(post) in teachers:
+            t_posts += [post]
+    return t_posts
 
 def get_class_announcements(class_id):
     posts = [post for post in get_head_posts(class_id) if get_post_category(post) == 'announcement']
@@ -624,6 +642,7 @@ def get_unresolved_posts(class_id):
     return [post for post in get_all_unresolved() if get_post_class(post) == class_id]
 
 
+
 # returns a dictionary of different types of followups
 def get_post_followups(post_id):
     responses = [post for post in get_all_posts() if get_post_parent(post) == post_id]
@@ -765,9 +784,11 @@ def get_post_data(post_id):
 
 def change_post_title(post_id, new_title):
     update_posts_row(post_id, 'title', new_title)
+    update_post_time(post_id)
 
 def change_post_body(post_id, new_body):
     update_posts_row(post_id, 'body', new_body)
+    update_post_time(post_id)
 
 
 
@@ -978,7 +999,7 @@ def sort_by_ctime(posts):
         ctime = datetime.strptime(get_post_ctime(post), "%Y-%m-%d %H:%M:%S.%f")
         ind = 0
         while len(times) > ind and times[ind] >= ctime:
-            ctime += 1
+            ind += 1
         times.insert(ind, ctime)
         sorted.insert(ind, post)
     return sorted
@@ -1318,6 +1339,13 @@ if __name__ == "__main__":
     ffs = get_post_followups(f_id)['other']
     for ff in ffs:
         print(get_post_body(ff))
+    
+    lst = get_teacher_head_posts(class_id)
+    for item in lst:
+        print(get_post_body(item))
+    
+    change_post_body(announcement_id, "nvm")
+    print(str(get_post_data(announcement_id)))
 
     '''
     print("\n----------------------------------\n")

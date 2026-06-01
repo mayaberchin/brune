@@ -20,6 +20,10 @@ function PostLayout({
   onVote,
 }) {
   const [selectedClassId, setSelectedClassId] = useState("all"); // for course filter
+  const postClasses =
+    selectedPostType === "announcement"
+      ? classes.filter((classInfo) => classInfo.is_teacher)
+      : classes;
 
   const filteredPosts =
     selectedClassId === "all"
@@ -69,7 +73,7 @@ function PostLayout({
         {showPostEditor && canPost && (
           <PostEditor
             selectedPostType={selectedPostType}
-            classes={classes}
+            classes={postClasses}
             onCancel={() => setShowPostEditor(false)}
             onSubmit={addPost}
           />
