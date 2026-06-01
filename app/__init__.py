@@ -314,7 +314,7 @@ def add_display_author(post):
 @app.route("/join_class", methods=["POST"])
 def join_a_class():
     print("joining")
-    code = request.form.get("class_code")
+    code = request.form.get("class_code", "").strip()
     print(data.get_all_classes())
     if code not in data.get_all_classes():
         print(data.get_all_classes())
@@ -326,8 +326,12 @@ def join_a_class():
 @app.route("/create_class_",methods=["POST"])
 def create_a_class():
     print("creating")
-    class_name = request.form.get("class_name")
-    data.create_class(session['email'], class_name)
+    class_name = request.form.get("class_name", "").strip()
+    if class_name == "":
+        flash("Class name cannot be empty.")
+        return redirect(url_for("home"))
+    class_id = data.create_class(session['email'], class_name)
+    flash("Class created! Code: " + class_id)
     print("Class created")
     return redirect(url_for("home"))
     

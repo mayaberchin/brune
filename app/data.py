@@ -1094,6 +1094,8 @@ def merge_list(lst, delim=","):
 
 # return a list from a string of comma-separated items (or some other delimeter)
 def make_list(str, delim=","):
+    if str == None:
+        return []
     lst = str.split(delim)
     return rm_empty(lst)
 

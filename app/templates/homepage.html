@@ -621,6 +621,14 @@
         <button onclick="join_create_class_display()"class="btn-join">Join/Create</button>
       </div>
 
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="error-message">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
       <!--
       <div class="course-card">
         <div class="course-head">Cybersecurity</div>
@@ -734,16 +742,16 @@
       <form action="/create_class_" method="POST">
         <input
           type="text"
-          name="class_code"
+          name="class_name"
           class="popup-input"
-          placeholder="Class code"
+          placeholder="Class name"
           required
         >
 
         <div class="popup-actions">
 
           <button type="submit" class="popup-main-btn">
-            Join
+            Create
           </button>
 
           <button
