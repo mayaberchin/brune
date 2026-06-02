@@ -78,18 +78,17 @@ def logout():
 def home():
     if 'email' not in session:
         return redirect(url_for('login'))
+    return render_template("homepage.html")
 
     # get homepage posts
-    homepage_post_ids = data.get_homepage_posts(session['email'],20)
+    homepage_post_ids = data.get_homepage_posts('email',20)
     homepage_posts = []
-    for post_id in homepage_post_ids['pinged'] + homepage_post_ids['unread']:
+    for post_id in homepage_post_ids:
         post_data = data.get_post_data(post_id)
-        if post_data not in homepage_posts:
-            homepage_posts.append(post_data)
-    #homepage_posts.reverse() # data should do this now
+        homepage_posts.append(post_data)
+    homepage_posts.reverse()
 
     # get updated posts ============================need to do
-    updated_posts = []
 
     # get unresolved posts
     unresolved_post_ids = data.get_all_unresolved()
@@ -97,27 +96,15 @@ def home():
     for post_id in unresolved_post_ids:
         post_data = data.get_post_data(post_id)
         unresolved_posts.append(post_data)
-    #unresolved_posts.reverse()
+    unresolved_posts.reverse()
 
-
-    # get instructors posts ===========================need to do
-    instructors_posts = []
-
-
-
-    # get courses
     class_ids = data.get_user_classes(session['email'])
     classes = []
     instructors_posts = []
     for class_id in class_ids:
-        classes.append({
-            "class_id": class_id,
-            "name": data.get_class_name(class_id),
-        })
-
-    unread_posts = []
-    for post_id in data.get_unread_posts(session['email']):
-        unread_posts.append(data.get_post_data(post_id))
+        # get courses
+        class_data = data.get_class_data(class_id)
+        classes.append(class_data)
 
         # get instructors posts ===========================need to do
         teacher_post_data = data.get_teacher_posts(class_id)
@@ -127,10 +114,7 @@ def home():
     return render_template(
         "homepage.html",
         homepage_posts=homepage_posts,
-        updated_posts=updated_posts,
         unresolved_posts=unresolved_posts,
-        instructors_posts=instructors_posts,
-        unread_posts=unread_posts,
         classes=classes,
         get_user_name=data.get_user_name,
         instructors_posts=instructors_posts
@@ -235,7 +219,7 @@ def api_posts():
         if post["parent_id"] == "" and (category == "" or post["category"] == category):
             posts.append(post)
 
-    #posts.reverse() # newest posts first # data should already do this now
+    posts.reverse() # newest posts first
     return jsonify({"posts": posts})
 
 # ceates and saves a new post
@@ -320,37 +304,19 @@ def api_toggle_upvote(post_id):
     post = add_display_author(post)
     return jsonify({"post": post})
 
-@app.route("/api/posts/<post_id>", methods=["DELETE"])
-def api_delete_post(post_id):
-    try:
-        post = data.get_post_data(post_id)
-    except IndexError:
-        return jsonify({"error": "Post not found"}), 404
-
-    if not data.is_class_teacher(post["class_id"], session["email"]):
-        return jsonify({"error": "Only teachers of this class can delete posts"}), 403
-
-    data.delete_post(post_id)
-    return jsonify({"deleted": post_id})
-
 def add_display_author(post):
     if post["is_anonymous"] == "yes":
         post["display_author"] = "Anonymous"
     else:
         post["display_author"] = data.get_user_name(post["author_email"])
     post["has_upvoted"] = 'email' in session and session["email"] in post["upvoters"]
-    post["can_delete"] = (
-        post["category"] != "chat"
-        and 'email' in session
-        and data.is_class_teacher(post["class_id"], session["email"])
-    )
     return post
 
 #join/create class:
 @app.route("/join_class", methods=["POST"])
 def join_a_class():
     print("joining")
-    code = request.form.get("class_code", "").strip()
+    code = request.form.get("class_code")
     print(data.get_all_classes())
     if code not in data.get_all_classes():
         print(data.get_all_classes())
@@ -362,12 +328,8 @@ def join_a_class():
 @app.route("/create_class_",methods=["POST"])
 def create_a_class():
     print("creating")
-    class_name = request.form.get("class_name", "").strip()
-    if class_name == "":
-        flash("Class name cannot be empty.")
-        return redirect(url_for("home"))
-    class_id = data.create_class(session['email'], class_name)
-    flash("Class created! Code: " + class_id)
+    class_name = request.form.get("class_name")
+    data.create_class(session['email'], class_name)
     print("Class created")
     return redirect(url_for("home"))
 
