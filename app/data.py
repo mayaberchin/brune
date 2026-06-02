@@ -704,7 +704,7 @@ def get_top_parent(post_id):
         return post_id
     grandparent = get_post_parent(parent)
     if (str(grandparent) == 'None' or grandparent == ''):
-        return parent 
+        return parent
     return grandparent
 
 
@@ -1287,7 +1287,7 @@ if __name__ == "__main__":
     #print(str(get_active_classes()))
     un_archive_class(class_id)
     #print(str(get_active_classes()))
-    
+
     #print("\n")
     #print(str(get_all_posts()))
     #delete_class(class_id)
@@ -1302,7 +1302,7 @@ if __name__ == "__main__":
     print(str(get_all_posts()))
     '''
 
-    
+
     print("\n----------------------------------\n")
     # author_email, class_id, title, body, category, show_dojo, attachments='', is_anonymous='no', parent_id=''
     post_id = create_post("mayaberchin@gmail.com", class_id, "test_post", "this is the body of the test post", "question", "no")
@@ -1317,7 +1317,7 @@ if __name__ == "__main__":
     add_post_upvoter(post_id, "b@b.com")
     share_to_dojo(post_id)
     print(str(get_post_data(post_id)))
-    
+
 
     announcement_id = create_post("mayaberchin@gmail.com", class_id, "ann", "important announcement!", "announcement", "no")
     print("\n")
@@ -1325,7 +1325,7 @@ if __name__ == "__main__":
     print(str(get_unread_posts('0@gmail.com')))
     print(str(get_pinged_posts('0@gmail.com')))
     print(str(get_unresolved_posts(class_id)))
-    
+
     create_followup('b@b.com', announcement_id, "huhhh???")
     create_followup('0@gmail.com', announcement_id, "lolll i get it")
     f_id = create_followup('0@gmail.com', announcement_id, ":)")
@@ -1340,11 +1340,11 @@ if __name__ == "__main__":
     ffs = get_post_followups(f_id)['other']
     for ff in ffs:
         print(get_post_body(ff))
-    
+
     lst = get_teacher_head_posts(class_id)
     for item in lst:
         print(get_post_body(item))
-    
+
     change_post_body(announcement_id, "nvm")
     print(str(get_post_data(announcement_id)))
 

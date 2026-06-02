@@ -108,6 +108,7 @@ def home():
     # get courses
     class_ids = data.get_user_classes(session['email'])
     classes = []
+    instructors_posts = []
     for class_id in class_ids:
         classes.append({
             "class_id": class_id,
@@ -118,6 +119,11 @@ def home():
     for post_id in data.get_unread_posts(session['email']):
         unread_posts.append(data.get_post_data(post_id))
 
+        # get instructors posts ===========================need to do
+        teacher_post_data = data.get_teacher_posts(class_id)
+        instructors_posts.append(teacher_post_data)
+
+
     return render_template(
         "homepage.html",
         homepage_posts=homepage_posts,
@@ -126,7 +132,8 @@ def home():
         instructors_posts=instructors_posts,
         unread_posts=unread_posts,
         classes=classes,
-        get_user_name=data.get_user_name
+        get_user_name=data.get_user_name,
+        instructors_posts=instructors_posts
     )
 
 
