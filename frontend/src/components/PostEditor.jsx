@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
 const questionTemplate =
-`QWonderful:
+`Problem encountered:
 
 
-Awe-inspiring:
+Steps already taken:
 
 
-Incredible:
+Additional context:
 
 
 `;

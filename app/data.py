@@ -196,8 +196,8 @@ def get_homepage_posts(email, n):
     if len(pinged) < n:
         unread = get_top_n_unread(email, n-len(pinged))
     posts = {}
-    posts['pinged'] = pinged
-    posts['unread'] = unread
+    posts['pinged'] = sort_by_ctime(pinged)
+    posts['unread'] = sort_by_ctime(unread)
     return posts
 
 
@@ -283,11 +283,11 @@ def mark_read(email, post_id):
     if (post_id in pinged_posts):
         pinged_posts.remove(post_id)
         pinged_str = merge_list(pinged_posts)
-        update_users_row(email, 'pinged_posts', pinged_posts)
+        update_users_row(email, 'pinged_posts', pinged_str)
     if (post_id in unread_posts):
         unread_posts.remove(post_id)
         unread_str = merge_list(unread_posts)
-        update_users_row(email, 'unread_posts', unread_posts)
+        update_users_row(email, 'unread_posts', unread_str)
 
 
 
@@ -379,7 +379,7 @@ def get_class_posts(class_id):
     posts = sort_by_ctime(posts)
     return posts
 
-# return only top-level posts, not followupss
+# return only top-level posts, not followups
 def get_head_posts(class_id):
     posts = [post for post in get_class_posts(class_id) if get_post_depth(post) == 0]
     posts = sort_by_ctime(posts)
@@ -607,6 +607,7 @@ def update_classes_row(class_id, col_name, col_val):
 
 def get_all_posts():
     data = get_col('posts', 'post_id')
+    data = sort_by_ctime(data)
     return data
 
 def get_posts_by(email):
@@ -649,6 +650,8 @@ def get_post_followups(post_id):
     followups = {}
     # don't order these posts at all if these are followups to followups--leave a thread ordered by post creation time
     if (get_post_depth(post_id) > 0 or len(responses) == 0):
+        responses = sort_by_ctime(responses)
+        responses.reverse()
         followups['answers'] = []
         followups['teacher_responses'] = []
         followups['other'] = responses
@@ -735,7 +738,7 @@ def post_is_answer(post_id):
     return is_answer == 'yes'
 
 def show_dojo(post_id):
-    dojo_sees = get_post_field(post_id, 'show_dojo')
+    dojo_sees = get_posts_field(post_id, 'show_dojo')
     return dojo_sees == 'yes'
 
 
@@ -931,14 +934,9 @@ def create_followup(author_email, post_id, body, is_anonymous='no'):
 def delete_post(post_id):
     # remove followups
     followups_dict = get_post_followups(post_id)
-    followups = followups_dict['answers'] + followups_dict['teacher_responses'] + followup_dict['other']
+    followups = followups_dict['answers'] + followups_dict['teacher_responses'] + followups_dict['other']
     for f in followups:
-        if get_post_depth(f) < 2:   # possibility that this followup has more followups
-            d_followups_dict = get_post_followups(f)
-            double_followups = d_followups_dict['answers'] + d_followups_dict['teacher_responses'] + d_followup_dict['other']
-            for d in double_followups:
-                delete_post_trace(d)
-        delete_post_trace(f)
+        delete_post(f)
     delete_post_trace(post_id)
 
 # delete all posts/followups in this class by this person
@@ -986,7 +984,7 @@ def delete_post_trace(post_id):
         readers += get_all_dojo()
     readers = unique_only(readers)
     for reader in readers:
-        mark_as_read(reader, post_id)    # removes the post from unread/ping
+        mark_read(reader, post_id)    # removes the post from unread/ping
     # remove from posts table
     delete_row('posts', 'post_id', post_id)
 
@@ -1094,6 +1092,8 @@ def merge_list(lst, delim=","):
 
 # return a list from a string of comma-separated items (or some other delimeter)
 def make_list(str, delim=","):
+    if str == None:
+        return []
     lst = str.split(delim)
     return rm_empty(lst)
 
@@ -1107,7 +1107,8 @@ def add_to_list(lst, item):
     return new_str
 
 def remove_from_list(lst, item):
-    lst.remove(item)
+    if item in lst:
+        lst.remove(item)
     new_str = merge_list(lst)
     return new_str
 

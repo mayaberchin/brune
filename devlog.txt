@@ -385,3 +385,23 @@ COMPLETE(ish) DB OVERHAUL
 - Whole team was working to get product for demo today!!
 - Pawned off working on attachments to posts on our future selves lol
 - BUT data.py is now 1.2k lines :') and most of that is tested soooo
+
+mayaB -- 2026-06-01 06:38
+SITE FIX FOR DEMO
+- Mostly worked on fixing things in data.py such as post ordering and adding requested functions, like one to get teacher posts
+- I see that groupmates have not logged, but I want to attest to their efforts. 
+  - Got GC working properly with websockets so that you can see messages update faster
+	- Styled the website to be a lot more consistent
+	- Got class creation and joining to work 
+	- Implemented ordering by upvotes for followups 
+	- Implemented post deletion
+	- Pretty awesome ngl. I think they went to sleep before they could brag on here
+
+mayaB -- 2026-06-02 09:52
+DEVELOPER PREVIEWS: The Aftermath
+- UI seems to be good
+- issues with spam, repeated messages, and long loading times
+- issues with moderation...
+- many suggestioned features we already had in mind, good reinforcement 
+- some new features suggested, such as being able to filter for your own posts
+- top remaining tasks: moderation and logging implementations, formatted posts supporting image embedding, dojo role

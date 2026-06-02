@@ -101,6 +101,17 @@ body.chat-page {
   overflow-wrap: anywhere;
 }
 
+.post-preview-top {
+  align-items: flex-start;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.post-preview-top .post-preview-title {
+  flex: 1;
+}
+
 .post-preview-meta {
   color: gray;
   font-size: 0.9rem;
@@ -137,6 +148,22 @@ body.chat-page {
   border-color: dodgerblue;
   color: dodgerblue;
   font-weight: 600;
+}
+
+.post-delete-button {
+  background-color: white;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  color: #555;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  padding: 4px 8px;
+}
+
+.post-delete-button:hover {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: white;
 }
 
 /* --------------------------------------------------------- */
@@ -206,6 +233,9 @@ body.chat-page {
 }
 
 .post-view-actions {
+  align-items: center;
+  display: flex;
+  gap: 8px;
   margin: 16px 0 8px;
 }
 

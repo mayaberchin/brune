@@ -98,6 +98,29 @@ function App() {
     return data.post;
   }
 
+  async function deletePost(postId) {
+    const response = await fetch(`/api/posts/${postId}`, {
+      method: "DELETE",
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.error);
+      return false;
+    }
+
+    setPosts((currentPosts) => (
+      currentPosts.filter((post) => post.post_id !== postId)
+    ));
+
+    setSelectedPost((currentPost) => (
+      currentPost !== null && currentPost.post_id === postId
+        ? null
+        : currentPost
+    ));
+    return true;
+  }
+
   const canPostOnPage =
     selectedPostType === "announcement"
       ? classes.some((classInfo) => classInfo.is_teacher)
@@ -132,6 +155,7 @@ function App() {
       setShowPostEditor={setShowPostEditor}
       addPost={addPost}
       onVote={votePost}
+      onDelete={deletePost}
     />
   );
 
