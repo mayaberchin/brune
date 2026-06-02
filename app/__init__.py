@@ -98,24 +98,26 @@ def home():
         unresolved_posts.append(post_data)
     unresolved_posts.reverse()
 
-
-    # get instructors posts ===========================need to do
-
-
-
-    # get courses
     class_ids = data.get_user_classes(session['email'])
     classes = []
+    instructors_posts = []
     for class_id in class_ids:
+        # get courses
         class_data = data.get_class_data(class_id)
         classes.append(class_data)
+
+        # get instructors posts ===========================need to do
+        teacher_post_data = data.get_teacher_posts(class_id)
+        instructors_posts.append(teacher_post_data)
+
 
     return render_template(
         "homepage.html",
         homepage_posts=homepage_posts,
         unresolved_posts=unresolved_posts,
         classes=classes,
-        get_user_name=data.get_user_name
+        get_user_name=data.get_user_name,
+        instructors_posts=instructors_posts
     )
 
 
@@ -330,7 +332,7 @@ def create_a_class():
     data.create_class(session['email'], class_name)
     print("Class created")
     return redirect(url_for("home"))
-    
+
 
 if __name__ == "__main__":
   app.debug = True
