@@ -78,12 +78,11 @@ def logout():
 def home():
     if 'email' not in session:
         return redirect(url_for('login'))
-    return render_template("homepage.html")
-
+    # return render_template("homepage.html")
     # get homepage posts
     homepage_post_ids = data.get_homepage_posts('email',20)
     homepage_posts = []
-    for post_id in homepage_post_ids:
+    for post_id in homepage_post_ids["unread"]:
         post_data = data.get_post_data(post_id)
         homepage_posts.append(post_data)
     homepage_posts.reverse()
@@ -102,14 +101,13 @@ def home():
     classes = []
     instructors_posts = []
     for class_id in class_ids:
-        # get courses
+        # get course data
         class_data = data.get_class_data(class_id)
         classes.append(class_data)
 
         # get instructors posts ===========================need to do
         teacher_post_data = data.get_teacher_posts(class_id)
         instructors_posts.append(teacher_post_data)
-
 
     return render_template(
         "homepage.html",
@@ -315,11 +313,8 @@ def add_display_author(post):
 #join/create class:
 @app.route("/join_class", methods=["POST"])
 def join_a_class():
-    print("joining")
     code = request.form.get("class_code")
-    print(data.get_all_classes())
     if code not in data.get_all_classes():
-        print(data.get_all_classes())
         flash("Class not found. Ask your teacher for the code.")
         return redirect(url_for("home"))
     data.add_class_member(code, session['email'])
@@ -327,10 +322,8 @@ def join_a_class():
 
 @app.route("/create_class_",methods=["POST"])
 def create_a_class():
-    print("creating")
     class_name = request.form.get("class_name")
     data.create_class(session['email'], class_name)
-    print("Class created")
     return redirect(url_for("home"))
 
 
