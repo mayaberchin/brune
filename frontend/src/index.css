@@ -253,6 +253,31 @@ body.chat-page {
   white-space: pre-wrap;
 }
 
+.post-attachment {
+  margin: 16px 0;
+}
+
+.post-attachment img {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-height: 420px;
+  max-width: 100%;
+}
+
+.post-attachment-link {
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  color: #333;
+  display: inline-block;
+  margin: 16px 0;
+  padding: 8px 10px;
+  text-decoration: none;
+}
+
+.post-attachment-link:hover {
+  background: whitesmoke;
+}
+
 .post-view-actions {
   align-items: center;
   display: flex;

@@ -93,6 +93,16 @@ function PostView({ postData, onBack, showClass, onVote, onDelete, getClassName 
     }
   }
 
+  const attachment = postData.attachments[0];
+  const attachmentName = attachment?.split("/").pop();
+  const attachmentNameLower = attachmentName?.toLowerCase();
+  const attachmentIsImage = attachmentNameLower !== undefined && (
+    attachmentNameLower.endsWith(".png") ||
+    attachmentNameLower.endsWith(".jpg") ||
+    attachmentNameLower.endsWith(".jpeg") ||
+    attachmentNameLower.endsWith(".gif")
+  );
+
   return (
     <div className="post-view">
       <button
@@ -115,6 +125,18 @@ function PostView({ postData, onBack, showClass, onVote, onDelete, getClassName 
           {postData.body}
         </ReactMarkdown>
       </div>
+
+      {attachment !== undefined && (
+        attachmentIsImage ? (
+          <div className="post-attachment">
+            <img src={attachment} alt="Post attachment" />
+          </div>
+        ) : (
+          <a className="post-attachment-link" href={attachment} target="_blank" rel="noreferrer">
+            {attachmentName}
+          </a>
+        )
+      )}
 
       <div className="post-view-actions">
         <UpvoteButton post={postData} onVote={onVote} />

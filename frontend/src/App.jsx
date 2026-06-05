@@ -38,13 +38,31 @@ function App() {
   }, []);
 
   async function addPost(postData) {
-    const response = await fetch("/api/posts", {
+    let requestInfo = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(postData),
-    });
+    };
+
+    if (postData.attachment != null) {
+      const formData = new FormData();
+      formData.append("title", postData.title);
+      formData.append("category", postData.category);
+      formData.append("class_id", postData.class_id);
+      formData.append("body", postData.body);
+      formData.append("isAnonymous", postData.isAnonymous ? "yes" : "");
+      formData.append("shareWithDojo", postData.shareWithDojo ? "yes" : "");
+      formData.append("attachment", postData.attachment);
+
+      requestInfo = {
+        method: "POST",
+        body: formData,
+      };
+    }
+
+    const response = await fetch("/api/posts", requestInfo);
     const data = await response.json();
 
     if (!response.ok) {

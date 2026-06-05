@@ -1,11 +1,19 @@
+import os
+import uuid
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from validate_email import validate_email
-
+from werkzeug.utils import secure_filename
+# https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
 import data
 
 app = Flask(__name__)
 app.secret_key = "vsecretandsecurekeyforstuyoverflow"
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1000 * 1000
+app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "static", "uploads")
 data.create_tables()
+
+ALLOWED_UPLOADS = {"png", "jpg", "jpeg", "gif", "pdf", "txt", "doc", "docx"}
 
 POST_PAGE_INFO = {
     "announcements": {
@@ -60,10 +68,10 @@ def set_user():
         email = request.form.get('email')
         password = request.form.get('password')
         is_valid = True
-        # is_valid = validate_email(email_address=email, check_format=True, check_smtp=True, smtp_timeout=10, dns_timeout=10, check_blacklist=True)
-        # if is_valid == None or not is_valid:
-        #     flash("Please enter a valid email.")
-        #     return redirect(url_for('set_user'))
+        is_valid = validate_email(email_address=email, check_format=True, check_smtp=True, smtp_timeout=10, dns_timeout=10, check_blacklist=True)
+        if is_valid == None or not is_valid:
+            flash("Please enter a valid email.")
+            return redirect(url_for('set_user'))
         if data.user_exists(email):
             flash("User already exists!")
             return redirect(url_for('set_user'))
@@ -229,7 +237,10 @@ def api_posts():
 # ceates and saves a new post
 @app.route("/api/posts", methods=["POST"])
 def api_create_post():
-    post = request.get_json() or {}
+    if request.content_type and request.content_type.startswith("multipart/form-data"):
+        post = request.form
+    else:
+        post = request.get_json() or {}
 
     title = post.get("title", "").strip()
     class_id = post.get("class_id", "").strip()
@@ -237,6 +248,23 @@ def api_create_post():
     category = post.get("category", "").strip()
     show_dojo = "yes" if post.get("shareWithDojo") else "no"
     is_anonymous = "yes" if post.get("isAnonymous") else "no"
+    attachment = ""
+
+    # if there is a file attached, save it and store link in attachments
+    file = request.files.get("attachment")
+    if file is not None and file.filename != "":
+        if "." not in file.filename:
+            return jsonify({"error": "That file type is not supported"}), 400
+        extension = file.filename.rsplit(".", 1)[1].lower()
+        if extension not in ALLOWED_UPLOADS:
+            return jsonify({"error": "That file type is not supported"}), 400
+
+        # secure_filename cleans up weird filenames before saving
+        clean_name = secure_filename(file.filename)
+        # uuid keeps two files with the same name from replacing each other
+        file_name = str(uuid.uuid4()) + "_" + clean_name
+        file.save(os.path.join(app.config["UPLOAD_FOLDER"], file_name))
+        attachment = url_for("static", filename="uploads/" + file_name)
 
     if category == "announcement" and not data.is_class_teacher(class_id, session["email"]):
         return jsonify({"error": "Only teachers can post announcements"}), 403
@@ -248,7 +276,7 @@ def api_create_post():
         body,
         category,
         show_dojo,
-        "", # attachments
+        attachment,
         is_anonymous
     )
     saved_post = data.get_post_data(post_id)
