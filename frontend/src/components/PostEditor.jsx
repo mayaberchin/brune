@@ -26,7 +26,7 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [shareWithDojo, setShareWithDojo] = useState(false);
   const [mode, setMode] = useState("editor");
-  const [showPreview, setShowPreview] = useState(false);
+  const [showPreview, setShowPreview] = useState(true);
   const [attachment, setAttachment] = useState(null);
 
   const [error, setError] = useState("");
