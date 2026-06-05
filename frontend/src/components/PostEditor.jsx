@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const questionTemplate =
 `Problem encountered:
@@ -22,6 +24,7 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
 
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [shareWithDojo, setShareWithDojo] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   const [error, setError] = useState("");
 
@@ -108,16 +111,37 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="postBody" className="form-label"> Post Body </label>
-          <textarea
-            ref={postBodyRef}
-            id="postBody"
-            name="postBody"
-            className="form-control post-body-input"
-            placeholder="Type your post here..."
-            value={body}
-            onChange={(event) => setBody(event.target.value)}
-          ></textarea>
+          <div className="post-body-label-row">
+            <label htmlFor="postBody" className="form-label"> Post Body </label>
+
+            <button
+              type="button"
+              className="btn btn-outline-secondary btn-sm"
+              onClick={() => setShowPreview(!showPreview)}
+            >
+              {showPreview ? "Hide Preview" : "Preview"}
+            </button>
+          </div>
+
+          <div className={showPreview ? "post-body-area has-preview" : "post-body-area"}>
+            <textarea
+              ref={postBodyRef}
+              id="postBody"
+              name="postBody"
+              className="form-control post-body-input"
+              placeholder="Type your post here..."
+              value={body}
+              onChange={(event) => setBody(event.target.value)}
+            ></textarea>
+
+            {showPreview && (
+              <div className="post-body-preview">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {body === "" ? "Nothing to preview yet." : body}
+                </ReactMarkdown>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="form-check mb-2">

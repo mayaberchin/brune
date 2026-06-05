@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import Followup, { FollowupForm } from "./Followup";
 import UpvoteButton from "./UpvoteButton";
 
@@ -107,7 +109,11 @@ function PostView({ postData, onBack, showClass, onVote, onDelete, getClassName 
         {showClass && " | Class: " + getClassName(postData.class_id)}
       </p>
 
-      <div className="post-view-body">{postData.body}</div>
+      <div className="post-view-body">
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {postData.body}
+        </ReactMarkdown>
+      </div>
 
       <div className="post-view-actions">
         <UpvoteButton post={postData} onVote={onVote} />
