@@ -10,7 +10,7 @@ DB_FILE="data.db"
 #=============================[GLOBALS]=============================#
 
 USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_stuy_teacher', 'class_id', 'unread_posts']
-CLASSES_COLS = ['class_id', 'name', 'owner_email', 'teacher_email', 'member_email', 'banned_email', 'posts', 'is_archived']
+CLASSES_COLS = ['class_id', 'name', 'teacher_email', 'posts', 'is_archived']
 POSTS_COLS = ['post_id', 'author_email', 'class_id', 'parent_id', 'title', 'body', 'attachments', 'category', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping', 'show_dojo', 'is_anonymous']
 FOLLOWUPS_COLS = ['followup_id', 'author_email', 'post_id', 'body', 'attachments', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping']
 
@@ -204,7 +204,9 @@ def get_homepage_posts(email, n):
 
 # get the classes someone is in
 def get_user_classes(email):
+    print('here')
     classes_str = get_users_field(email, 'class_id')
+    print(classes_str)
     classes = make_list(classes_str)
     return classes
 
@@ -436,7 +438,9 @@ def get_class_gc_by(class_id, email):
 def get_class_data(class_id):
     keys = CLASSES_COLS
     values = get_row('classes', 'class_id', class_id)
+    print(str(values))
     d = list_to_dict(keys, values)
+    print(d)
     d['teacher_email'] = make_list(d['teacher_email'])
     d['posts'] = make_list(d['posts'])
     d['posts'] = sort_by_ctime(d['posts'])
