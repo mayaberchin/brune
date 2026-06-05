@@ -440,13 +440,6 @@ body.chat-page {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 }
 
-.post-body-label-row {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-
 .post-body-preview {
   background: white;
   border: 1px solid #ddd;
@@ -457,6 +450,44 @@ body.chat-page {
   overflow-wrap: anywhere;
   overflow-y: auto;
   padding: 12px;
+}
+
+.post-body-preview.plain {
+  white-space: pre-wrap;
+}
+
+.post-body-label-row {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.post-editor-tabs {
+  display: inline-flex;
+  margin-bottom: 10px;
+}
+
+.post-editor-tab {
+  background: white;
+  border: 1px solid #aaa;
+  color: #333;
+  font-size: 0.9rem;
+  padding: 6px 12px;
+}
+
+.post-editor-tab:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.post-editor-tab:last-child {
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+}
+
+.post-editor-tab.active {
+  background: #333;
+  color: white;
 }
 
 /* --------------------------------------------------------- */

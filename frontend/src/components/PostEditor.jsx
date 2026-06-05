@@ -24,6 +24,7 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
 
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [shareWithDojo, setShareWithDojo] = useState(false);
+  const [mode, setMode] = useState("editor");
   const [showPreview, setShowPreview] = useState(false);
 
   const [error, setError] = useState("");
@@ -123,6 +124,24 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
             </button>
           </div>
 
+          <div className="post-editor-tabs">
+            <button
+              type="button"
+              className={mode === "editor" ? "post-editor-tab active" : "post-editor-tab"}
+              onClick={() => setMode("editor")}
+            >
+              Editor
+            </button>
+
+            <button
+              type="button"
+              className={mode === "markdown" ? "post-editor-tab active" : "post-editor-tab"}
+              onClick={() => setMode("markdown")}
+            >
+              Markdown Editor
+            </button>
+          </div>
+
           <div className={showPreview ? "post-body-area has-preview" : "post-body-area"}>
             <textarea
               ref={postBodyRef}
@@ -135,11 +154,17 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
             ></textarea>
 
             {showPreview && (
-              <div className="post-body-preview">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              mode === "markdown" ? (
+                <div className="post-body-preview">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {body === "" ? "Nothing to preview yet." : body}
+                  </ReactMarkdown>
+                </div>
+              ) : (
+                <div className="post-body-preview plain">
                   {body === "" ? "Nothing to preview yet." : body}
-                </ReactMarkdown>
-              </div>
+                </div>
+              )
             )}
           </div>
         </div>

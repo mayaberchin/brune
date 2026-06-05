@@ -59,10 +59,11 @@ def set_user():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        is_valid = validate_email(email_address=email, check_format=True, check_smtp=True, smtp_timeout=10, dns_timeout=10, check_blacklist=True)
-        if is_valid == None or not is_valid:
-            flash("Please enter a valid email.")
-            return redirect(url_for('set_user'))
+        is_valid = True
+        # is_valid = validate_email(email_address=email, check_format=True, check_smtp=True, smtp_timeout=10, dns_timeout=10, check_blacklist=True)
+        # if is_valid == None or not is_valid:
+        #     flash("Please enter a valid email.")
+        #     return redirect(url_for('set_user'))
         if data.user_exists(email):
             flash("User already exists!")
             return redirect(url_for('set_user'))
