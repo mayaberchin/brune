@@ -221,6 +221,16 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
                 <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                   {body === "" ? "Nothing to preview yet." : body}
                 </ReactMarkdown>
+                {/* Guide:
+                Text Formatting:
+                  - **Bold** or __Bold__
+                  - *Italic* or _Italic_
+                  - ***Bold and Italic** or ___Bold and Italic___
+                  - ~~Strikethrough~~
+                  - `Inline Code`
+
+                Line Breaks:
+                  - https://www.craftmarkdown.com/markdown-cheat-sheet */}
               </div>
             )}
           </div>
