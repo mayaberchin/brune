@@ -368,7 +368,7 @@ TO DO
 - Improve CSS :( + formatting for chat
 - Fancy MD + code formatting, etc. text editor
 - No more hard-coded classes!
-- only teachers post announcements, sharing to dojo and post anonymously (+ add who even posted it...)! 
+- only teachers post announcements, sharing to dojo and post anonymously (+ add who even posted it...)!
 
 mayaB -- 2026-05-22 00:12
 DD+DB OVERHAUL
@@ -376,24 +376,61 @@ DD+DB OVERHAUL
 - Add/modify a bunch of user-related functions to comply with new database needs (needs testing)
 - Begin modifying class-related middleware too
 
+christineC -- 2026-05-26 08:00
+FORMATTING
+- CSS
+- Fixed minor syntax/layout issues
+
+christineC -- 2026-05-28 05:40
+CHAT / POST PAGE UI
+- Custom layout/styling for chat page to resemble messages!
+- Add course/class filter component
+- Improved navbar format
+- Line clamping for post previews
+
 mayaB -- 2026-05-28 06:09
 COMPLETE(ish) DB OVERHAUL
 - Been quite a while since last log lol! Only worked on smaller things so didn't update
-- Today finished DB overhaul 
+- Today finished DB overhaul
   - Posts are now one big table with followups
-	- Added necessary columns to users/classes table I hadn't thought of before, like banned users 
+	- Added necessary columns to users/classes table I hadn't thought of before, like banned users
 - Whole team was working to get product for demo today!!
 - Pawned off working on attachments to posts on our future selves lol
 - BUT data.py is now 1.2k lines :') and most of that is tested soooo
 
+christineC -- 2026-05-28 12:20
+WEBSOCKETS
+- Set up WebSocket server for chat
+
+christineC -- 2026-05-31 05:00
+WEBSOCKETS
+- Finished WebSocket server
+- Connect to live site and create instructions for group!
+UPVOTES
+- Add upvote support in React and connect to backend
+
+christineC -- 2026-06-01 06:00
+CHAT
+- Auto-scroll for new chat msgs
+- "Jump to latest" button when scrolling up
+CLASSES
+- Replaced hardcoded class display with class data from backend
+- Display class names instead of class IDs
+DELETE
+- Add teacher delete controls for posts/followups
+FORMATTING
+- Made homepage nav buttons easier to click
+- Question template
+- Match styling of post pages to homepage
+
 mayaB -- 2026-06-01 06:38
 SITE FIX FOR DEMO
 - Mostly worked on fixing things in data.py such as post ordering and adding requested functions, like one to get teacher posts
-- I see that groupmates have not logged, but I want to attest to their efforts. 
+- I see that groupmates have not logged, but I want to attest to their efforts.
   - Got GC working properly with websockets so that you can see messages update faster
 	- Styled the website to be a lot more consistent
-	- Got class creation and joining to work 
-	- Implemented ordering by upvotes for followups 
+	- Got class creation and joining to work
+	- Implemented ordering by upvotes for followups
 	- Implemented post deletion
 	- Pretty awesome ngl. I think they went to sleep before they could brag on here
 
@@ -402,6 +439,20 @@ DEVELOPER PREVIEWS: The Aftermath
 - UI seems to be good
 - issues with spam, repeated messages, and long loading times
 - issues with moderation...
-- many suggestioned features we already had in mind, good reinforcement 
+- many suggestioned features we already had in mind, good reinforcement
 - some new features suggested, such as being able to filter for your own posts
 - top remaining tasks: moderation and logging implementations, formatted posts supporting image embedding, dojo role
+
+christineC -- 2026-06-03 11:40
+MARKDOWN
+- Add react markdown and tables to packages
+- Add basic markdown rendering support!
+
+christineC -- 2026-06-05 05:39
+POST EDITOR
+- Added separate normal editor and markdown editor modes
+- Add preview option for posts
+- Add bold/italic/underline buttons for normal editor
+- Add `rehype-raw` for underlining!
+UPLOADS
+- Started support for uploading one attachment w/ posts
