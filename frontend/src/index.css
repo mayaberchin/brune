@@ -490,6 +490,40 @@ body.chat-page {
   color: white;
 }
 
+.post-format-toolbar {
+  display: flex;
+  width: max-content;
+  margin-top: -4px;
+  margin-bottom: 10px;
+}
+
+.post-format-button {
+  background: white;
+  border: 1px solid #aaa;
+  color: #333;
+  font-size: 0.75rem;
+  height: 24px;
+  line-height: 1;
+  min-width: 26px;
+  padding: 2px 7px;
+}
+
+.post-format-button + .post-format-button {
+  border-left: none;
+}
+
+.post-format-button:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.post-format-button:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+.post-format-button:hover {
+  background: whitesmoke;
+}
+
 /* --------------------------------------------------------- */
 /* Mobile / small screens                                    */
 /* - no post opened: show post list only                       */

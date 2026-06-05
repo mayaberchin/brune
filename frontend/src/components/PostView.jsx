@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import Followup, { FollowupForm } from "./Followup";
 import UpvoteButton from "./UpvoteButton";
@@ -110,7 +111,7 @@ function PostView({ postData, onBack, showClass, onVote, onDelete, getClassName 
       </p>
 
       <div className="post-view-body">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
           {postData.body}
         </ReactMarkdown>
       </div>

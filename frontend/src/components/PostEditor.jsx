@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 
 const questionTemplate =
@@ -63,6 +64,35 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
     }
 
     onSubmit(postData);
+  }
+
+  function addStyle(left, right, exampleText) {
+    const box = postBodyRef.current;
+
+    if (box === null) {
+      return;
+    }
+
+    const start = box.selectionStart;
+    const end = box.selectionEnd;
+    const selected = body.slice(start, end);
+    const textToAdd = selected || exampleText;
+    const styledText = left + textToAdd + right;
+    const newBody = body.slice(0, start) + styledText + body.slice(end);
+
+    setBody(newBody);
+
+    setTimeout(() => {
+      box.focus();
+
+      if (selected === "") {
+        const textStart = start + left.length;
+        const textEnd = textStart + exampleText.length;
+        box.setSelectionRange(textStart, textEnd);
+      } else {
+        box.setSelectionRange(start, start + styledText.length);
+      }
+    }, 0);
   }
 
   return (
@@ -142,6 +172,37 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
             </button>
           </div>
 
+          {mode === "editor" && (
+            <div className="post-format-toolbar" aria-label="Text formatting">
+              <button
+                type="button"
+                className="post-format-button"
+                onClick={() => addStyle("**", "**", "bold text")}
+                title="Bold"
+              >
+                <strong>B</strong>
+              </button>
+
+              <button
+                type="button"
+                className="post-format-button"
+                onClick={() => addStyle("*", "*", "italic text")}
+                title="Italic"
+              >
+                <em>I</em>
+              </button>
+
+              <button
+                type="button"
+                className="post-format-button"
+                onClick={() => addStyle("<u>", "</u>", "underlined text")}
+                title="Underline"
+              >
+                <u>U</u>
+              </button>
+            </div>
+          )}
+
           <div className={showPreview ? "post-body-area has-preview" : "post-body-area"}>
             <textarea
               ref={postBodyRef}
@@ -154,17 +215,11 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
             ></textarea>
 
             {showPreview && (
-              mode === "markdown" ? (
-                <div className="post-body-preview">
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {body === "" ? "Nothing to preview yet." : body}
-                  </ReactMarkdown>
-                </div>
-              ) : (
-                <div className="post-body-preview plain">
+              <div className={mode === "markdown" ? "post-body-preview" : "post-body-preview plain"}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                   {body === "" ? "Nothing to preview yet." : body}
-                </div>
-              )
+                </ReactMarkdown>
+              </div>
             )}
           </div>
         </div>
