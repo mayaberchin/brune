@@ -157,6 +157,8 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
           </div>
 
           <div className="post-editor-tabs">
+
+            {/* Default Editor  */}
             <button
               type="button"
               className={mode === "editor" ? "post-editor-tab active" : "post-editor-tab"}
@@ -165,6 +167,7 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
               Editor
             </button>
 
+            {/* Markdown Editor  */}
             <button
               type="button"
               className={mode === "markdown" ? "post-editor-tab active" : "post-editor-tab"}
@@ -172,6 +175,16 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
             >
               Markdown Editor
             </button>
+
+            {/* Quill Editor  */}
+            <button
+              type="button"
+              className={mode === "quill" ? "post-editor-tab active" : "post-editor-tab"}
+              onClick={() => setMode("quill")}
+            >
+              Quill Editor
+            </button>
+
           </div>
 
           {mode === "editor" && (
