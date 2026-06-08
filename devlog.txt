@@ -456,3 +456,9 @@ POST EDITOR
 - Add `rehype-raw` for underlining!
 UPLOADS
 - Started support for uploading one attachment w/ posts
+
+christineC -- 2026-06-05 11:45
+POST EDITOR
+- Modified preview formatting
+- Set preview to true on default
+- Working on markdown guide button in markdown editor mode 
