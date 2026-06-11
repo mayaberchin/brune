@@ -203,8 +203,9 @@ def get_homepage_posts(email, n):
 
 # get the classes someone is in
 def get_user_classes(email):
-    print('here')
+    print('here in get_user_classes')
     classes_str = get_users_field(email, 'class_id')
+    print("finding all the classes for a user")
     print(classes_str)
     classes = make_list(classes_str)
     return classes
