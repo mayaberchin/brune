@@ -203,7 +203,10 @@ def get_homepage_posts(email, n):
 
 # get the classes someone is in
 def get_user_classes(email):
+    print('here in get_user_classes')
     classes_str = get_users_field(email, 'class_id')
+    print("finding all the classes for a user")
+    print(classes_str)
     classes = make_list(classes_str)
     return classes
 
@@ -1264,7 +1267,7 @@ if __name__ == "__main__":
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
     print("Classes Maya owns: " + str(get_owned_classes("mayaberchin@gmail.com")))
     print("Classes Other owns: " + str(get_owned_classes("other@gmail.com")))
-    
+
 
     for i in range(15):
         add_user(f"{i}@gmail.com", "b", "b b")

@@ -111,7 +111,15 @@ def home():
         unresolved_posts.append(post_data)
     unresolved_posts.reverse()
 
+    print("starting classes functions")
+
     class_ids = data.get_user_classes(session['email'])
+
+    print('trying to find demo in classes')
+    print(str(data.get_class_members('277c0d')))
+
+    print(session['email'])
+    print('here===')
     print(str(class_ids))
     classes = []
     instructors_posts = []
@@ -357,9 +365,14 @@ def join_a_class():
 
 @app.route("/create_class_",methods=["POST"])
 def create_a_class():
-    print('creating class')
     class_name = request.form.get("class_name")
+    print('before class creation')
+    print(data.get_all_classes())
     data.create_class(session['email'], class_name)
+    print('class id:')
+    print(data.create_class(session['email'], class_name))
+    print('after class creation')
+    print(data.get_all_classes())
     return redirect(url_for("home"))
 
 
