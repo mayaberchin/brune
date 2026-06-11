@@ -203,9 +203,7 @@ def get_homepage_posts(email, n):
 
 # get the classes someone is in
 def get_user_classes(email):
-    print('here')
     classes_str = get_users_field(email, 'class_id')
-    print(classes_str)
     classes = make_list(classes_str)
     return classes
 
@@ -437,9 +435,7 @@ def get_class_gc_by(class_id, email):
 def get_class_data(class_id):
     keys = CLASSES_COLS
     values = get_row('classes', 'class_id', class_id)
-    print(str(values))
     d = list_to_dict(keys, values)
-    print(d)
     d['teacher_email'] = make_list(d['teacher_email'])
     d['posts'] = make_list(d['posts'])
     d['posts'] = sort_by_ctime(d['posts'])
@@ -1250,17 +1246,17 @@ if __name__ == "__main__":
     #print("Class teachers: " + str(get_class_teachers(class_id)))
 
     add_class_member(class_id, "other@gmail.com")
-    '''
+
     print("\nClasses Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
     print("Classes Other is in: " + str(get_user_classes("other@gmail.com")))
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
-    '''
+
 
     #print("\nPromoting Other... also removing Maya as owner")
     promote_to_owner(class_id, 'other@gmail.com')
     demote_owner(class_id, "mayaberchin@gmail.com")
-    '''
+
     print("Class teachers: " + str(get_class_teachers(class_id)))
     print("Classes Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
@@ -1268,7 +1264,7 @@ if __name__ == "__main__":
     print("Classes Other teaches: " + str(get_teaching_classes("other@gmail.com")))
     print("Classes Maya owns: " + str(get_owned_classes("mayaberchin@gmail.com")))
     print("Classes Other owns: " + str(get_owned_classes("other@gmail.com")))
-    '''
+    
 
     for i in range(15):
         add_user(f"{i}@gmail.com", "b", "b b")
@@ -1294,7 +1290,7 @@ if __name__ == "__main__":
     #print("\n")
     #print(str(get_all_posts()))
     #delete_class(class_id)
-    '''
+
     print(str(get_all_classes()))
     print("Classes Maya is in: " + str(get_user_classes("mayaberchin@gmail.com")))
     print("Classes Maya teaches: " + str(get_teaching_classes("mayaberchin@gmail.com")))
@@ -1303,7 +1299,7 @@ if __name__ == "__main__":
     print("Classes Maya owns: " + str(get_owned_classes("mayaberchin@gmail.com")))
     print("Classes Other owns: " + str(get_owned_classes("other@gmail.com")))
     print(str(get_all_posts()))
-    '''
+
 
 
     print("\n----------------------------------\n")
