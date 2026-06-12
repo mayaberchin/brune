@@ -203,12 +203,21 @@ def get_homepage_posts(email, n):
 
 # get the classes someone is in
 def get_user_classes(email):
-    print('here in get_user_classes')
-    classes_str = get_users_field(email, 'class_id')
-    print("finding all the classes for a user")
-    print(classes_str)
-    classes = make_list(classes_str)
-    return classes
+    # print('here in get_user_classes')
+    # classes_str = get_users_field(email, 'class_id')
+    # print("finding all the classes for a user")
+    # print(classes_str) #prints none
+    # classes = make_list(classes_str)
+
+    user_classes = []
+    classes = get_all_classes()
+    for c in classes:
+        members = get_class_members(c)
+        if email in members:
+            user_classes.append(c)
+    print("in get_user_classes -- printing user classes")
+    print(user_classes)
+    return user_classes
 
 # get the classes someone teaches
 def get_teaching_classes(email):
@@ -464,6 +473,7 @@ def is_banned(class_id, email):
 
 
 def create_class(teacher_email, class_name):
+    print("create class called")
     # add the class to classes table
     class_id = unique_id(get_all_classes(), 3)
     owner = teacher_email
@@ -1029,6 +1039,8 @@ def get_field(table, ID_fieldname, ID, field):
     lst = get_field_list(table, ID_fieldname, ID, field)
     if (len(lst) == 0):
         return 'None'
+    print("in get_field")
+    print(lst[0])
     return lst[0]
 
 # return all values in a specific field (column) in a row with a matching "id" item
@@ -1202,6 +1214,8 @@ def rm_empty(lst):
 def sqlite(command, vals=()):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
+    print("command in sqlite: "+str(command))
+    print("vals in sqlite: "+str(vals))
     if vals == ():
         c.execute(command)
     else:

@@ -368,11 +368,13 @@ def create_a_class():
     class_name = request.form.get("class_name")
     print('before class creation')
     print(data.get_all_classes())
-    data.create_class(session['email'], class_name)
+    class_created = data.create_class(session['email'], class_name)
     print('class id:')
-    print(data.create_class(session['email'], class_name))
+    print(class_created)
     print('after class creation')
     print(data.get_all_classes())
+    print("in init -- get_class_members b9daee")
+    print(str(data.get_class_members("b9daee")))
     return redirect(url_for("home"))
 
 
