@@ -462,3 +462,13 @@ POST EDITOR
 - Modified preview formatting
 - Set preview to true on default
 - Working on markdown guide button in markdown editor mode 
+
+mayaB -- 2026-06-15 08:12
+LAST LOG
+- Bit late for a final log but was locked in on actually updating the site
+- Bugs crushed w. Megan
+- Christine unfortunately unreachable for video but I hope she's enjoying her vacation :)
+- Video recorded, uploaded
+- Basic dojo role implemented, can just check as dojo member upon signup
+- Fixed seeing posts you weren't supposed to
+- Generally tightened up things for the final demonstration
