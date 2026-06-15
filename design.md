@@ -212,6 +212,7 @@ _posts_
 | TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 | TEXT          | ping          | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 | TEXT          | show_dojo     | NOT NULL                                                               |
+| TEXT          | is_anonymous  | NOT NULL                                                               |
 
 <br>
 
@@ -268,24 +269,25 @@ _posts_
 
 <div align="center">
 
-| Task                                             | Deadline          |
-|--------------------------------------------------|-------------------|
-| Account creation, authentication                 | 05-14-26r         |
-| Class creation                                   | 05-15-26f         |
-| Basic posts                                      | 05-18-26m         |
-| Post deletion                                    | 05-18-26m         |
-| Followups                                        | 05-18-26m         |
-| Changing the status of a post or follow-up       | 05-18-26m         |
-| Editing posts and followups                      | 05-19-26t         |
-| Formatted posts                                  | 05-20-26w         |
-| Tagging system                                   | 05-20-26w         |
-| Images in posts                                  | 05-21-26r         |
-| Dojo role seeing questions                       | 05-21-26r         |
-| Tabs for different types of posts                | 05-22-26f         |
-| Upvotes                                          | 05-22-26f         |
-| Mark follow-ups as containing answers            | 05-22-26f         |
-| Consistent theming                               | 05-25-26m         |
-| Integration with teacher websites                | 05-25-26m         |
+| Task                                                      | Deadline          |
+|-----------------------------------------------------------|-------------------|
+| Account creation, authentication                          | 05-14-26r         |
+| Class creation                                            | 05-15-26f         |
+| Basic posts                                               | 05-18-26m         |
+| Post deletion                                             | 05-18-26m         |
+| Followups                                                 | 05-18-26m         |
+| Changing the status of a post or follow-up                | 05-18-26m         |
+| Editing posts and followups                               | 05-19-26t         |
+| Formatted posts                                           | 05-20-26w         |
+| Tagging system                                            | 05-20-26w         |
+| Images in posts                                           | 05-21-26r         |
+| Dojo role seeing questions                                | 05-21-26r         |
+| Tabs for different types of posts                         | 05-22-26f         |
+| Upvotes                                                   | 05-22-26f         |
+| Mark follow-ups as containing answers                     | 05-22-26f         |
+| Consistent theming                                        | 05-25-26m         |
+| Integration with teacher websites                         | 05-25-26m         |
+| Complete whatever was missed above, same relative order   | 06-15-26m         |
 
 </div>
 
@@ -305,7 +307,7 @@ Project is considered **complete** when all of the following are true:
 <br>
 
 ## Open Questions
-- Will we be using React? If so, where?
+- Will we be using React? If so, where? -- DECIDED: yes, for post creation!
 - Should teachers be able to decide whether students can open their questions to Dojo staff?
 - Should there be a delay before students get to open their questions to Dojo staff?
 - Should there be any kind of reward/point system for being online or reading posts?
