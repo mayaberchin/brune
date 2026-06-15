@@ -226,16 +226,17 @@ def api_classes():
 @app.route("/api/posts")
 def api_posts():
     category = request.args.get("category", "")
+    all_posts = data.get_all_posts()
+    all_posts = data.sort_by_ctime(all_posts) # newest posts first
     posts = []
 
-    for post_id in data.get_all_posts(): # list of all post IDs in db
+    for post_id in all_posts:
         post = data.get_post_data(post_id)
         post = add_display_author(post)
 
-        if post["parent_id"] == "" and (category == "" or post["category"] == category):
+        if post["parent_id"] == "" and (category == "" or post["category"] == category) and ((data.is_dojo(session["email"]) and post["show_dojo"] == "yes") or post["class_id"] in data.get_user_classes(session["email"])):
             posts.append(post)
 
-    posts.reverse() # newest posts first
     return jsonify({"posts": posts})
 
 # ceates and saves a new post
