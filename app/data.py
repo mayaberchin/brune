@@ -107,6 +107,8 @@ def get_all_teachers():
 
 
 def get_user_name(email):
+    print("in get_user_name ===================")
+    print(email)
     return get_users_field(email, 'name')
 
 def get_user_password(email):
@@ -215,8 +217,6 @@ def get_user_classes(email):
         members = get_class_members(c)
         if email in members:
             user_classes.append(c)
-    print("in get_user_classes -- printing user classes")
-    print(user_classes)
     return user_classes
 
 # get the classes someone teaches
@@ -1039,8 +1039,6 @@ def get_field(table, ID_fieldname, ID, field):
     lst = get_field_list(table, ID_fieldname, ID, field)
     if (len(lst) == 0):
         return 'None'
-    print("in get_field")
-    print(lst[0])
     return lst[0]
 
 # return all values in a specific field (column) in a row with a matching "id" item
@@ -1183,7 +1181,6 @@ def clean_list_2d(raw_output):
 # convert a list of data into a dictionary
 def list_to_dict(keys, values):
     if len(keys) != len(values):
-        print("list_to_dict: length keys != length values")
         return {}
     dict = {}
     for i in range(len(keys)):
@@ -1214,8 +1211,6 @@ def rm_empty(lst):
 def sqlite(command, vals=()):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
-    print("command in sqlite: "+str(command))
-    print("vals in sqlite: "+str(vals))
     if vals == ():
         c.execute(command)
     else:

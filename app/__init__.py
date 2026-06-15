@@ -94,11 +94,11 @@ def home():
         return redirect(url_for('login'))
     # return render_template("homepage.html")
     # get homepage posts
-    homepage_post_ids = data.get_homepage_posts('email',20)
+    homepage_post_ids = data.get_homepage_posts(session['email'], 20)
     homepage_posts = []
     for post_id in homepage_post_ids["unread"]:
         post_data = data.get_post_data(post_id)
-        homepage_posts.append(post_data)
+        homepage_posts.extend(post_data)
     homepage_posts.reverse()
 
     # get updated posts ============================need to do
@@ -108,19 +108,11 @@ def home():
     unresolved_posts = []
     for post_id in unresolved_post_ids:
         post_data = data.get_post_data(post_id)
-        unresolved_posts.append(post_data)
+        unresolved_posts.extend(post_data)
     unresolved_posts.reverse()
 
-    print("starting classes functions")
 
     class_ids = data.get_user_classes(session['email'])
-
-    print('trying to find demo in classes')
-    print(str(data.get_class_members('277c0d')))
-
-    print(session['email'])
-    print('here===')
-    print(str(class_ids))
     classes = []
     instructors_posts = []
     for class_id in class_ids:
@@ -129,8 +121,11 @@ def home():
         classes.append(class_data)
 
         # get instructors posts ===========================need to do
+        print("1")
         teacher_post_data = data.get_teacher_posts(class_id)
-        instructors_posts.append(teacher_post_data)
+        print("2")
+        instructors_posts.extend(teacher_post_data)
+        print("3")
 
     return render_template(
         "homepage.html",
@@ -366,15 +361,7 @@ def join_a_class():
 @app.route("/create_class_",methods=["POST"])
 def create_a_class():
     class_name = request.form.get("class_name")
-    print('before class creation')
-    print(data.get_all_classes())
     class_created = data.create_class(session['email'], class_name)
-    print('class id:')
-    print(class_created)
-    print('after class creation')
-    print(data.get_all_classes())
-    print("in init -- get_class_members b9daee")
-    print(str(data.get_class_members("b9daee")))
     return redirect(url_for("home"))
 
 
