@@ -552,7 +552,7 @@
 
     <div class="posts" id="homepage_posts">
       {% for post in homepage_posts %}
-        <div class="post-card">
+        <div class="post-card"> <!-- onclick="api_followups({{ post['post_id'] }})"> -->
           <div class="post-head">
             <div class="post-title">{{ post['title'] }} <span>{{ get_user_name(post['author_email']) }}</span></div>
           </div>
