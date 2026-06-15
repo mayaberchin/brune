@@ -579,6 +579,7 @@
           </div>
         </div>
       {% endfor %}
+    </div>
     <div class="posts" id="unresolved_posts" style="display:none;">
       {% for post in unresolved_posts %}
         <div class="post-card">
@@ -649,10 +650,12 @@
 
       {% for course in classes %}
         <div class="course-card">
-            <div class="course-head">{{ course['name'] }}</div>
+            <div class="course-head">{{ course['name'] }} | {{ course['class_id'] }}</div>
             <div class="course-body">
-              {% for post in unread_posts %}
-                <div class="course-item">- {{ post['title'] }}</div>
+              {% for post in unread_posts %} <!--doesn't work-->
+                {% if post['post_id'] in course['posts'] %}
+                  <div class="course-item">- {{ post['title'] }}</div>
+                {% endif %}
               {% endfor %}
             </div>
         </div>
@@ -852,8 +855,8 @@
     }
 
   // close if user clicks the dark background
-    document.getElementById("modal").addEventListener("click", function(e) {
-      if (e.target === this) closeModal();
+    document.getElementById("classPopupOverlay").addEventListener("click", function(e) {
+      if (e.target === this) join_create_class_close();
     });
 
 </script>

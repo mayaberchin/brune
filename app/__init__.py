@@ -98,7 +98,7 @@ def home():
     homepage_posts = []
     for post_id in homepage_post_ids["unread"]:
         post_data = data.get_post_data(post_id)
-        homepage_posts.extend(post_data)
+        homepage_posts.append(post_data)
     homepage_posts.reverse()
 
     # get updated posts ============================need to do
@@ -108,7 +108,7 @@ def home():
     unresolved_posts = []
     for post_id in unresolved_post_ids:
         post_data = data.get_post_data(post_id)
-        unresolved_posts.extend(post_data)
+        unresolved_posts.append(post_data)
     unresolved_posts.reverse()
 
 
@@ -124,7 +124,7 @@ def home():
         print("1")
         teacher_post_data = data.get_teacher_posts(class_id)
         print("2")
-        instructors_posts.extend(teacher_post_data)
+        instructors_posts.append(teacher_post_data)
         print("3")
 
     return render_template(

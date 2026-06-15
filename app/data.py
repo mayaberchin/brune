@@ -107,8 +107,8 @@ def get_all_teachers():
 
 
 def get_user_name(email):
-    print("in get_user_name ===================")
-    print(email)
+    if not email:
+        return "Anonymous"
     return get_users_field(email, 'name')
 
 def get_user_password(email):
