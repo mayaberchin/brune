@@ -27,7 +27,7 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
   const [shareWithDojo, setShareWithDojo] = useState(false);
   const [mode, setMode] = useState("editor");
   const [showPreview, setShowPreview] = useState(true);
-  const [attachment, setAttachment] = useState(null);
+  // const [attachment, setAttachment] = useState(null);
 
   const [error, setError] = useState("");
 
@@ -271,7 +271,7 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
           <label htmlFor="shareWithDojo" className="form-check-label"> Share with Dojo </label>
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="postAttachment" className="form-label"> Attachment </label>
           <input
             id="postAttachment"
@@ -280,7 +280,7 @@ function PostEditor({ selectedPostType, classes, onCancel, onSubmit }) {
             accept=".png,.jpg,.jpeg,.gif,.pdf,.txt,.doc,.docx"
             onChange={(event) => setAttachment(event.target.files[0] || null)}
           />
-        </div>
+        </div> */}
 
         <div className="d-flex justify-content-end gap-2">
           <button
