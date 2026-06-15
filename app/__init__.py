@@ -67,6 +67,9 @@ def set_user():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        is_dojo = False
+        if 'is_dojo' in request.form and request.form.get('is_dojo') == 'yes':
+            is_dojo = True
         is_valid = True
         is_valid = validate_email(email_address=email, check_format=True, check_smtp=True, smtp_timeout=10, dns_timeout=10, check_blacklist=True)
         if is_valid == None or not is_valid:
@@ -78,6 +81,8 @@ def set_user():
         github = request.form.get('github')
         name = request.form.get('name')
         data.add_user(email, password, name, github)
+        if (is_dojo):
+            data.add_dojo(email)
         session['email'] = email;
         return redirect(url_for('home'))
     return render_template('register.html')
