@@ -290,6 +290,7 @@ def api_create_post():
 
 @app.route("/api/posts/<post_id>/followups")
 def api_followups(post_id):
+    data.mark_read(session["email"], post_id)
     followup_ids = data.get_post_followups(post_id)
     if type(followup_ids) == list:
         followup_ids = {

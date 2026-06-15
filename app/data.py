@@ -581,7 +581,7 @@ def remove_member(class_id, email, purge_posts=False):
     # remove posts from this class in the user's table
     posts = get_class_posts(class_id)
     for post in posts:
-        mark_as_read(email, post)
+        mark_read(email, post)
     # purge posts from this user if specified
     if (purge_posts):
         delete_class_posts_by(class_id, email)
