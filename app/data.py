@@ -1204,7 +1204,20 @@ def rm_empty(lst):
 
 #---------[sqlite]---------#
 
+# PURPOSE
+# These helper functions serve to interact directly with SQLite3.
 
+# PARAMETERS
+# command       STRING          A command for SQLite3 to execute.
+# vals          TUPLE           An OPTIONAL tuple of values that are filtered (in case of SQL injection), then added to the command.
+
+# RETURN VALUES
+# Use sqlite() for commands that return nothing.
+# Use sqlite_fetchone() if you are looking for one piece of data from the dataset.
+# Use sqlite_fetchall() to run commands that return a list of tuples (a lot of data).
+
+
+# run a command that returns nothing in SQLite3
 def sqlite(command, vals=()):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
@@ -1216,10 +1229,12 @@ def sqlite(command, vals=()):
     db.close()
 
 
+# run a SQLite3 command and get the result (one tuple of data)
 def sqlite_fetchone(command, vals=()):
     return sqlite_fetchall(command, vals)[0]
 
 
+# run a SQLite3 command and get the result (a list of tuples of data)
 def sqlite_fetchall(command, vals=()):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
