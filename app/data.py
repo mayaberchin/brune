@@ -1110,11 +1110,8 @@ def make_list(str, delim=","):
     return rm_empty(lst)
 
 def add_to_list(lst, item):
-    new_lst = []
-    if (str(lst) == 'None'):
-        new_lst = [item]
-    else:
-        new_lst = lst + [item]
+    new_lst = rm_empty(lst)
+    new_lst += [item]
     new_str = merge_list(new_lst)
     return new_str
 
@@ -1193,7 +1190,7 @@ def list_2d_to_dict_list(keys, values):
     lst = []
     for val_sublst in values:
         lst += [list_to_dict(keys, val_sublst)]
-    return lsta
+    return lst
 
 # remove empty and none from a 1d list
 def rm_empty(lst):
