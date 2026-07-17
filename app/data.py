@@ -475,7 +475,7 @@ def is_banned(class_id, email):
 def create_class(teacher_email, class_name):
     print("create class called")
     # add the class to classes table
-    class_id = unique_id(get_all_classes(), 3)
+    class_id = gen_id(get_all_classes(), 3)
     owner = teacher_email
     members = teacher_email
     posts = ''
@@ -892,7 +892,7 @@ def share_to_dojo(post_id):
 
 
 def create_post(author_email, class_id, title, body, category, show_dojo, attachments='', is_anonymous='no', parent_id=''):
-    post_id = unique_id(get_all_posts(), 16)
+    post_id = gen_id(get_all_posts(), 16)
     is_resolved = 'no'
     is_answer = 'no'
     time = str(datetime.now())
@@ -930,7 +930,7 @@ def create_post(author_email, class_id, title, body, category, show_dojo, attach
     return post_id
 
 def create_followup(author_email, post_id, body, is_anonymous='no'):
-    followup_id = unique_id(get_all_posts(), 16)
+    followup_id = gen_id(get_all_posts(), 16)
     class_id = get_post_class(post_id)
     category = get_post_category(post_id)
     show_dojo = get_posts_field(post_id, 'show_dojo')
@@ -1055,7 +1055,7 @@ def get_row(table, col_name, ID):
 def get_row_list(table, col_name, ID):
     # use ? for unsafe/user provided variables
     data = sqlite_fetchall(f'SELECT * FROM {table} WHERE {col_name} = ?', (ID,))
-    return clean_list_2d(data)
+    return clean_2d_list(data)
 
 # return a list of all items in a column of the table
 def get_col(table, col_name):
@@ -1133,72 +1133,145 @@ def unique_only(lst):
 #---------[id]---------#
 
 
-def unique_id(others, byte_nums):
-    id = gen_id(byte_nums)
+def gen_id(others, byte_nums):
+    # generate an id
+    id = secrets.token_hex(byte_nums)
+    # make sure it's unique
     while id in others:
-        id = gen_id(byte_nums)
+        id = secrets.token_hex(byte_nums)
     return id
-
-# generate an id
-def gen_id(byte_nums):
-    # use secrets module to generate a random byte_nums-byte string
-    return secrets.token_hex(byte_nums)
-
-
 
 
 #---------[output-convert]---------#
 
 
-# turn a list of tuples (returned by .fetchall()) into a 1d list
-def clean_list(raw_output):
-    clean_output = []
-    for lst in raw_output:
-        for item in lst:
-            if str(item) != 'None' and item != "":
-                clean_output += [item]
-    return clean_output
+# PURPOSE
+# Convert plain lists into dictionaries, given a list of corresponding keys.
+
+# PARAMETERS
+# keys          LIST-STRINGS                                    A list of keys corresponding to the provided list of values.
+# values        LIST-STRINGS or LIST-LIST-STRINGS               A list (or list of lists) of values corresponding to the provided list of keys.
+
+# RETURN VALUES
+# Use list_to_dict() to get a dictionary.
+# Use list_2d_to_dict_list to get a list of dictionaries.
 
 
-# turn a list of tuples (returned by .fetchall()) into a 2d list
-def clean_list_2d(raw_output):
-    clean_output = []
-    for lst in raw_output:
-        clean_1d = []
-        for item in lst:
-            if str(item) != 'None':
-                clean_1d += [item]
-            else:
-                clean_1d += ['']
-        if len(clean_1d) > 0:
-            clean_output += [clean_1d]
-    return clean_output
-
-
-# convert a list of data into a dictionary
+# list of keys + list of values -> dictionary
 def list_to_dict(keys, values):
     if len(keys) != len(values):
+        print("list_to_dict: len keys != len values")
         return {}
     dict = {}
     for i in range(len(keys)):
         dict[keys[i]] = values[i]
     return dict
 
-
-# convert a 2d list of data to a list of dictionaries
+# list of keys + 2d list of values -> list of dictionaries
 def list_2d_to_dict_list(keys, values):
     lst = []
     for val_sublst in values:
         lst += [list_to_dict(keys, val_sublst)]
     return lst
 
-# remove empty and none from a 1d list
-def rm_empty(lst):
-    cleanlst = [item for item in lst if str(item) != 'None' and item != '']
-    if (str(cleanlst) == 'None'):
-        cleanlst = []
-    return cleanlst
 
+
+# PURPOSE
+# Convert a list of tuples (which is what is returned by .fetchall()) into lists to work with.
+# Either create a 1d list or a 2d list.
+
+# PARAMETERS
+# raw_output       LIST-TUPLES          A list of tuples fetched as the result of a SQLite3 command.
+
+# RETURN VALUES
+# Use tups_to_list for a 1d list.
+# Use tups_to_list_2d for a 2d list.
+
+
+# list of tuples (returned by .fetchall()) -> 1d list
+def tups_to_list(raw_output):
+    lst = []
+    for tup in raw_output:
+        # represent None as '', otherwise add item to list as is
+        lst += ['' if item is None else item for item in tup]
+    return lst
+
+# list of tuples (returned by .fetchall()) -> 2d list
+def tups_to_2d_list(raw_output):
+    lst = []
+    for tup in raw_output:
+        sub_lst = list(tup)
+        # represent None as '', otherwise add item to list as is
+        sub_lst = ['' if item is None else item for item in sub_lst]
+        lst += [sub_lst]
+    return lst
+
+
+
+# PURPOSE
+# Convert a list of tuples (which is what is returned by .fetchall()) into FILTERED lists to work with.
+# Either create a 1d list or a 2d list.
+
+# PARAMETERS
+# raw_output       LIST-TUPLES          A list of tuples fetched as the result of a SQLite3 command.
+
+# RETURN VALUES
+# Use clean_list() for a 1d list without any empty items ('').
+# Use clean_2d_list() for a 2d list without any empty sub_lists--but sub_lists may contain ''.
+# Use deep_clean_list() for a 2d list without any empty sub_lists--sub_lists will NOT contain ''.
+
+
+# turn a list of tuples (returned by .fetchall()) into a 1d list AND remove empty items
+def clean_list(raw_output):
+    clean_output = tups_to_lst(raw_output)
+    clean_output = rm_empty(raw_output)
+    return clean_output
+
+# turn a list of tuples (returned by .fetchall()) into a 2d list AND remove empty 1d lists
+def clean_2d_list(raw_output):
+    clean_output = tups_to_2d_lst(raw_output)
+    clean_output = rm_empty_lists(clean_output)
+    return clean_output
+
+# turn a list of tuples (returned by .fetchall()) into a 2d list AND remove empty 1d lists AND remove empty items from each sub-list
+def deep_clean_list(raw_output):
+    clean_output = tups_to_2d_list(raw_output)
+    clean_output = deep_rm_empty(clean_output)
+    return clean_output
+
+
+
+# PURPOSE
+# Remove empty entries ('' or []) from lists.
+
+# PARAMETERS
+# lst(_2d)      LIST-STRINGS or LIST-LIST-STRINGS       The list to remove empty entries from.
+
+# RETURN VALUES
+# Use rm_empty() to remove '' from 1d lists.
+# Use rm_empty_lists() to remove [] from 2d lists.
+# Use deep_rm_empty() to remove [] from 2d lists AND remove '' from each sub_list.
+
+
+# remove '' and None from a 1d list
+def rm_empty(lst):
+    clean_lst = [item for item in lst if item is not None and item != '']
+    if (clean_lst is None):
+        clean_lst = []
+    return clean_lst
+
+# remove [] from a 2d list
+def rm_empty_lists(lst_2d):
+    clean_lst = [lst for lst in lst_2d if len(lst) > 0]
+    return clean_lst
+
+# remove [] from a 2d lists AND remove None/'' from each sub_list
+def deep_rm_empty(lst_2d):
+    new_lst = rm_empty_lists(lst_2d)
+    for i in range(len(new_lst)):
+        sub_lst = new_lst[i]
+        new_lst[i] = rm_empty(sub_lst)
+    return new_lst
 
 
 
