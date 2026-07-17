@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profile Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f0ede8;
+    --surface: #ffffff;
+    --border: #d4cfc8;
+    --text: #1a1a1a;
+    --text-muted: #6b6560;
+    --accent: #2ecc71;
+    --accent-hover: #27ae60;
+    --sidebar-header: #3a3a3a;
+    --tag-bg: #e8e4df;
+    --nav-bg: #fff;
+    --nav-icon: #333333;
+    --nav-icon-hover: #ffffff;
+    --badge: #e74c3c;
+    --link: #3a7bd5;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    font-size: 14px;
+  }
+
+  /* ── LEFT NAV ── */
+  .nav {
+    width: 110px;
+    background: var(--nav-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .nav-btn {
+    position: relative;
+    width: 92px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--nav-icon);
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.1;
+    letter-spacing: -0.3px;
+    transition: background 0.15s, color 0.15s;
+    user-select: none;
+  }
+  .nav-btn a {
+    color: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 0 8px;
+    text-decoration: none;
+  }
+  .nav-btn:hover { background: #dddddd; color: #000000; }
+  .nav-btn.active { background: #dddddd; color: #000000; }
+
+  .nav-badge {
+    position: absolute;
+    top: 5px; right: 5px;
+    background: var(--badge);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 600;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .nav-spacer { flex: 1; }
+
+  /* ── MAIN LAYOUT ── */
+  .layout {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── CENTER FEED ── */
+  .feed {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-right: 1px solid var(--border);
+  }
+
+  .feed-header {
+    padding: 18px 20px 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .feed-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .feed-title {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+  }
+
+  .btn-ask {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-ask:hover { background: var(--accent-hover); }
+
+  .feed-tabs {
+    display: flex;
+    align-items: center;
+    gap: 0;
+  }
+
+  .tab {
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    color: var(--text);
+    border-bottom: 2px solid var(--text);
+  }
+  .tab-sep {
+    color: var(--border);
+    font-size: 13px;
+    padding: 0 2px;
+    user-select: none;
+  }
+
+  .filter-row {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .filter-row span { cursor: pointer; }
+  .filter-row span:hover { color: var(--text); }
+
+  /* Profile icon */
+  .profile-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  
+
+  .sidebar-top-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sidebar-top-row .search-bar { flex: 1; }
+
+  .profile-container{
+    position: relative;
+    display:inline-block;
+  }
+
+  .profile-container img{
+    display: block;
+    width: 200px;
+    height:200px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .overlay-img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: auto;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .overlay-img:hover{
+    opacity: 0.95;
+  }
+
+  .profile-upload-label{
+    cursor: pointer;
+    display: block;
+    width: 100%;
+    height:100%;
+  }
+
+  #imageUpload{
+    display: none;
+  }
+
+  
+.fristLsat input,
+.emailChange input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  transition: background-color 0.2s ease;
+  padding:10px;
+}
+
+.fristLsat input {
+  font-size: 2em;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.emailChange input {
+  font-size: 1.5em;
+  font-weight: bold;
+  line-height: 1.2;
+}
+
+.fristLsat input:hover,
+.emailChange input:hover {
+  background-color: #ffffff;
+}
+
+.pass input{
+    border:gray;
+    outline:1px;
+    background: lightgrey;
+    font-family: inherit;
+    padding: 10px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- LEFT NAV -->
+<nav class="nav">
+  <div class="nav-btn active"><a href="{{ url_for('home') }}">Home</a></div>
+  <div class="nav-btn"><a href="{{ url_for('announcements') }}">Announcements</a></div>
+  <div class="nav-btn">
+    <a href="{{ url_for('chat') }}">Chat</a>
+    <!-- <span class="nav-badge" id="chatNotifs"></span> will inject code -->
+  </div>
+  <div class="nav-btn">
+    <a href="{{ url_for('questions') }}">Questions</a>
+  </div>
+  <div class="nav-btn">
+    <a href="{{ url_for('notes_rsrc') }}">Notes</a>
+  </div>
+  <!-- <div class="nav-btn"><a href="{{ url_for('pinned') }}">Pinned</a></div> -->
+  <!-- <div class="nav-spacer"></div> -->
+  <!-- <div class="nav-btn"><a href="{{ url_for('settings') }}">Settings</a></div> -->
+  <div class="nav-btn"><a href="{{ url_for('logout') }}">Logout</a></div>
+</nav>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- HEADING -->
+  <section class="feed">
+    <div class="feed-header">
+      <div class="feed-title-row">
+        <h1 class="feed-title">Profile Settings</h1>
+      <div class="profile-icon">
+        <!-- <a href="{{ url_for('account') }}"> -->
+          User
+        <!-- </a> -->
+      </div>
+      </div>
+    </div>
+    
+    <div style="padding:3%; display: flex;">
+        <!-- Change Profile Picture -->
+        <div class="profile-container">
+            <label for="imageUpload" class="profile-upload-label">
+                <input type="file" id="imageUpload" accept="image/*">
+                <img class="base-picture" id="preview" src="profile.svg" alt="Image Preview">
+                <img class="overlay-img" src="upload.png" alt="">
+            </label>
+        </div>
+
+        <!-- Name/Email/Change Password -->
+        <div style="display: flex; padding: 30px;">
+            <!-- Name & Email -->
+             <div>
+                <div class="fristLsat"><label for="name"><input type="text" id="name" name="name" value="Frist Lsat"></label></div>
+                <div class="emailChange"><label for="email"><input type="text" id="email" name="email" value="emial@emial.cmo"></label></div>
+             </div>
+            <!-- Name & Email -->
+             <div>
+                <div class="pass"><label for="old-password"><input type="password" id="old-password" name="old-password" placeholder="Old Password"></label></div>
+                <div class="pass"><label for="new-password1"><input type="password" id="new-password1" name="new-password2" placeholder="New Password "></label></div>
+                <div class="pass"><label for="new-password2"><input type="password" id="new-password2" name="new-password2" placeholder="New Password Again"></label></div>
+                <div>Submit</div>
+
+             </div>
+        </div>
+
+    </div>
+
+
+  </section>
+
+
+
+</div>
+
+
+<script>
+document.getElementById('imageUpload').addEventListener('change',function(){
+    let file=this.files[0];
+        let reader = new FileReader();
+        reader.onload = function (event){
+            let base64String = event.target.result;
+            document.getElementById('preview').src=base64String;
+            document.getElementById('preview').style.display = 'block';
+            console.log(base64String);
+        };
+        reader.readAsDataURL(file);
+});
+
+document.getElementById('submitBtn').addEventListener('click', () => {
+  const nameInput = document.getElementById('name');
+  const emailInput = document.getElementById('email');
+
+  nameInput.setAttribute('value', nameInput.value);
+  emailInput.setAttribute('value', emailInput.value);
+
+  nameInput.blur();
+  emailInput.blur();
+
+//   const payload = {
+//     name: nameInput.value,
+//     email: emailInput.value
+//   };
+//   console.log('Submitting:', payload);
+});
+
+</script>
+</body>
+
+</html>
