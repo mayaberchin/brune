@@ -1043,7 +1043,7 @@ def get_field(table, ID_fieldname, ID, field):
 
 # return all values in a specific field (column) in a row with a matching "id" item
 def get_field_list(table, col_name, ID, field):
-    # use ? for unsafe/user provided variables
+    # # use ? for user-provided, potentially unsafe values
     data = sqlite_fetchall(f'SELECT {field} FROM {table} WHERE {col_name} = ?', (ID,))
     return clean_list(data)
 
@@ -1053,7 +1053,7 @@ def get_row(table, col_name, ID):
 
 # return all rows that have an "id" field matching the given argument
 def get_row_list(table, col_name, ID):
-    # use ? for unsafe/user provided variables
+    # # use ? for user-provided, potentially unsafe values
     data = sqlite_fetchall(f'SELECT * FROM {table} WHERE {col_name} = ?', (ID,))
     return clean_2d_list(data)
 
@@ -1085,7 +1085,7 @@ def update_row(table, ID_fieldname, id, col_name, item):
     sqlite(command, vals_tup)
 
 def delete_row(table, ID_fieldname, id):
-    # use ? for unsafe/user provided variables
+    # # use ? for user-provided, potentially unsafe values
     sqlite(f'DELETE FROM {table} WHERE {ID_fieldname} = ?', (id,))
 
 
