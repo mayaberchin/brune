@@ -1,7 +1,7 @@
-import sqlite3                      # enable control of an sqlite database
+import sqlite3                      # enable control of a sqlite database
 import hashlib                      # for consistent hashes
 import secrets                      # to generate ids
-from datetime import datetime
+from datetime import datetime       # for dates/times
 
 
 DB_FILE="data.db"
