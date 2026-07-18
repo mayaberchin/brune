@@ -8,11 +8,11 @@ DB_FILE="data.db"
 
 
 
-#=====================================================[ID]=====================================================#
+#=======================================================[ID]=======================================================#
 
 
 
-                                         #---------[generate]---------#
+                                            #---------[generate]---------#
 
 
 # PURPOSE
@@ -41,7 +41,7 @@ def gen_id(others, byte_nums):
 
 
 
-                                         #---------[add/remove]---------#
+                                            #---------[add/remove]---------#
 
 
 # PURPOSE
@@ -81,7 +81,7 @@ def remove_from_list(lst, item, delim=','):
 
 
 
-                                      #---------[string-conversions]---------#
+                                            #---------[string-conversions]---------#
 
 
 # PURPOSE
@@ -116,7 +116,7 @@ def make_list(str, delim=','):
 
 
 
-                                         #---------[dictionary-conversions]---------#
+                                            #---------[dictionary-conversions]---------#
 
 
 # PURPOSE
@@ -151,7 +151,7 @@ def list_2d_to_dict_list(keys, values):
 
 
 
-                              #---------[tuple conversions]---------#
+                                            #---------[tuple conversions]---------#
 
 
 # PURPOSE
@@ -187,7 +187,7 @@ def tups_to_2d_list(raw_output):
 
 
 
-                            #---------[tuple-to-list-filtering]---------#
+                                            #---------[tuple-to-list-filtering]---------#
 
 
 # PURPOSE
@@ -224,7 +224,7 @@ def deep_clean_list(raw_output):
 
 
 
-                                         #---------[remove-empty]---------#
+                                            #---------[remove-empty]---------#
 
 
 # PURPOSE
@@ -262,7 +262,7 @@ def deep_rm_empty(lst_2d):
 
 
 
-                                         #---------[unique]---------#
+                                            #---------[unique]---------#
 
 
 # PURPOSE
@@ -286,11 +286,11 @@ def unique_only(lst):
 
 
 
-#===================================================[SQLITE3]===================================================#
+#=====================================================[SQLITE3]=====================================================#
 
 
 
-                                         #---------[execute]---------#
+                                            #---------[execute]---------#
 
 
 # PURPOSE
