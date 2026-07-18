@@ -247,5 +247,5 @@ def add_users_row(values):
 def update_users_row(email, col_name, col_val):
     tables.update_row('users', 'email', email, col_name, col_val)
 
-def delete_users_row(ID_fieldname, id):
-    tables.delete_row('users', ID_fieldname, id)
+def delete_users_row(email):
+    tables.delete_row('users', 'email', id)
