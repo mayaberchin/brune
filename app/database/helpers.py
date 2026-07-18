@@ -27,9 +27,7 @@ DB_FILE="data.db"
 
 
 def gen_id(others, byte_nums):
-    # generate an id
     id = secrets.token_hex(byte_nums)
-    # make sure it's unique
     while id in others:
         id = secrets.token_hex(byte_nums)
     return id
@@ -63,9 +61,8 @@ def add_to_list(lst, item, delim=','):
     if isinstance(lst, str):
         lst = make_list(lst, delim)
     lst += [item]
-    # make this into a delim-separated string for our database
-    new_str = merge_list(lst, delim)
-    return new_str
+    lst_str = merge_list(lst, delim)
+    return lst_str
 
 # remove (the first instance of) an item from a list and return a delim-separated string
 def remove_from_list(lst, item, delim=','):
@@ -74,9 +71,8 @@ def remove_from_list(lst, item, delim=','):
         lst = make_list(lst, delim)
     if item in lst:
         lst.remove(item)
-    # make this into a delim-separated string for our database
-    new_str = merge_list(lst, delim)
-    return new_str
+    lst_str = merge_list(lst, delim)
+    return lst_str
 
 
 
