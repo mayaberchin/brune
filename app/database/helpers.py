@@ -55,7 +55,6 @@ def gen_id(others, byte_nums):
 # remove_from_list() returns a delim-separated string with (the first instance of) item removed.
 
 
-# add an item to a list and return a delim-separated string
 def add_to_list(lst, item, delim=','):
     # check if lst has been provided as a list already or if we need to convert it into one
     if isinstance(lst, str):
@@ -64,7 +63,6 @@ def add_to_list(lst, item, delim=','):
     lst_str = merge_list(lst, delim)
     return lst_str
 
-# remove (the first instance of) an item from a list and return a delim-separated string
 def remove_from_list(lst, item, delim=','):
     # check if lst has been provided as a list already or if we need to convert it into one
     if isinstance(lst, str):
@@ -92,7 +90,6 @@ def remove_from_list(lst, item, delim=','):
 # make_list() returns a list.
 
 
-# list -> comma (or some specified other delimeter)-separated string
 def merge_list(lst, delim=','):
     if lst == None:
         return ''
@@ -101,7 +98,6 @@ def merge_list(lst, delim=','):
         return ''
     return delim.join(lst)
 
-# string of comma (or some specified other delimeter)-separated items -> list
 def make_list(str, delim=','):
     if str == None:
         return []
@@ -127,7 +123,6 @@ def make_list(str, delim=','):
 # Use list_2d_to_dict_list to get a list of dictionaries.
 
 
-# list of keys + list of values -> dictionary
 def list_to_dict(keys, values):
     if len(keys) != len(values):
         print("list_to_dict: len keys != len values")
@@ -137,7 +132,6 @@ def list_to_dict(keys, values):
         dict[keys[i]] = values[i]
     return dict
 
-# list of keys + 2d list of values -> list of dictionaries
 def list_2d_to_dict_list(keys, values):
     lst = []
     for val_sublst in values:
@@ -162,7 +156,6 @@ def list_2d_to_dict_list(keys, values):
 # Use tups_to_list_2d for a 2d list.
 
 
-# list of tuples (returned by .fetchall()) -> 1d list
 def tups_to_list(raw_output):
     lst = []
     for tup in raw_output:
@@ -170,7 +163,6 @@ def tups_to_list(raw_output):
         lst += ['' if item is None else item for item in tup]
     return lst
 
-# list of tuples (returned by .fetchall()) -> 2d list
 def tups_to_2d_list(raw_output):
     lst = []
     for tup in raw_output:
@@ -199,19 +191,16 @@ def tups_to_2d_list(raw_output):
 # Use deep_clean_list() for a 2d list without any empty sub_lists--sub_lists will NOT contain ''.
 
 
-# turn a list of tuples (returned by .fetchall()) into a 1d list AND remove empty items
 def clean_list(raw_output):
     clean_output = tups_to_lst(raw_output)
     clean_output = rm_empty(raw_output)
     return clean_output
 
-# turn a list of tuples (returned by .fetchall()) into a 2d list AND remove empty 1d lists
 def clean_2d_list(raw_output):
     clean_output = tups_to_2d_lst(raw_output)
     clean_output = rm_empty_lists(clean_output)
     return clean_output
 
-# turn a list of tuples (returned by .fetchall()) into a 2d list AND remove empty 1d lists AND remove empty items from each sub-list
 def deep_clean_list(raw_output):
     clean_output = tups_to_2d_list(raw_output)
     clean_output = deep_rm_empty(clean_output)
@@ -235,19 +224,16 @@ def deep_clean_list(raw_output):
 # Use deep_rm_empty() to remove [] from 2d lists AND remove '' from each sub_list.
 
 
-# remove '' and None from a 1d list
 def rm_empty(lst):
     clean_lst = [item for item in lst if item is not None and item != '']
     if (clean_lst is None):
         clean_lst = []
     return clean_lst
 
-# remove [] from a 2d list
 def rm_empty_lists(lst_2d):
     clean_lst = [lst for lst in lst_2d if len(lst) > 0]
     return clean_lst
 
-# remove [] from a 2d lists AND remove None/'' from each sub_list
 def deep_rm_empty(lst_2d):
     new_lst = rm_empty_lists(lst_2d)
     for i in range(len(new_lst)):
@@ -271,7 +257,6 @@ def deep_rm_empty(lst_2d):
 # unique_only() returns a list of unique items.
 
 
-# keep only unique items in the list
 def unique_only(lst):
     new_lst = []
     for item in lst:
@@ -302,7 +287,6 @@ def unique_only(lst):
 # Use sqlite_fetchall() to run commands that return a list of tuples (a lot of data).
 
 
-# run a command that returns nothing in SQLite3
 def sqlite(command, vals=()):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
@@ -314,12 +298,10 @@ def sqlite(command, vals=()):
     db.close()
 
 
-# run a SQLite3 command and get the result (one tuple of data)
 def sqlite_fetchone(command, vals=()):
     return sqlite_fetchall(command, vals)[0]
 
 
-# run a SQLite3 command and get the result (a list of tuples of data)
 def sqlite_fetchall(command, vals=()):
     db = sqlite3.connect(DB_FILE)
     c = db.cursor()
