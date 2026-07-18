@@ -1,5 +1,5 @@
-import hashlib                      # for consistent hashes
-from datetime import datetime       # for dates/times
+import hashlib                              # for consistent hashes
+from datetime import datetime               # for dates/times
 
 import tables, helpers, classes, posts
 
