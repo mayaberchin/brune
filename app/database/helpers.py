@@ -57,7 +57,7 @@ def add_to_list(lst, item, delim=','):
     # check if lst has been provided as a list already or if we need to convert it into one
     if isinstance(lst, str):
         lst = make_list(lst, delim)
-    lst += [item]
+    lst.append(item)
     lst_str = merge_list(lst, delim)
     return lst_str
 
@@ -259,7 +259,7 @@ def unique_only(lst):
     new_lst = []
     for item in lst:
         if item not in new_lst:
-            new_lst += [item]
+            new_lst.append(item)
     return new_lst
 
 
