@@ -1093,8 +1093,20 @@ def delete_row(table, ID_fieldname, id):
 #---------[db-list-management]---------#
 
 
-# merge a list into a comma-separated (or some other delimeter) string
-def merge_list(lst, delim=","):
+# PURPOSE
+# Convert lists to/from delim-separated strings--we work with lists but store strings.
+
+# PARAMETERS
+# lst/str           LIST-STRINGS or STRING              The list/string to convert.
+# delim             STRING                              An optional delimeter; defaults to ','.
+
+# RETURN VALUES
+# merge_list() returns a delim-separated string.
+# make_list() returns a list.
+
+
+# list -> comma (or some specified other delimeter)-separated string
+def merge_list(lst, delim=','):
     if lst == None:
         return ''
     lst = rm_empty(lst)
@@ -1102,24 +1114,60 @@ def merge_list(lst, delim=","):
         return ''
     return delim.join(lst)
 
-# return a list from a string of comma-separated items (or some other delimeter)
-def make_list(str, delim=","):
+# string of comma (or some specified other delimeter)-separated items -> list
+def make_list(str, delim=','):
     if str == None:
         return []
     lst = str.split(delim)
     return rm_empty(lst)
 
-def add_to_list(lst, item):
-    new_lst = rm_empty(lst)
-    new_lst += [item]
-    new_str = merge_list(new_lst)
+
+
+# PURPOSE
+# Add or remove an item from a list and convert the list into a delim-separated string.
+
+# PARAMETERS
+# lst               LIST-STRINGS or STRING              A list of items or a delim-separated string of items.
+# item              STRING                              The item to add or remove.
+# delim             STRING                              An optional delimeter; defaults to ','.          
+
+# RETURN VALUES
+# add_to_list() returns a delim-separated string with item appended.
+# remove_from_list() returns a delim-separated string with (the first instance of) item removed.
+
+
+# add an item to a list and return a delim-separated string
+def add_to_list(lst, item, delim=','):
+    # check if lst has been provided as a list already or if we need to convert it into one
+    if isinstance(lst, str):
+        lst = make_list(lst, delim)
+    lst += [item]
+    # make this into a delim-separated string for our database
+    new_str = merge_list(lst, delim)
     return new_str
 
-def remove_from_list(lst, item):
+# remove (the first instance of) an item from a list and return a delim-separated string
+def remove_from_list(lst, item, delim=','):
+    # check if lst has been provided as a list already or if we need to convert it into one
+    if isinstance(lst, str):
+        lst = make_list(lst, delim)
     if item in lst:
         lst.remove(item)
-    new_str = merge_list(lst)
+    # make this into a delim-separated string for our database
+    new_str = merge_list(lst, delim)
     return new_str
+
+
+
+# PURPOSE
+# Return a list that only contains the unique values of the inputted list.
+
+# PARAMETERS
+# lst               LIST-ANY                            A list of any items.
+
+# RETURN VALUES
+# unique_only() returns a list of unique items.
+
 
 # keep only unique items in the list
 def unique_only(lst):
@@ -1131,6 +1179,17 @@ def unique_only(lst):
 
 
 #---------[id]---------#
+
+
+# PURPOSE
+# Generate a unique id whenever needed.
+
+# PARAMETERS
+# others            LIST-STRINGS                        A list of previously used ids.
+# byte_nums         INTEGER                             The number of bytes the id should take up.
+
+# RETURN VALUES
+# gen_id() returns a an alphanumeric string.
 
 
 def gen_id(others, byte_nums):
@@ -1149,8 +1208,8 @@ def gen_id(others, byte_nums):
 # Convert plain lists into dictionaries, given a list of corresponding keys.
 
 # PARAMETERS
-# keys          LIST-STRINGS                                    A list of keys corresponding to the provided list of values.
-# values        LIST-STRINGS or LIST-LIST-STRINGS               A list (or list of lists) of values corresponding to the provided list of keys.
+# keys              LIST-STRINGS                                    A list of keys corresponding to the provided list of values.
+# values            LIST-STRINGS or LIST-LIST-STRINGS               A list (or list of lists) of values corresponding to the provided list of keys.
 
 # RETURN VALUES
 # Use list_to_dict() to get a dictionary.
@@ -1181,7 +1240,7 @@ def list_2d_to_dict_list(keys, values):
 # Either create a 1d list or a 2d list.
 
 # PARAMETERS
-# raw_output       LIST-TUPLES          A list of tuples fetched as the result of a SQLite3 command.
+# raw_output        LIST-TUPLES             A list of tuples fetched as the result of a SQLite3 command.
 
 # RETURN VALUES
 # Use tups_to_list for a 1d list.
