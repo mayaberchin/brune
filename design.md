@@ -172,7 +172,7 @@ _users_
 | TEXT          | is_dojo       | NOT NULL                                                  |
 | TEXT          | is_sensei     | NOT NULL                                                  |
 | TEXT          | is_teacher    | NOT NULL                                                  |
-| TEXT          | class_id      | (can have multiple, comma-separated)                      |
+| TEXT          | classes       | (can have multiple, comma-separated)                      |
 | TEXT          | unread_posts  | (can have multiple, comma-separated) (references post_id) |
 | TEXT          | pinged_posts  | (can have multiple, comma-separated) (references post_id) |
 
