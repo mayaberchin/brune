@@ -279,7 +279,6 @@ _followups_
 | INTEGER       | upvotes       | NOT NULL                                                               |
 | TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
 | TEXT          | ping          | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
-| TEXT          | show_dojo     | NOT NULL                                                               |
 | TEXT          | is_anonymous  | NOT NULL                                                               |
 
 <br>
