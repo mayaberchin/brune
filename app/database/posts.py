@@ -6,7 +6,7 @@ import tables, helpers, users, classes
 
 
 def get_all_posts():
-    data = get_col('posts', 'post_id')
+    data = tables.get_col('posts', 'post_id')
     data = sort_by_ctime(data)
     return data
 
@@ -62,11 +62,11 @@ def get_post_followups(post_id):
     other = []
     for post in responses:
         if post_is_answer(post):
-            if is_class_teacher(get_post_class(post), get_post_author(post)):
+            if classes.is_class_teacher(get_post_class(post), get_post_author(post)):
                 teacher_answers += [post]
             else:
                 answers += [post]
-        elif is_class_teacher(get_post_class(post), get_post_author(post)):
+        elif classes.is_class_teacher(get_post_class(post), get_post_author(post)):
             teacher_responses += [post]
         else:
             other += [post]
@@ -156,15 +156,15 @@ def get_post_upvotes(post_id):
 
 def get_post_upvoters(post_id):
     upvoters = get_posts_field(post_id, 'upvoters')
-    upvoters_lst = make_list(upvoters)
+    upvoters_lst = helpers.make_list(upvoters)
     return upvoters_lst
 
 def get_post_pingees(post_id):
     ping = get_posts_field(post_id, 'ping')
-    ping_lst = make_list(ping)
+    ping_lst = helpers.make_list(ping)
     # remove users who have been deleted since the last time this list was accessed
-    ping_filtered = [user for user in ping_lst if user_exists(user)]
-    ping_str = merge_list(ping_filtered)
+    ping_filtered = [user for user in ping_lst if users.user_exists(user)]
+    ping_str = helpers.merge_list(ping_filtered)
     update_posts_row(post_id, 'ping', ping_str)
     return ping_filtered
 
@@ -172,11 +172,11 @@ def get_post_pingees(post_id):
 
 def get_post_data(post_id):
     keys = POSTS_COLS
-    values = get_row('posts', 'post_id', post_id)
-    d = list_to_dict(keys, values)
-    d['attachments'] = make_list(d['attachments'])
-    d['upvoters'] = make_list(d['upvoters'])
-    d['ping'] = make_list(d['ping'])
+    values = tables.get_row('posts', 'post_id', post_id)
+    d = helpers.list_to_dict(keys, values)
+    d['attachments'] = helpers.make_list(d['attachments'])
+    d['upvoters'] = helpers.make_list(d['upvoters'])
+    d['ping'] = helpers.make_list(d['ping'])
     return d
 
 
@@ -224,7 +224,7 @@ def increment_post_upvotes(post_id, inc):     # inc can be positive or negative
 
 def add_post_upvoter(post_id, email):
     upvoters = get_post_upvoters(post_id)
-    upvoters_new = add_to_list(upvoters, email)
+    upvoters_new = helpers.add_to_list(upvoters, email)
     update_posts_row(post_id, 'upvoters', upvoters_new)
     increment_post_upvotes(post_id, 1)
     add_post_pingee(post_id, email)
@@ -232,7 +232,7 @@ def add_post_upvoter(post_id, email):
 def remove_post_upvoter(post_id, email):
     upvoters = get_post_upvoters(post_id)
     upvoters.remove(email)
-    upvoters_new = merge_list(upvoters)
+    upvoters_new = helpers.merge_list(upvoters)
     update_posts_row(post_id, 'upvoters', upvoters_new)
     increment_post_upvotes(post_id, -1)
     remove_post_pingee(post_id, email)
@@ -242,7 +242,7 @@ def remove_post_upvoter(post_id, email):
 def add_post_pingee(post_id, email):
     pingees = get_post_pingees(post_id)
     if email not in pingees:
-        pingees_new = add_to_list(pingees, email)
+        pingees_new = helpers.add_to_list(pingees, email)
         update_posts_row(post_id, 'ping', pingees_new)
 
 def remove_post_pingee(post_id, email):
@@ -250,7 +250,7 @@ def remove_post_pingee(post_id, email):
     if author != email:
         pingees = get_post_pingees(post_id)
         pingees.remove(email)
-        pingees_new = merge_list(pingees)
+        pingees_new = helpers.merge_list(pingees)
         update_posts_row(post_id, 'ping', pingees_new)
 
 def ping(post_id, pingees=[]):
@@ -261,7 +261,7 @@ def ping(post_id, pingees=[]):
             remove_users += [user]
         else:
             pinged_posts = get_pinged_posts(user)
-            pinged_str = add_to_list(pinged_posts, post_id)
+            pinged_str = helpers.add_to_list(pinged_posts, post_id)
             update_users_row(user, 'pinged_posts', pinged_str)
 
 
@@ -270,7 +270,7 @@ def share_to_dojo(post_id):
     readers = get_all_dojo()
     for reader in readers:
         unread = get_unread_posts(reader)
-        unread_str = add_to_list(unread, ping_post)
+        unread_str = helpers.add_to_list(unread, ping_post)
         update_users_row(reader, 'unread_posts', unread_str)
     update_posts_row(post_id, 'show_dojo', 'yes')
 
@@ -280,7 +280,7 @@ def share_to_dojo(post_id):
 
 
 def create_post(author_email, class_id, title, body, category, show_dojo, attachments='', is_anonymous='no', parent_id=''):
-    post_id = gen_id(get_all_posts(), 16)
+    post_id = helpers.gen_id(get_all_posts(), 16)
     is_resolved = 'no'
     is_answer = 'no'
     time = str(datetime.now())
@@ -290,35 +290,35 @@ def create_post(author_email, class_id, title, body, category, show_dojo, attach
     add_posts_row([post_id, author_email, class_id, parent_id, title, body, attachments, category, is_resolved, is_answer, time, time, upvotes, upvoters, to_ping, show_dojo, is_anonymous])
     ping_post = get_top_parent(post_id)
     # add to classes table
-    class_posts = get_class_posts(class_id)
-    posts_str = add_to_list(class_posts, ping_post)
-    update_classes_row(class_id, 'posts', posts_str)
+    class_posts = classes.get_class_posts(class_id)
+    posts_str = helpers.add_to_list(class_posts, ping_post)
+    classes.update_classes_row(class_id, 'posts', posts_str)
     # add as unread post
-    readers = get_class_members(class_id)
+    readers = classes.get_class_members(class_id)
     if (show_dojo == 'yes'):
-        readers += get_all_dojo()
-    readers = unique_only(readers)
+        readers += users.get_all_dojo()
+    readers = helpers.unique_only(readers)
     if author_email in readers:
         readers.remove(author_email)
     for reader in readers:
-        unread = get_unread_posts(reader)
-        unread_str = add_to_list(unread, ping_post)
+        unread = users.get_unread_posts(reader)
+        unread_str = helpers.add_to_list(unread, ping_post)
         update_users_row(reader, 'unread_posts', unread_str)
     # ping necessary people
     if (parent_id != ''):
         ping(parent_id)
         add_post_pingee(parent_id, author_email)
     elif get_post_category(post_id) == 'announcement':
-        ping_list = get_class_members(class_id)
+        ping_list = classes.get_class_members(class_id)
         if (show_dojo == 'yes'):
             ping_list += get_all_dojo()
-        ping_list = unique_only(ping_list)
+        ping_list = helpers.unique_only(ping_list)
         ping_list.remove(author_email)
         ping(post_id, ping_list)
     return post_id
 
 def create_followup(author_email, post_id, body, is_anonymous='no'):
-    followup_id = gen_id(get_all_posts(), 16)
+    followup_id = helpers.gen_id(get_all_posts(), 16)
     class_id = get_post_class(post_id)
     category = get_post_category(post_id)
     show_dojo = get_posts_field(post_id, 'show_dojo')
@@ -376,17 +376,17 @@ def delete_post_trace(post_id):
     # remove from classes table
     class_id = get_post_class(post_id)
     class_posts = get_class_posts(class_id)
-    c_posts_str = remove_from_list(class_posts, post_id)
+    c_posts_str = helpers.remove_from_list(class_posts, post_id)
     update_classes_row(class_id, 'posts', c_posts_str)
     # remove from users table
-    readers = get_class_members(class_id)
+    readers = classes.get_class_members(class_id)
     if (show_dojo(post_id)):
-        readers += get_all_dojo()
-    readers = unique_only(readers)
+        readers += users.get_all_dojo()
+    readers = helpers.unique_only(readers)
     for reader in readers:
-        mark_read(reader, post_id)    # removes the post from unread/ping
+        users.mark_read(reader, post_id)    # removes the post from unread/ping
     # remove from posts table
-    delete_row('posts', 'post_id', post_id)
+    tables.delete_row('posts', 'post_id', post_id)
 
 
 # sorts so that the most recent posts come first
