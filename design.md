@@ -164,6 +164,7 @@ _users_
 
 | Variable Type | Variable Name | Variable Attribute(s)                                     |
 |---------------|---------------|-----------------------------------------------------------|
+| TEXT          | user_id	      | PRIMARY KEY NOT NULL                                      |
 | TEXT          | email         | UNIQUE NOT NULL                                           |
 | TEXT          | github        |                                                           |
 | TEXT          | name          | NOT NULL                                                  |
@@ -192,20 +193,33 @@ _classes_
 
 <br>
 
-_posts_  
+
+_announcements_  
 
 | Variable Type | Variable Name | Variable Attribute(s)                                                  |
 |---------------|---------------|------------------------------------------------------------------------|
 | TEXT          | post_id       | PRIMARY KEY                                                            |
-| TEXT          | author_email  | NOT NULL FOREIGN KEY references email                                  |
+| TEXT          | author_id     | NOT NULL FOREIGN KEY references user_id                                |
 | TEXT          | class_id      | NOT NULL FOREIGN KEY references class_id                               |
-| TEXT          | parent_id     | references previous post (null if not followup)                        |
-| TEXT          | title         | (null if quick q)                                                      |
+| TEXT          | title         |                                                                        |
 | TEXT          | body          | NOT NULL                                                               |
-| TEXT          | attachments   |                                                                        |
-| TEXT          | category      | NOT NULL (e.g. announcement, question)                                 |
-| TEXT          | is_resolved   | (null if not question)                                                 |
-| TEXT          | is_answer     | (null if not question)                                                 |
+| TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
+| TEXT          | updated_at    | NOT NULL CURRENT_TIMESTAMP                                             |
+| INTEGER       | upvotes       | NOT NULL                                                               |
+| TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+
+<br>
+
+_questions_  
+
+| Variable Type | Variable Name | Variable Attribute(s)                                                  |
+|---------------|---------------|------------------------------------------------------------------------|
+| TEXT          | post_id       | PRIMARY KEY                                                            |
+| TEXT          | author_id     | NOT NULL FOREIGN KEY references user_id                                |
+| TEXT          | class_id      | NOT NULL FOREIGN KEY references class_id                               |
+| TEXT          | title         |                                                                        |
+| TEXT          | body          | NOT NULL                                                               |
+| TEXT          | is_resolved   |                                                                        |
 | TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
 | TEXT          | updated_at    | NOT NULL CURRENT_TIMESTAMP                                             |
 | INTEGER       | upvotes       | NOT NULL                                                               |
@@ -215,6 +229,60 @@ _posts_
 | TEXT          | is_anonymous  | NOT NULL                                                               |
 
 <br>
+
+
+_notes_  
+
+| Variable Type | Variable Name | Variable Attribute(s)                                                  |
+|---------------|---------------|------------------------------------------------------------------------|
+| TEXT          | post_id       | PRIMARY KEY                                                            |
+| TEXT          | author_id     | NOT NULL FOREIGN KEY references user_id                                |
+| TEXT          | class_id      | NOT NULL FOREIGN KEY references class_id                               |
+| TEXT          | title         |                                                                        |
+| TEXT          | body          | NOT NULL                                                               |
+| TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
+| TEXT          | updated_at    | NOT NULL CURRENT_TIMESTAMP                                             |
+| INTEGER       | upvotes       | NOT NULL                                                               |
+| TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | ping          | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | show_dojo     | NOT NULL                                                               |
+| TEXT          | is_anonymous  | NOT NULL                                                               |
+
+<br>
+
+_chat_  
+
+| Variable Type | Variable Name | Variable Attribute(s)                                                  |
+|---------------|---------------|------------------------------------------------------------------------|
+| TEXT          | post_id       | PRIMARY KEY                                                            |
+| TEXT          | author_id     | NOT NULL FOREIGN KEY references user_id                                |
+| TEXT          | class_id      | NOT NULL FOREIGN KEY references class_id                               |
+| TEXT          | body          | NOT NULL                                                               |
+| TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
+
+<br>
+
+_followups_  
+
+| Variable Type | Variable Name | Variable Attribute(s)                                                  |
+|---------------|---------------|------------------------------------------------------------------------|
+| TEXT          | post_id       | PRIMARY KEY                                                            |
+| TEXT          | author_id     | NOT NULL FOREIGN KEY references user_id                                |
+| TEXT          | class_id      | NOT NULL FOREIGN KEY references class_id                               |
+| TEXT          | parent_id     | references previous post                                               |
+| TEXT          | body          | NOT NULL                                                               |
+| TEXT          | is_resolved   |                                                                        |
+| TEXT          | is_answer     |                                                                        |
+| TEXT          | created_at    | NOT NULL CURRENT_TIMESTAMP                                             |
+| TEXT          | updated_at    | NOT NULL CURRENT_TIMESTAMP                                             |
+| INTEGER       | upvotes       | NOT NULL                                                               |
+| TEXT          | upvoted_by    | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | ping          | FOREIGN KEY references user_id (can have multiple, comma-separated)    |
+| TEXT          | show_dojo     | NOT NULL                                                               |
+| TEXT          | is_anonymous  | NOT NULL                                                               |
+
+<br>
+
 
 </div>
 
