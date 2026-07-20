@@ -11,15 +11,26 @@ import helpers
                                             #---------[table-columns]---------#
 
 
-USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_stuy_teacher', 'class_id', 
-              'unread_posts', 'pinged_posts']
+USERS_COLS = ['user_id', 'email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_stuy_teacher', 
+              'classes', 'unread_posts', 'pinged_posts']
 
 CLASSES_COLS = ['class_id', 'name', 'owner_email', 'teacher_email', 'member_email', 'banned_email', 'posts', 
                 'is_archived']
 
-POSTS_COLS = ['post_id', 'author_email', 'class_id', 'parent_id', 'title', 'body', 'attachments', 'category', 
-              'is_resolved','is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping', 'show_dojo', 
-              'is_anonymous']
+ANNOUNCEMENTS_COLS = ['post_id', 'author_id', 'class_id', 'title', 'body', 'created_at', 'updated_at', 'upvotes', 
+                      'upvoters']
+
+QUESTIONS_COLS = ['post_id', 'author_id', 'class_id', 'title', 'body', 'is_resolved', 'created_at', 'updated_at', 
+                  'upvotes', 'upvoters', 'ping', 'show_dojo', 'is_anonymous']
+
+NOTES_COLS = ['post_id', 'author_id', 'class_id', 'title', 'body', 'created_at', 'updated_at', 'upvotes', 'upvoters',
+              'ping', 'show_dojo', 'is_anonymous']
+
+CHAT_COLS = ['post_id', 'author_id', 'class_id', 'body', 'created_at']
+
+
+FOLLOWUPS_COLS = ['post_id', 'author_id', 'class_id', 'parent_id', 'depth', 'title', 'body', 'is_resolved',
+              'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping', 'is_anonymous']
 
 
 
@@ -35,14 +46,15 @@ POSTS_COLS = ['post_id', 'author_email', 'class_id', 'parent_id', 'title', 'body
 def create_users_table():
     command =  """
                 CREATE TABLE IF NOT EXISTS users (
-                    email           TEXT        NOT NULL    PRIMARY KEY     UNIQUE,
+                    user_id         TEXT        NOT NULL    PRIMARY KEY     UNIQUE,
+                    email           TEXT        NOT NULL                    UNIQUE,
                     github          TEXT,
                     name            TEXT        NOT NULL,
                     password_hash   TEXT        NOT NULL,
                     is_dojo         TEXT        NOT NULL,
                     is_sensei       TEXT        NOT NULL,
                     is_stuy_teacher TEXT        NOT NULL,
-                    class_id        TEXT,
+                    classes         TEXT,
                     unread_posts    TEXT,
                     pinged_posts    TEXT
                 )"""
@@ -58,23 +70,88 @@ def create_classes_table():
                     teacher_email   TEXT        NOT NULL,
                     member_email    TEXT        NOT NULL,
                     banned_email    TEXT,
-                    posts           TEXT,
                     is_archived     TEXT        NOT NULL
                 )"""
     helpers.sqlite(command)
 
-# posts                     
+# announcements
+def create_announcements_table():
+    command =  """
+                CREATE TABLE IF NOT EXISTS posts (
+                    post_id         TEXT        NOT NULL    PRIMARY KEY,
+                    author_id       TEXT        NOT NULL,
+                    class_id        TEXT        NOT NULL,
+                    title           TEXT,
+                    body            TEXT        NOT NULL,
+                    created_at      TEXT        NOT NULL,
+                    updated_at      TEXT        NOT NULL,
+                    upvotes         INTEGER     NOT NULL,
+                    upvoters        TEXT,
+                )"""
+    helpers.sqlite(command)
+
+# questions
 def create_posts_table():
     command =  """
                 CREATE TABLE IF NOT EXISTS posts (
                     post_id         TEXT        NOT NULL    PRIMARY KEY,
-                    author_email    TEXT        NOT NULL,
+                    author_id       TEXT        NOT NULL,
                     class_id        TEXT        NOT NULL,
-                    parent_id       TEXT,
                     title           TEXT,
                     body            TEXT        NOT NULL,
-                    attachments     TEXT,
-                    category        TEXT        NOT NULL,
+                    is_resolved     TEXT,
+                    created_at      TEXT        NOT NULL,
+                    updated_at      TEXT        NOT NULL,
+                    upvotes         INTEGER     NOT NULL,
+                    upvoters        TEXT,
+                    ping            TEXT,
+                    show_dojo       TEXT        NOT NULL,
+                    is_anonymous    TEXT        NOT NULL
+                )"""
+    helpers.sqlite(command)
+
+# notes
+def create_posts_table():
+    command =  """
+                CREATE TABLE IF NOT EXISTS posts (
+                    post_id         TEXT        NOT NULL    PRIMARY KEY,
+                    author_id       TEXT        NOT NULL,
+                    class_id        TEXT        NOT NULL,
+                    title           TEXT,
+                    body            TEXT        NOT NULL,
+                    created_at      TEXT        NOT NULL,
+                    updated_at      TEXT        NOT NULL,
+                    upvotes         INTEGER     NOT NULL,
+                    upvoters        TEXT,
+                    ping            TEXT,
+                    show_dojo       TEXT        NOT NULL,
+                    is_anonymous    TEXT        NOT NULL
+                )"""
+    helpers.sqlite(command)
+
+# chat
+def create_posts_table():
+    command =  """
+                CREATE TABLE IF NOT EXISTS posts (
+                    post_id         TEXT        NOT NULL    PRIMARY KEY,
+                    author_id       TEXT        NOT NULL,
+                    class_id        TEXT        NOT NULL,
+                    body            TEXT        NOT NULL,
+                    created_at      TEXT        NOT NULL,
+                )"""
+    helpers.sqlite(command)
+
+# followups
+def create_posts_table():
+    command =  """
+                CREATE TABLE IF NOT EXISTS posts (
+                    post_id         TEXT        NOT NULL    PRIMARY KEY,
+                    author_id       TEXT        NOT NULL,
+                    class_id        TEXT        NOT NULL,
+                    parent_id       TEXT,
+                    depth           INTEGER     NOT NULL,
+                    title           TEXT,
+                    body            TEXT        NOT NULL,
                     is_resolved     TEXT,
                     is_answer       TEXT,
                     created_at      TEXT        NOT NULL,
@@ -82,7 +159,6 @@ def create_posts_table():
                     upvotes         INTEGER     NOT NULL,
                     upvoters        TEXT,
                     ping            TEXT,
-                    show_dojo       TEXT        NOT NULL,
                     is_anonymous    TEXT        NOT NULL
                 )"""
     helpers.sqlite(command)
@@ -96,7 +172,11 @@ def create_posts_table():
 def create_tables():
     create_users_table()
     create_classes_table()
-    create_posts_table()
+    create_announcements_table()
+    create_questions_table()
+    create_notes_table()
+    create_chat_table()
+    create_followups_table()
 
 
 
