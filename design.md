@@ -270,6 +270,7 @@ _followups_
 | TEXT          | author_id     | NOT NULL FOREIGN KEY references user_id                                |
 | TEXT          | class_id      | NOT NULL FOREIGN KEY references class_id                               |
 | TEXT          | parent_id     | references previous post                                               |
+| INTEGER       | depth         | NOT NULL                                                               |
 | TEXT          | body          | NOT NULL                                                               |
 | TEXT          | is_resolved   |                                                                        |
 | TEXT          | is_answer     |                                                                        |
