@@ -2,7 +2,7 @@ import sqlite3                      # enable control of a sqlite database
 import secrets                      # to generate ids
 
 
-DB_FILE="data.db"
+DB_FILE="../data.db"
 
 
 
