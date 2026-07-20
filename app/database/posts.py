@@ -407,8 +407,26 @@ def sort_by_ctime(posts):
 def get_posts_field(post_id, field_name):
     return get_field('posts', 'post_id', post_id, field_name)
 
+def get_posts_field_list(post_id, field_name):
+    return get_field_list('posts', 'post_id', post_id, field_name)
+
+
+def get_posts_row(post_id):
+    return tables.get_row('posts', 'post_id', post_id)
+
+def get_posts_row_list(post_id):
+    return tables.get_row_list('posts', 'post_id', post_id)
+
+
+def get_posts_col(col_name):
+    return tables.get_col('posts', col_name)
+
+
 def add_posts_row(values):
     add_row('posts', values)
 
 def update_posts_row(post_id, col_name, col_val):
     update_row('posts', 'post_id', post_id, col_name, col_val)
+
+def delete_posts_row(post_id):
+    tables.delete_row('posts', 'post_id', post_id)

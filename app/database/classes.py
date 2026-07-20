@@ -258,10 +258,22 @@ def ban_member(class_id, email, purge_posts=False):
 
 
 def get_classes_field(class_id, field_name):
-    return get_field('classes', 'class_id', class_id, field_name)
+    return tables.get_field('classes', 'class_id', class_id, field_name)
+
+def get_classes_field_list(class_id, field_name):
+    return tables.get_field_list('classes', 'class_id', class_id, field_name)
+    
 
 def get_classes_row(class_id):
-    tables.get_row('classes', 'class_id', class_id)
+    return tables.get_row('classes', 'class_id', class_id)
+
+def get_classes_row_list(class_id):
+    return tables.get_row_list('classes', 'class_id', class_id)
+    
+
+def get_classes_col(col_name):
+    return tables.get_col('classes', col_name)
+    
 
 def add_classes_row(values):
     add_row('classes', values)

@@ -241,6 +241,21 @@ def auth(email, password):
 def get_users_field(email, field_name):
     return helpers.get_field('users', 'email', email, field_name)
 
+def get_users_field_list(email, field_name):
+    return helpers.get_field_list('users', 'email', email, field_name)
+
+
+def get_users_row(email):
+    return tables.get_row('users', 'email', email)
+
+def get_users_row_list(email):
+    return tables.get_row_list('users', 'email', email)
+
+
+def get_users_col(col_name):
+    return tables.get_col('users', col_name)
+
+
 def add_users_row(values):
     tables.add_row('users', values)
 
@@ -248,4 +263,4 @@ def update_users_row(email, col_name, col_val):
     tables.update_row('users', 'email', email, col_name, col_val)
 
 def delete_users_row(email):
-    tables.delete_row('users', 'email', id)
+    tables.delete_row('users', 'email', email)
