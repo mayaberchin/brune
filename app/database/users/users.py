@@ -8,9 +8,18 @@ import tables, helpers, classes, posts
 #====================================================[ACCOUNTS]====================================================#
 
 
+                                            #---------[list]---------#
+
+
 def get_all_users():
     data = tables.get_col("users", "email")
     return data
+
+
+
+
+                                            #---------[add]---------#
+
 
 def add_user(email, password, name, github=''):
     if user_exists(email):
@@ -28,12 +37,24 @@ def add_user(email, password, name, github=''):
     add_users_row([email, github, name, password, is_dojo, is_sensei, is_stuy_teacher, classes, unread_posts, pinged_posts])
     return 'success'
 
+
+
+
+                                          #---------[verify]---------#
+
+
 def user_exists(email):
     all_users = get_all_users()
     for user in all_users:
         if (user == email):
             return True
     return False
+
+
+
+
+                                       #---------[authenticate]---------#
+
 
 def auth(email, password):
     if not user_exists(email):
@@ -48,6 +69,9 @@ def auth(email, password):
 
 
 #====================================================[USER-DATA]====================================================#
+
+
+                                           #---------[accessors]---------#
 
 
 def get_user_name(email):
@@ -73,7 +97,27 @@ def get_user_data(email):
 
 
 
+                                           #---------[modifiers]---------#
+
+
+def change_name(email, new_name):
+    update_users_row(email, 'name', new_name)
+
+def change_password(email, new_pass):
+    pass_hash = new_pass.encode('utf-8')
+    pass_hash = str(hashlib.sha256(pass_hash).hexdigest())
+    update_users_row(email, 'password_hash', pass_hash)
+
+def change_github(email, new_git):
+    update_users_row(email, 'github', new_git)
+
+
+
+
 #======================================================[ROLES]======================================================#
+
+
+                                             #---------[list]---------#
 
 
 def get_all_dojo():
@@ -84,6 +128,11 @@ def get_all_senseis():
 
 def get_all_teachers():
     return [user for user in get_all_users() if is_stuy_teacher(user)]
+
+
+
+
+                                         #---------[check-role]---------#
 
 
 def is_dojo(email):
@@ -97,6 +146,10 @@ def is_sensei(email):
 def is_stuy_teacher(email):
     teacher = get_users_field(email, 'is_stuy_teacher')
     return teacher == 'yes'
+
+
+
+                                         #---------[add-role]---------#
 
 
 def add_dojo(email):
@@ -113,6 +166,9 @@ def add_teacher(email):
 
 
 #=====================================================[CLASSES]=====================================================#
+
+
+                                             #---------[list]---------#
 
 
 def get_user_classes(email):
