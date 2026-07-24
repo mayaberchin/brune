@@ -116,8 +116,8 @@ def make_list(str, delim=','):
 # values            LIST-STRINGS or LIST-LIST-STRINGS               A list (or list of lists) of values corresponding to the provided list of keys.
 
 # RETURN VALUES
-# Use list_to_dict() to get a dictionary.
-# Use list_2d_to_dict_list to get a list of dictionaries.
+# list_to_dict() returns a dictionary.
+# list_2d_to_dict_list returns a list of dictionaries.
 
 
 def list_to_dict(keys, values):
@@ -149,8 +149,8 @@ def list_2d_to_dict_list(keys, values):
 # raw_output        LIST-TUPLES             A list of tuples fetched as the result of a SQLite3 command.
 
 # RETURN VALUES
-# Use tups_to_list for a 1d list.
-# Use tups_to_list_2d for a 2d list.
+# tups_to_list returns a 1d list.
+# tups_to_list_2d returns a 2d list.
 
 
 def tups_to_list(raw_output):
@@ -183,9 +183,9 @@ def tups_to_2d_list(raw_output):
 # raw_output       LIST-TUPLES          A list of tuples fetched as the result of a SQLite3 command.
 
 # RETURN VALUES
-# Use clean_list() for a 1d list without any empty items ('').
-# Use clean_2d_list() for a 2d list without any empty sub_lists--but sub_lists may contain ''.
-# Use deep_clean_list() for a 2d list without any empty sub_lists--sub_lists will NOT contain ''.
+# clean_list() returns a 1d list not containing ''.
+# clean_2d_list() returns a 2d list not containing [] (though sub-lists may contain '').
+# deep_clean_list() returns a 2d list not containing [] AND its sub-lists will not contain ''.
 
 
 def clean_list(raw_output):
@@ -216,9 +216,9 @@ def deep_clean_list(raw_output):
 # lst(_2d)      LIST-STRINGS or LIST-LIST-STRINGS       The list to remove empty entries from.
 
 # RETURN VALUES
-# Use rm_empty() to remove '' from 1d lists.
-# Use rm_empty_lists() to remove [] from 2d lists.
-# Use deep_rm_empty() to remove [] from 2d lists AND remove '' from each sub_list.
+# rm_empty() returns a 1d list not containing ''.
+# rm_empty_lists() returns a 2d list not containing [] (though sub-lists may contain '').
+# deep_rm_empty() returns a 2d list not containing [] AND its sub-lists will not contain ''.
 
 
 def rm_empty(lst):
@@ -279,9 +279,9 @@ def unique_only(lst):
 # vals          TUPLE           An OPTIONAL tuple of values that are filtered (in case of SQL injection), then added to the command.
 
 # RETURN VALUES
-# Use sqlite() for commands that return nothing.
-# Use sqlite_fetchone() if you are looking for one piece of data from the dataset.
-# Use sqlite_fetchall() to run commands that return a list of tuples (a lot of data).
+# sqlite() returns nothing.
+# sqlite_fetchone() returns one piece of data from the dataset as a result of the given Sqlite command.
+# sqlite_fetchall() returns a list of tuples (a lot of data) as a result of the given Sqlite command.
 
 
 def sqlite(command, vals=()):
