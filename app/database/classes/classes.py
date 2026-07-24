@@ -194,7 +194,28 @@ def ban_member(class_id, email, purge_posts=False):
 
 
 
-#---------[classes-helpers]---------#
+#=====================================================[TABLE-HELPERS]=====================================================#
+
+
+
+                                            #---------[accessors]---------#
+
+
+# PURPOSE
+# These helper functions serve to access data from the 'classes' table.
+# They correspond to more general functions in tables.py--these are basically wrappers.
+
+# PARAMETERS
+# class_id      STRING          The id corresponding to the entry (row) containing data we want to access.
+# field_name    STRING          The name of the field (column) containing the data of interest to us.
+# col_name      STRING          The name of the entire column we are getting from the table.
+
+# RETURN VALUES
+# get_classes_field() returns the first piece of data from 'users' that matches the criteria.
+# get_classes_field_list() returns a list of all data from 'users' that matches the criteria.
+# get_classes_row() returns the first row from 'users' that matches the criteria, formatted as a list.
+# get_classes_row_list() returns a list of all rows from 'users' that match the criteria, formatted as a 2d list.
+# get_classes_col() returns data from an entire column of 'users' formatted as a list.
 
 
 def get_classes_field(class_id, field_name):
@@ -202,24 +223,40 @@ def get_classes_field(class_id, field_name):
 
 def get_classes_field_list(class_id, field_name):
     return tables.get_field_list('classes', 'class_id', class_id, field_name)
-    
 
 def get_classes_row(class_id):
     return tables.get_row('classes', 'class_id', class_id)
 
 def get_classes_row_list(class_id):
     return tables.get_row_list('classes', 'class_id', class_id)
-    
 
 def get_classes_col(col_name):
     return tables.get_col('classes', col_name)
-    
+
+
+
+
+                                            #---------[modifiers]---------#
+
+
+# PURPOSE
+# These helper functions serve to modify data in the 'classes' table.
+# They correspond to more general functions in tables.py--these are basically wrappers.
+
+# PARAMETERS
+# class_id      STRING                          The id corresponding to the entry (row) containing data we want to modify.
+# col_name      STRING                          The name of the field (column) containing data we want to modify.
+# value(s)      STRING or LIST-STRING           The new data we want to put in the table (add or update).
+
+# RETURN VALUES
+# None of these functions return anything.
+
 
 def add_classes_row(values):
     add_row('classes', values)
 
-def update_classes_row(class_id, col_name, col_val):
-    update_row('classes', 'class_id', class_id, col_name, col_val)
+def update_classes_row(class_id, col_name, value):
+    update_row('classes', 'class_id', class_id, col_name, value)
 
 def delete_classes_row(class_id):
     tables.delete_row('classes', 'class_id', class_id)
