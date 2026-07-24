@@ -5,92 +5,13 @@ import tables, helpers, classes, posts
 
 
 
-#==================================================[TABLE-HELPERS]==================================================#
-
-#---------[accessors]---------#
+#====================================================[ACCOUNTS]====================================================#
 
 
-# returns a list of emails
 def get_all_users():
     data = tables.get_col("users", "email")
     return data
 
-def get_all_dojo():
-    return [user for user in get_all_users() if is_dojo(user)]
-
-def get_all_senseis():
-    return [user for user in get_all_users() if is_sensei(user)]
-
-def get_all_teachers():
-    return [user for user in get_all_users() if is_stuy_teacher(user)]
-
-
-
-def get_user_name(email):
-    if not email:
-        return "Anonymous"
-    return get_users_field(email, 'name')
-
-def get_user_passhash(email):
-    return get_users_field(email, 'password_hash')
-
-def get_user_github(email):
-    return get_users_field(email, 'github')
-
-
-
-# get the classes someone is in
-def get_user_classes(email):
-    user_classes = []
-    classes = classes.get_all_classes()
-    for c in classes:
-        members = classes.get_class_members(c)
-        if email in members:
-            user_classes.append(c)
-    return user_classes
-
-# get the classes someone teaches
-def get_teaching_classes(email):
-    classes = get_user_classes(email)
-    teaches = [c for c in classes if email in classes.get_class_teachers(c)]
-    return teaches
-
-# get the classes someone owns
-def get_owned_classes(email):
-    classes = get_user_classes(email)
-    owned = [c for c in classes if email in classes.get_class_owners(c)]
-    return owned
-
-
-
-def is_dojo(email):
-    dojo = get_users_field(email, 'is_dojo')
-    return dojo == 'yes'
-
-def is_sensei(email):
-    sensei = get_users_field(email, 'is_sensei')
-    return sensei == 'yes'
-
-def is_stuy_teacher(email):
-    teacher = get_users_field(email, 'is_stuy_teacher')
-    return teacher == 'yes'
-
-
-def get_user_data(email):
-    keys = tables.USERS_COLS
-    values = tables.get_row('users', 'email', email)
-    d = helpers.list_to_dict(keys, values)
-    d['classes'] = helpers.make_list(d['classes'])
-    d['unread_posts'] = helpers.make_list(d['unread_posts'])
-    d['pinged_posts'] = helpers.make_list(d['pinged_posts'])
-    return d
-
-
-
-
-#---------[modifiers]---------#
-
-# adds a new user's data to user table
 def add_user(email, password, name, github=''):
     if user_exists(email):
         return 'There is already a user with this email'
@@ -107,6 +28,76 @@ def add_user(email, password, name, github=''):
     add_users_row([email, github, name, password, is_dojo, is_sensei, is_stuy_teacher, classes, unread_posts, pinged_posts])
     return 'success'
 
+def user_exists(email):
+    all_users = get_all_users()
+    for user in all_users:
+        if (user == email):
+            return True
+    return False
+
+def auth(email, password):
+    if not user_exists(email):
+        return False
+    real_pass = get_user_passhash(email)
+    password = password.encode('utf-8')
+    if real_pass != str(hashlib.sha256(password).hexdigest()):
+        return False
+    return True
+
+
+
+
+#====================================================[USER-DATA]====================================================#
+
+
+def get_user_name(email):
+    if not email:
+        return "Anonymous"
+    return get_users_field(email, 'name')
+
+def get_user_passhash(email):
+    return get_users_field(email, 'password_hash')
+
+def get_user_github(email):
+    return get_users_field(email, 'github')
+
+def get_user_data(email):
+    keys = tables.USERS_COLS
+    values = tables.get_row('users', 'email', email)
+    d = helpers.list_to_dict(keys, values)
+    d['classes'] = helpers.make_list(d['classes'])
+    d['unread_posts'] = helpers.make_list(d['unread_posts'])
+    d['pinged_posts'] = helpers.make_list(d['pinged_posts'])
+    return d
+
+
+
+
+#======================================================[ROLES]======================================================#
+
+
+def get_all_dojo():
+    return [user for user in get_all_users() if is_dojo(user)]
+
+def get_all_senseis():
+    return [user for user in get_all_users() if is_sensei(user)]
+
+def get_all_teachers():
+    return [user for user in get_all_users() if is_stuy_teacher(user)]
+
+
+def is_dojo(email):
+    dojo = get_users_field(email, 'is_dojo')
+    return dojo == 'yes'
+
+def is_sensei(email):
+    sensei = get_users_field(email, 'is_sensei')
+    return sensei == 'yes'
+
+def is_stuy_teacher(email):
+    teacher = get_users_field(email, 'is_stuy_teacher')
+    return teacher == 'yes'
+
 
 def add_dojo(email):
     update_users_row(email, 'is_dojo', 'yes')
@@ -118,40 +109,31 @@ def add_sensei(email):
 def add_teacher(email):
     update_users_row(email, 'is_stuy_teacher', 'yes')
 
-def mark_read(email, post_id):
-    pinged_posts = get_pinged_posts(email)
-    unread_posts = get_unread_posts(email)
-    if (post_id in pinged_posts):
-        pinged_posts.remove(post_id)
-        pinged_str = merge_list(pinged_posts)
-        update_users_row(email, 'pinged_posts', pinged_str)
-    if (post_id in unread_posts):
-        unread_posts.remove(post_id)
-        unread_str = merge_list(unread_posts)
-        update_users_row(email, 'unread_posts', unread_str)
 
 
 
-#---------[verification]---------#
+#=====================================================[CLASSES]=====================================================#
 
 
-# returns whether or not a user exists
-def user_exists(email):
-    all_users = get_all_users()
-    for user in all_users:
-        if (user == email):
-            return True
-    return False
+def get_user_classes(email):
+    user_classes = []
+    classes = classes.get_all_classes()
+    for c in classes:
+        members = classes.get_class_members(c)
+        if email in members:
+            user_classes.append(c)
+    return user_classes
 
-# checks if provided password in login attempt matches user password
-def auth(email, password):
-    if not user_exists(email):
-        return False
-    real_pass = get_user_passhash(email)
-    password = password.encode('utf-8')
-    if real_pass != str(hashlib.sha256(password).hexdigest()):
-        return False
-    return True
+def get_teaching_classes(email):
+    classes = get_user_classes(email)
+    teaches = [c for c in classes if email in classes.get_class_teachers(c)]
+    return teaches
+
+def get_owned_classes(email):
+    classes = get_user_classes(email)
+    owned = [c for c in classes if email in classes.get_class_owners(c)]
+    return owned
+
 
 
 
