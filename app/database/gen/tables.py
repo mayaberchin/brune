@@ -40,8 +40,18 @@ FOLLOWUPS_COLS = ['post_id', 'author_id', 'class_id', 'parent_id', 'depth', 'tit
 
 
                                             #---------individual]---------#
-                                            
-                                            
+
+
+# PURPOSE
+# Create individual tables for our database.
+
+# PARAMETERS
+# N/A
+
+# RETURN VALUES
+# N/A
+
+
 # users
 def create_users_table():
     command =  """
@@ -169,6 +179,16 @@ def create_posts_table():
                                             #---------[all]---------#
 
 
+# PURPOSE
+# Create all tables needed for our database at once.
+
+# PARAMETERS
+# N/A
+
+# RETURN VALUES
+# N/A
+
+
 def create_tables():
     create_users_table()
     create_classes_table()
@@ -198,8 +218,8 @@ def create_tables():
 # field             STRING          The name of the field (column) containing the data we want.
 
 # RETURN VALUES
-# Use get_field() to get ONE piece of data from the table.
-# Use get_field_list() to get all data matching the criteria from the table.
+# get_field() returns ONE piece of data from the table.
+# get_field_list() returns all data matching the criteria from the table formatted as a list.
 
 
 def get_field(table, ID_fieldname, ID, field):
@@ -228,8 +248,8 @@ def get_field_list(table, ID_fieldname, ID, field):
 # ID                ANY             Matches the value in the {ID_fieldname} column of an entry (row) containing data we want.
 
 # RETURN VALUES
-# Use get_row() to get ONE row of data (as a list) from the table.
-# Use get_row_list() to get all rows (as a 2d list) matching the criteria from the table.
+# get_row() returns ONE row of data from the table formatted a list.
+# get_row_list() returns all rows matching the criteria from the table as a 2d list.
 
 
 def get_row(table, ID_fieldname, ID):
@@ -279,7 +299,7 @@ def get_col(table, col_name):
 # vals              LIST-ANY        A list of values for each field (column) of the entry (row).
 
 # RETURN VALUES
-# add_row() returns nothing.
+# N/A
 
 
 def add_row(table, vals):
@@ -309,7 +329,7 @@ def add_row(table, vals):
 # item              ANY             The value we want to change the {col_name} field to.
 
 # RETURN VALUES
-# update_row() returns nothing.
+# N/A
 
 
 def update_row(table, ID_fieldname, id, col_name, item):
@@ -334,7 +354,7 @@ def update_row(table, ID_fieldname, id, col_name, item):
 # ID                ANY             Matches the value in the {ID_fieldname} column of an entry (row) that we want to delete.
 
 # RETURN VALUES
-# delete_row() returns nothing.
+# N/A
 
 
 def delete_row(table, ID_fieldname, id):
