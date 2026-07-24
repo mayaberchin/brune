@@ -274,8 +274,8 @@ def get_posts_col(col_name):
 def add_posts_row(values):
     add_row('posts', values)
 
-def update_posts_row(post_id, col_name, col_val):
-    update_row('posts', 'post_id', post_id, col_name, col_val)
+def update_posts_row(post_id, col_name, value):
+    update_row('posts', 'post_id', post_id, col_name, value)
 
 def delete_posts_row(post_id):
     tables.delete_row('posts', 'post_id', post_id)
