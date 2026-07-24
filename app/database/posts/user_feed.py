@@ -1,3 +1,15 @@
+def mark_read(email, post_id):
+    pinged_posts = get_pinged_posts(email)
+    unread_posts = get_unread_posts(email)
+    if (post_id in pinged_posts):
+        pinged_posts.remove(post_id)
+        pinged_str = merge_list(pinged_posts)
+        update_users_row(email, 'pinged_posts', pinged_str)
+    if (post_id in unread_posts):
+        unread_posts.remove(post_id)
+        unread_str = merge_list(unread_posts)
+        update_users_row(email, 'unread_posts', unread_str)
+
 def get_pinged_posts(email):
     pinged_posts_str = get_users_field(email, 'pinged_posts')
     pinged_posts = helpers.make_list(pinged_posts_str)
