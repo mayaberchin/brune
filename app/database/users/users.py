@@ -3,6 +3,10 @@ from datetime import datetime               # for dates/times
 
 import tables, helpers, classes, posts
 
+
+
+#==================================================[TABLE-HELPERS]==================================================#
+
 #---------[accessors]---------#
 
 
@@ -58,16 +62,6 @@ def get_owned_classes(email):
     return owned
 
 
-def get_user_data(email):
-    keys = tables.USERS_COLS
-    values = tables.get_row('users', 'email', email)
-    d = helpers.list_to_dict(keys, values)
-    d['classes'] = helpers.make_list(d['classes'])
-    d['unread_posts'] = helpers.make_list(d['unread_posts'])
-    d['pinged_posts'] = helpers.make_list(d['pinged_posts'])
-    return d
-
-
 
 def is_dojo(email):
     dojo = get_users_field(email, 'is_dojo')
@@ -80,6 +74,16 @@ def is_sensei(email):
 def is_stuy_teacher(email):
     teacher = get_users_field(email, 'is_stuy_teacher')
     return teacher == 'yes'
+
+
+def get_user_data(email):
+    keys = tables.USERS_COLS
+    values = tables.get_row('users', 'email', email)
+    d = helpers.list_to_dict(keys, values)
+    d['classes'] = helpers.make_list(d['classes'])
+    d['unread_posts'] = helpers.make_list(d['unread_posts'])
+    d['pinged_posts'] = helpers.make_list(d['pinged_posts'])
+    return d
 
 
 
@@ -151,11 +155,11 @@ def auth(email, password):
 
 
 
-#=====================================================[TABLE-HELPERS]=====================================================#
+#==================================================[TABLE-HELPERS]==================================================#
 
 
 
-                                            #---------[accessors]---------#
+                                          #---------[accessors]---------#
 
 
 # PURPOSE
@@ -193,7 +197,7 @@ def get_users_col(col_name):
 
 
 
-                                            #---------[modifiers]---------#
+                                          #---------[modifiers]---------#
 
 
 # PURPOSE
