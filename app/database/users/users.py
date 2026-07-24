@@ -11,6 +11,16 @@ import tables, helpers, classes, posts
                                             #---------[list]---------#
 
 
+# PURPOSE
+# List all the users in the database.
+
+# PARAMETERS
+# N/A
+
+# RETURN VALUES
+# get_all_users() returns a list of emails (strings).
+
+
 def get_all_users():
     data = tables.get_col("users", "email")
     return data
@@ -21,26 +31,49 @@ def get_all_users():
                                             #---------[add]---------#
 
 
+# PURPOSE
+# Add a user to the 'users' table in the database.
+
+# PARAMETERS
+# email         STRING          The user's given email address.
+# password      STRING          The user's chosen password before it is hashed.
+# name          STRING          The user's display name.
+# github        STRING          OPTIONAL--the user's github handle.
+
+# RETURN VALUES
+# N/A
+
+
 def add_user(email, password, name, github=''):
     if user_exists(email):
         return 'There is already a user with this email'
     if password == "":
         return 'Password cannot be empty'
-    password = password.encode('utf-8')
-    password = str(hashlib.sha256(password).hexdigest())
+    pass_hash = password.encode('utf-8')
+    pass_hash = str(hashlib.sha256(pass_hash).hexdigest())
     is_dojo = 'no'
     is_sensei = 'no'
     is_stuy_teacher = 'no'
     classes = ''
     unread_posts = ''
     pinged_posts = ''
-    add_users_row([email, github, name, password, is_dojo, is_sensei, is_stuy_teacher, classes, unread_posts, pinged_posts])
+    add_users_row([email, github, name, pass_hash, is_dojo, is_sensei, is_stuy_teacher, classes, unread_posts, pinged_posts])
     return 'success'
 
 
 
 
                                           #---------[verify]---------#
+
+
+# PURPOSE
+# Check if an email corresponds to an existing user in the 'users' table.
+
+# PARAMETERS
+# email         STRING          The user's given email address.
+
+# RETURN VALUES
+# user_exists() returns True if the user's email is found in the database and False otherwise.
 
 
 def user_exists(email):
@@ -56,12 +89,23 @@ def user_exists(email):
                                        #---------[authenticate]---------#
 
 
+# PURPOSE
+# Check if a given password's hash matches the user's real password hash.
+
+# PARAMETERS
+# email         STRING          The user's given email address.
+# password      STRING          The user's password before it is hashed.
+
+# RETURN VALUES
+# auth() returns True if the given password's hash matches the one in the database and False otherwise.
+
+
 def auth(email, password):
     if not user_exists(email):
         return False
-    real_pass = get_user_passhash(email)
-    password = password.encode('utf-8')
-    if real_pass != str(hashlib.sha256(password).hexdigest()):
+    real_hash = get_user_passhash(email)
+    pass_hash = pass_hash.encode('utf-8')
+    if real_hash != str(hashlib.sha256(pass_hash).hexdigest()):
         return False
     return True
 
@@ -72,6 +116,17 @@ def auth(email, password):
 
 
                                            #---------[accessors]---------#
+
+
+# PURPOSE
+# Get data about a user from the 'users' table.
+
+# PARAMETERS
+# email         STRING          The user's given email address.
+
+# RETURN VALUES
+# get_user_name(), get_user_passhash(), and get_user_github() each return a string.
+# get_user_data() returns a dictionary of data where the keys correspond to the columns of the 'users' table.
 
 
 def get_user_name(email):
@@ -100,16 +155,27 @@ def get_user_data(email):
                                            #---------[modifiers]---------#
 
 
-def change_name(email, new_name):
-    update_users_row(email, 'name', new_name)
+# PURPOSE
+# Change or update data in the 'users' table.
 
-def change_password(email, new_pass):
-    pass_hash = new_pass.encode('utf-8')
+# PARAMETERS
+# email         STRING          The user's given email address.
+# value         STRING          The new value to put into the table.
+
+# RETURN VALUES
+# N/A
+
+
+def change_name(email, value):
+    update_users_row(email, 'name', value)
+
+def change_password(email, value):
+    pass_hash = value.encode('utf-8')
     pass_hash = str(hashlib.sha256(pass_hash).hexdigest())
     update_users_row(email, 'password_hash', pass_hash)
 
-def change_github(email, new_git):
-    update_users_row(email, 'github', new_git)
+def change_github(email, value):
+    update_users_row(email, 'github', new)
 
 
 
@@ -118,6 +184,16 @@ def change_github(email, new_git):
 
 
                                              #---------[list]---------#
+
+
+# PURPOSE
+# List all the users that have a particular role.
+
+# PARAMETERS
+# N/A
+
+# RETURN VALUES
+# get_all_dojo(), get_all_senseis(), and get_all_teachers() all return a list of emails (strings).
 
 
 def get_all_dojo():
@@ -133,6 +209,16 @@ def get_all_teachers():
 
 
                                          #---------[check-role]---------#
+
+
+# PURPOSE
+# Check if a given user has a specified role.
+
+# PARAMETERS
+# email         STRING          The user's given email address.
+
+# RETURN VALUES
+# is_dojo(), is_sensei(), and is_stuy_teacher() each return True if the user has the role and False otherwise.
 
 
 def is_dojo(email):
@@ -152,6 +238,16 @@ def is_stuy_teacher(email):
                                          #---------[add-role]---------#
 
 
+# PURPOSE
+# Give a user a role.
+
+# PARAMETERS
+# email         STRING          The user's given email address.
+
+# RETURN VALUES
+# N/A
+
+
 def add_dojo(email):
     update_users_row(email, 'is_dojo', 'yes')
 
@@ -169,6 +265,16 @@ def add_teacher(email):
 
 
                                              #---------[list]---------#
+
+
+# PURPOSE
+# List all the classes a user is in, is teaching, or owns.
+
+# PARAMETERS
+# email         STRING          The user's given email address.
+
+# RETURN VALUES
+# get_user_classes(), get_teaching_classes(), and get_owned_classes() all return a list of class_ids (strings).
 
 
 def get_user_classes(email):
@@ -248,7 +354,7 @@ def get_users_col(col_name):
 # value(s)      STRING or LIST-STRING           The new data we want to put in the table (add or update).
 
 # RETURN VALUES
-# None of these functions return anything.
+# N/A
 
 
 def add_users_row(values):
