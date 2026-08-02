@@ -84,7 +84,8 @@ def authorized():
         return redirect(url_for(home))
     except Exception as e:
         flash("Authorization error: " + str(e))
-        return redirect(url_for('index'))
+        return redirect(url_for(index))
+
 
 #main
 @app.route('/home', methods=['GET', 'POST'])
