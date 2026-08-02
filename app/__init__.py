@@ -70,7 +70,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user' not in session:
-            return redirect(url_for('login'))
+            return redirect(url_for('index'))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -91,9 +91,22 @@ def authorized():
         user_info = google.get('userinfo').json()
         session['user'] = user_info
         session['email'] = user_info['email']
+        if not data.user_exists(email):
+            # check if this user should be registered
+            teacher_whitelist = []
+            if email[-8:] == 'stuy.edu' or email in teacher_whitelist:
+                register_user()
+            else:
+                return 'You are not signed in with a stuy.edu account, nor is your email on our whitelist.'
         return redirect(url_for('home'))
     except Exception as e:
         return "Authorization error: " + str(e)
+
+def register_user():
+    password = 'a' #CHANGE THIS when we delete passwd from database
+    email = session['email']
+    name = session['user']['name']
+    data.add_user(email, password, name)
 
 @app.route('/logout')
 def logout():
