@@ -97,6 +97,10 @@ def logout():
 def home():
     if 'email' not in session:
         return redirect(url_for('login'))
+    # TEMP
+    display_skills = True
+    if display_skills:
+        return redirect(url_for('skills'))
     # return render_template("homepage.html")
     # get homepage posts
     homepage_post_ids = data.get_homepage_posts(session['email'], 20)
@@ -142,6 +146,20 @@ def home():
     )
 
 
+# TEMP
+@app.route('/skills', methods=['GET', 'POST'])
+def skills():
+    fields = ['entry','common_sense','reading_comp','hw','timeliness','participation','comms','hardware','terminal','racket','prefix_notation',
+              'logic','conditionals','variables','functions','return_types','recursion','loops','comments','turtles','patches','shapes','programs','interface','webpage']
+    entries = [['overall',3.57,3.14,3.00,2.57,3.29,4.00,3.00,3.20,3.00,4.00,3.86,3.40,'-','-','-','-','-','-','-','-','-','-','-','-'],
+              ['10-19-26m',4,3,4,3,4,4,'-','-',4,'-',4,4,'-','-','-','-','-','-','-','-','-','-','-','-'],
+              ['10-12-26m',4,3,2,1,4,4,'-',4,4,'-',4,4,'-','-','-','-','-','-','-','-','-','-','-','-'],
+              ['10-05-26m',4,2,1,0,3,4,'-',4,3,'-',4,4,'-','-','-','-','-','-','-','-','-','-','-','-'],
+              ['09-28-26m',4,4,3,3,4,4,'-',3,3,'-',4,3,'-','-','-','-','-','-','-','-','-','-','-','-'],
+              ['09-21-26m',3,4,4,3,4,4,4,3,2,4,4,2,'-','-','-','-','-','-','-','-','-','-','-','-','-'],
+              ['09-14-26m',3,3,3,4,2,4,4,2,2,4,4,'-','-','-','-','-','-','-','-','-','-','-','-','-'],
+              ['09-07-26m',3,3,4,4,2,4,1,'-','-','-',3,'-','-','-','-','-','-','-','-','-','-','-','-','-']]
+    return render_template('skills.html', fields=fields, entries=entries)
 
 
 
