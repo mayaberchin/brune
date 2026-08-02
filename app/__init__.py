@@ -66,7 +66,7 @@ def index():
 
 @app.route('/login')
 def login():
-    redirect_uri = url_for('authorized', _external=True)
+    redirect_uri = url_for(authorized, _external=True)
     return google.authorize_redirect(redirect_uri)
 
 @app.route('/authorized')
@@ -80,24 +80,24 @@ def authorized():
         return redirect(url_for(home))
     except Exception as e:
         flash("Authorization error: " + str(e))
-        return redirect(url_for('index'))
+        return redirect(url_for(index))
 
 @app.route('/logout')
 def logout():
     session.pop('email', None)
     session.pop('user', None)
-    return redirect(url_for('index'))
+    return redirect(url_for(index))
 
 
 #main
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     if 'email' not in session:
-        return redirect(url_for('index'))
+        return redirect(url_for(index))
     # TEMP
     display_skills = True
     if display_skills:
-        return redirect(url_for('skills'))
+        return redirect(url_for(skills))
     # return render_template("homepage.html")
     # get homepage posts
     homepage_post_ids = data.get_homepage_posts(session['email'], 20)
