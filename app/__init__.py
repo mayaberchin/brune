@@ -99,7 +99,7 @@ def authorized():
 
 def register_user():
     whitelist = ['tm@stuycs.org', 'mayaberchin@gmail.com']
-    if session['email'][-8:] == 'stuy.edu' or session['email'] in teacher_whitelist:
+    if session['email'][-8:] == 'stuy.edu' or session['email'] in whitelist:
         password = 'a' #CHANGE THIS when we delete passwd from database
         email = session['email']
         name = session['user']['name']
