@@ -80,13 +80,17 @@ def authorized():
         return redirect(url_for(home))
     except Exception as e:
         flash("Authorization error: " + str(e))
-        return redirect(url_for('index'))
+        return redirect(url_for('err'))
+
+@app.route('/err')
+def err():
+    return 'ruh roh, error'
 
 @app.route('/logout')
 def logout():
     session.pop('email', None)
     session.pop('user', None)
-    return redirect(url_for(index))
+    return redirect(url_for('index'))
 
 
 #main
