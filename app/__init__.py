@@ -61,7 +61,8 @@ POST_PAGE_INFO = {
 
 @app.route('/')
 def index():
-    return 'Welcome to Flask Google OAuth2 Example! <a href="/login">Login with Google</a>'
+    # return 'Welcome to Flask Google OAuth2 Example! <a href="/login">Login with Google</a>'
+    return render_template("login-new.html")
 
 @app.route('/login')
 def login():
