@@ -2,7 +2,7 @@ import os
 import uuid
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-from flask_oauthlib.client import OAuth
+from authlib.integrations.flask_client import OAuth
 from werkzeug.utils import secure_filename
 # https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
 import data
@@ -15,19 +15,15 @@ app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "static", "uploads")
 
 oauth = OAuth(app)
 
-# define Google as our OAuth provider
-google = oauth.remote_app(
+google = oauth.register(
     'google',
-    consumer_key='YOUR_CLIENT_ID',
-    consumer_secret='YOUR_CLIENT_SECRET',
-    request_token_params={
-        'scope': 'email',
-    },
-    base_url='https://www.googleapis.com/oauth2/v1/',
-    request_token_url=None,
-    access_token_method='POST',
-    access_token_url='https://accounts.google.com/o/oauth2/token',
+    client_id='168842329444',
+    client_secret='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B',
+    access_token_url='https://oauth2.googleapis.com/token',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
+    client_kwargs={
+        'scope': 'openid email profile',
+    },
 )
 
 
@@ -69,26 +65,26 @@ def index():
 
 @app.route('/login')
 def login():
-    return google.authorize(callback=url_for('authorized', _external=True))
+    redirect_uri = url_for('authorize', _external=True)
+    return google.authorize_redirect(redirect_uri)
 
 @app.route('/logout')
 def logout():
     session.pop('email', None)
-    session.pop('google_token', None)
+    session.pop('user', None)
     return redirect(url_for('index'))
 
 @app.route('/authorized')
 def authorized():
-    response = google.authorized_response()
-    if response is None or response.get('access_token') is None:
-        return 'Access denied: reason={} error={}'.format(
-            request.args['error_reason'],
-            request.args['error_description']
-        )
-    session['google_token'] = (response['access_token'], '')
-    user_info = google.get('userinfo')
-    session['email'] = user_info.data['email']
-    return redirect(url_for(home))
+    try:
+        token = google.authorize_access_token()
+        user_info = google.parse_id_token(token)
+        session['user'] = user_info
+        session['email'] = user_info['email']
+        return redirect(url_for(home))
+    except Exception as e:
+        flash("Authorization error: " + str(e))
+        return redirect(url_for('index'))
 
 #main
 @app.route('/home', methods=['GET', 'POST'])
