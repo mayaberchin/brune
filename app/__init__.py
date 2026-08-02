@@ -92,21 +92,20 @@ def authorized():
         session['user'] = user_info
         session['email'] = user_info['email']
         if not data.user_exists(email):
-            # check if this user should be registered
-            teacher_whitelist = []
-            if email[-8:] == 'stuy.edu' or email in teacher_whitelist:
-                register_user()
-            else:
-                return 'You are not signed in with a stuy.edu account, nor is your email on our whitelist.'
+            return register_user()
         return redirect(url_for('home'))
     except Exception as e:
         return "Authorization error: " + str(e)
 
 def register_user():
-    password = 'a' #CHANGE THIS when we delete passwd from database
-    email = session['email']
-    name = session['user']['name']
-    data.add_user(email, password, name)
+    teacher_whitelist = []
+    if session['email'][-8:] == 'stuy.edu' or session['email'] in teacher_whitelist:
+        password = 'a' #CHANGE THIS when we delete passwd from database
+        email = session['email']
+        name = session['user']['name']
+        data.add_user(email, password, name)
+        return redirect(url_for('home'))
+    return 'You are not signed in with a stuy.edu account, nor is your email on our whitelist. <a href="/logout">Logout</a>'
 
 @app.route('/logout')
 def logout():
