@@ -73,10 +73,10 @@ def login():
 def authorized():
     try:
         token = google.authorize_access_token()
-        user_info = google.parse_id_token(token)
+        #user_info = google.parse_id_token(token)
         #user_info = google.get('userinfo').json()
-        session['user'] = user_info
-        session['email'] = user_info['email']
+        #session['user'] = user_info
+        #session['email'] = user_info['email']
         return redirect(url_for(home))
     except Exception as e:
         flash("Authorization error: " + str(e))
@@ -96,8 +96,8 @@ def logout():
 #main
 @app.route('/home', methods=['GET', 'POST'])
 def home():
-    if 'email' not in session:
-        return redirect(url_for(index))
+    #if 'email' not in session:
+    #    return redirect(url_for(index))
     # TEMP
     display_skills = True
     if display_skills:
