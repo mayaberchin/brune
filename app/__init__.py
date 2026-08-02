@@ -4,26 +4,32 @@ import uuid
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from authlib.integrations.flask_client import OAuth
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
 # https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
 import data
 
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = "hYMfVrTQplkRPJ41TjRf9d9x8pKOrdtArWKbOz2pvzgH9DFKLAbjImyQK297dnx8Xl3KBAalEw9EoSZ7Sn4IW9FONwkEbH5c71VGAOSeJyvvhKC0RiQtvcYOIR2M7zKn"
+app.secret_key = os.getenv('APP_SECRET')
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1000 * 1000
 app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "static", "uploads")
-
 
 oauth = OAuth(app)
 
 google = oauth.register(
     'google',
-    client_id='168842329444-qg05afkt6pb16lohc870kdfjo1jfht3r.apps.googleusercontent.com',
-    client_secret='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B',
+    client_id=os.getenv('CLIENT_ID'),
+    client_secret=os.getenv('CLIENT_SECRET'),
     access_token_url='https://oauth2.googleapis.com/token',
+    access_token_params=None,
     authorize_url='https://accounts.google.com/o/oauth2/auth',
+    authorize_params=None,
+    api_base_url='https://www.googleapis.com/oauth2/v1/',
     client_kwargs={
         'scope': 'openid email profile',
     },
+    server_metadata_url= 'https://accounts.google.com/.well-known/openid-configuration'
 )
 
 
@@ -73,26 +79,18 @@ def login():
 def authorized():
     try:
         token = google.authorize_access_token()
-        user_info = google.parse_id_token(token)
-        #user_info = google.get('userinfo').json()
+        user_info = google.get('userinfo').json()
         session['user'] = user_info
         session['email'] = user_info['email']
-        return "hooray"
-        #return redirect(url_for(home))
+        return redirect(url_for('home'))
     except Exception as e:
-        flash("Authorization error: " + str(e))
-        return redirect(url_for('err'))
-
-@app.route('/err')
-def err():
-    return 'ruh roh, error'
+        return "Authorization error: " + str(e)
 
 @app.route('/logout')
 def logout():
     session.pop('email', None)
     session.pop('user', None)
     return redirect(url_for('index'))
-
 
 #main
 @app.route('/home', methods=['GET', 'POST'])
@@ -102,7 +100,7 @@ def home():
     # TEMP
     display_skills = True
     if display_skills:
-        return redirect(url_for(skills))
+        return redirect(url_for('skills'))
     # return render_template("homepage.html")
     # get homepage posts
     homepage_post_ids = data.get_homepage_posts(session['email'], 20)
@@ -161,7 +159,7 @@ def skills():
               ['09-21-26m',3,4,4,3,4,4,4,3,2,4,4,2,'-','-','-','-','-','-','-','-','-','-','-','-','-'],
               ['09-14-26m',3,3,3,4,2,4,4,2,2,4,4,'-','-','-','-','-','-','-','-','-','-','-','-','-'],
               ['09-07-26m',3,3,4,4,2,4,1,'-','-','-',3,'-','-','-','-','-','-','-','-','-','-','-','-','-']]
-    return render_template('skills.html', fields=fields, entries=entries)
+    return render_template('skills.html', name=session['user']['name'], fields=fields, entries=entries)
 
 
 
