@@ -91,7 +91,7 @@ def authorized():
         user_info = google.get('userinfo').json()
         session['user'] = user_info
         session['email'] = user_info['email']
-        if not data.user_exists(email):
+        if not data.user_exists(session['email']):
             return register_user()
         return redirect(url_for('home'))
     except Exception as e:
