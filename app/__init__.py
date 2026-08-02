@@ -62,12 +62,25 @@ POST_PAGE_INFO = {
 @app.route('/')
 def index():
     # return 'Welcome to Flask Google OAuth2 Example! <a href="/login">Login with Google</a>'
-    return render_template("login-new.html")
+    return render_template('login-new.html')
 
 @app.route('/login')
 def login():
     redirect_uri = url_for('authorized', _external=True)
     return google.authorize_redirect(redirect_uri)
+
+@app.route('/authorized')
+def authorized():
+    try:
+        token = google.authorize_access_token()
+        #user_info = google.parse_id_token(token)
+        user_info = google.get('userinfo').json()
+        session['user'] = user_info
+        session['email'] = user_info['email']
+        return redirect(url_for(home))
+    except Exception as e:
+        flash("Authorization error: " + str(e))
+        return redirect(url_for('index'))
 
 @app.route('/logout')
 def logout():
@@ -75,24 +88,12 @@ def logout():
     session.pop('user', None)
     return redirect(url_for('index'))
 
-@app.route('/authorized')
-def authorized():
-    try:
-        token = google.authorize_access_token()
-        user_info = google.parse_id_token(token)
-        session['user'] = user_info
-        session['email'] = user_info['email']
-        return redirect(url_for(home))
-    except Exception as e:
-        flash("Authorization error: " + str(e))
-        return redirect(url_for(index))
-
 
 #main
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     if 'email' not in session:
-        return redirect(url_for('login'))
+        return redirect(url_for('index'))
     # TEMP
     display_skills = True
     if display_skills:
