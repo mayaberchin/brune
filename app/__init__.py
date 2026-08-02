@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from authlib.integrations.flask_client import OAuth
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
+from functools import wraps
 # https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
 import data
 
@@ -65,6 +66,14 @@ POST_PAGE_INFO = {
     },
 }
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/')
 def index():
     # return 'Welcome to Flask Google OAuth2 Example! <a href="/login">Login with Google</a>'
@@ -94,6 +103,7 @@ def logout():
 
 #main
 @app.route('/home', methods=['GET', 'POST'])
+@login_required
 def home():
     #if 'email' not in session:
     #    return redirect(url_for(index))
@@ -148,6 +158,7 @@ def home():
 
 # TEMP
 @app.route('/skills', methods=['GET', 'POST'])
+@login_required
 def skills():
     fields = ['entry','common_sense','reading_comp','hw','timeliness','participation','comms','hardware','terminal','racket','prefix_notation',
               'logic','conditionals','variables','functions','return_types','recursion','loops','comments','turtles','patches','shapes','programs','interface','webpage']
@@ -166,9 +177,6 @@ def skills():
 # ------------------ POST PAGES ------------------
 
 def render_post_page(page):
-    if 'email' not in session:
-        return redirect(url_for('login'))
-
     page_info = POST_PAGE_INFO[page]
     can_post = page != "announcements" or data.is_stuy_teacher(session["email"])
     return render_template(
@@ -182,6 +190,7 @@ def render_post_page(page):
     )
 
 @app.route("/announcements")
+@login_required
 def announcements():
     if 'email' not in session:
         return redirect(url_for('login'))
@@ -190,44 +199,38 @@ def announcements():
 
 
 @app.route("/pinned")
+@login_required
 def pinned():
-    if 'email' not in session:
-        return redirect(url_for('login'))
     return render_template("pinned.html")
     #return render_post_page("pinned")
 
 
 @app.route("/questions")
+@login_required
 def questions():
-    if 'email' not in session:
-        return redirect(url_for('login'))
     return render_post_page("questions")
 
 
 @app.route("/chat")
+@login_required
 def chat():
-    if 'email' not in session:
-        return redirect(url_for('login'))
     return render_post_page("chat")
 
 
 @app.route("/notes_resources")
+@login_required
 def notes_rsrc():
-    if 'email' not in session:
-        return redirect(url_for('login'))
     return render_post_page("notes_resources")
 
 
 @app.route("/account")
+@login_required
 def account():
-    if 'email' not in session:
-        return redirect(url_for('login'))
     return render_template("account.html")
 
 @app.route("/settings")
+@login_required
 def settings():
-    if 'email' not in session:
-        return redirect(url_for('login'))
     return render_template("settings.html")
 
 # ------------------ REACT POST API ROUTES ------------------
