@@ -2,15 +2,36 @@ import os
 import uuid
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
-from validate_email import validate_email
+from flask_oauthlib.client import OAuth
 from werkzeug.utils import secure_filename
 # https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file
 import data
 
 app = Flask(__name__)
-app.secret_key = "vsecretandsecurekeyforstuyoverflow"
+app.secret_key = "hYMfVrTQplkRPJ41TjRf9d9x8pKOrdtArWKbOz2pvzgH9DFKLAbjImyQK297dnx8Xl3KBAalEw9EoSZ7Sn4IW9FONwkEbH5c71VGAOSeJyvvhKC0RiQtvcYOIR2M7zKn"
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1000 * 1000
 app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "static", "uploads")
+
+
+oauth = OAuth(app)
+
+# define Google as our OAuth provider
+google = oauth.remote_app(
+    'google',
+    consumer_key='YOUR_CLIENT_ID',
+    consumer_secret='YOUR_CLIENT_SECRET',
+    request_token_params={
+        'scope': 'email',
+    },
+    base_url='https://www.googleapis.com/oauth2/v1/',
+    request_token_url=None,
+    access_token_method='POST',
+    access_token_url='https://accounts.google.com/o/oauth2/token',
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+)
+
+
+
 data.create_tables()
 
 ALLOWED_UPLOADS = {"png", "jpg", "jpeg", "gif", "pdf", "txt", "doc", "docx"}
@@ -42,55 +63,32 @@ POST_PAGE_INFO = {
     },
 }
 
-#login
-@app.route("/", methods=["GET", "POST"])
+@app.route('/')
+def index():
+    return 'Welcome to Flask Google OAuth2 Example! <a href="/login">Login with Google</a>'
+
+@app.route('/login')
 def login():
-    if 'email' in session:
-        return redirect(url_for('home'))
-    if request.method == 'POST':
-        email = request.form.get("email")
-        password = request.form.get("password")
-        if data.auth(email, password):
-            session['email'] = email
-            return redirect(url_for('home'))
-        else:
-            flash("Email or password incorrect. Try again.")
-            return redirect(url_for('login'))
-    return render_template('login.html')
+    return google.authorize(callback=url_for('authorized', _external=True))
 
-
-#register
-@app.route("/register", methods = ['GET', "POST"])
-def set_user():
-    if 'username' in session:
-        return redirect(url_for('home'))
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        is_dojo = False
-        if 'is_dojo' in request.form and request.form.get('is_dojo') == 'yes':
-            is_dojo = True
-        is_valid = True
-        is_valid = validate_email(email_address=email, check_format=True, check_smtp=True, smtp_timeout=10, dns_timeout=10, check_blacklist=True)
-        if is_valid == None or not is_valid:
-            flash("Please enter a valid email.")
-            return redirect(url_for('set_user'))
-        if data.user_exists(email):
-            flash("User already exists!")
-            return redirect(url_for('set_user'))
-        github = request.form.get('github')
-        name = request.form.get('name')
-        data.add_user(email, password, name, github)
-        if (is_dojo):
-            data.add_dojo(email)
-        session['email'] = email;
-        return redirect(url_for('home'))
-    return render_template('register.html')
-
-@app.route("/logout")
+@app.route('/logout')
 def logout():
     session.pop('email', None)
-    return redirect(url_for('login'))
+    session.pop('google_token', None)
+    return redirect(url_for('index'))
+
+@app.route('/authorized')
+def authorized():
+    response = google.authorized_response()
+    if response is None or response.get('access_token') is None:
+        return 'Access denied: reason={} error={}'.format(
+            request.args['error_reason'],
+            request.args['error_description']
+        )
+    session['google_token'] = (response['access_token'], '')
+    user_info = google.get('userinfo')
+    session['email'] = user_info.data['email']
+    return redirect(url_for(home))
 
 #main
 @app.route('/home', methods=['GET', 'POST'])
