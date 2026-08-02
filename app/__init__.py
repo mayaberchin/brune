@@ -18,7 +18,7 @@ oauth = OAuth(app)
 google = oauth.register(
     'google',
     client_id='168842329444-qg05afkt6pb16lohc870kdfjo1jfht3r.apps.googleusercontent.com',
-    client_secret='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B',
+    client_secret='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',
     access_token_url='https://oauth2.googleapis.com/token',
     authorize_url='https://accounts.google.com/o/oauth2/auth',
     client_kwargs={
