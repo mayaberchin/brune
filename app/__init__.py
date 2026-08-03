@@ -122,7 +122,6 @@ def home():
     display_skills = True
     if display_skills:
         return redirect(url_for('skills'))
-    # return render_template("homepage.html")
     # get homepage posts
     homepage_post_ids = data.get_homepage_posts(session['email'], 20)
     homepage_posts = []
@@ -130,7 +129,6 @@ def home():
         post_data = data.get_post_data(post_id)
         homepage_posts.append(post_data)
     homepage_posts.reverse()
-
     # get unresolved posts
     unresolved_post_ids = data.get_all_unresolved()
     unresolved_posts = []
@@ -138,8 +136,6 @@ def home():
         post_data = data.get_post_data(post_id)
         unresolved_posts.append(post_data)
     unresolved_posts.reverse()
-
-
     class_ids = data.get_user_classes(session['email'])
     classes = []
     instructors_posts = []
@@ -152,7 +148,6 @@ def home():
         print("2")
         instructors_posts.append(teacher_post_data)
         print("3")
-
     return render_template(
         "homepage.html",
         homepage_posts=homepage_posts,
@@ -180,7 +175,6 @@ def skills():
     return render_template('skills.html', name=session['user']['name'], skills=skills, entries=entries)
 
 
-
 # ------------------ POST PAGES ------------------
 
 def render_post_page(page):
@@ -199,8 +193,6 @@ def render_post_page(page):
 @app.route("/announcements")
 @login_required
 def announcements():
-    if 'email' not in session:
-        return redirect(url_for('login'))
     return render_post_page("announcements")
 
 

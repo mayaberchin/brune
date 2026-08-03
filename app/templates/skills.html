@@ -3,17 +3,17 @@
 		<head>
 				<meta charset="UTF-8">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
-				<title>My Skills</title>
+				<title>StuyOverflow: My Skills</title>
 		</head>
 		<body>
 				Hello, {{ name }}! <br>
 				<a href="{{ url_for('logout') }}">Log Out</a>
 				<br><br>
 				<table bgcolor="#999999">
-						{% for i in range(len(skills)) %}
+						{% for i in range(skills | length) %}
 								<tr bgcolor="#ffffff">
 										<th> {{ skills[i] }} </th>
-										{% for j in range(len(entries)) %}
+										{% for j in range(entries | length) %}
 												<td> {{ entries[j][i] }} </td>
 										{% endfor %}
 								</tr>
