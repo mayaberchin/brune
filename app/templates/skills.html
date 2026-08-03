@@ -9,19 +9,31 @@
 				Hello, {{ name }}! <br>
 				<a href="{{ url_for('logout') }}">Log Out</a>
 				<br><br>
-				<table border="1">
-						<tr>
+				<table bgcolor="#999999">
+						{% for i in range(len(skills)) %}
+								<tr bgcolor="#ffffff">
+										<th> {{ skills[i] }} </th>
+										{% for j in range(len(entries)) %}
+												<td> {{ entries[j][i] }} </td>
+										{% endfor %}
+								</tr>
+						{% endfor %}
+				</table>
+		<!--
+						<tr bgcolor="#ffffff">
 								{% for field in fields %}
 										<th> {{ field }} </th>
 								{% endfor %}
+						</tr>
 								{% for row in entries %}
-										<tr>
+										<tr bgcolor="#ffffff">
 												{% for item in row %}
-															<td> {{ item }} </td>
+														<td> {{ item }} </td>
 												{% endfor %}
 										</tr>
 								{% endfor %}
 						</tr>
 				</table>
+		-->
 		</body>
 </html>

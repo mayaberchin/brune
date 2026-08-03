@@ -95,7 +95,8 @@ def authorized():
             return register_user()
         return redirect(url_for('home'))
     except Exception as e:
-        return "Authorization error: " + str(e)
+        #return 'Authorization error: ' + str(e)
+        return 'Authorization error. Please try again. <a href="/logout">Login with stuy.edu</a>'
 
 def register_user():
     whitelist = ['tm@stuycs.org', 'mayaberchin@gmail.com']
@@ -117,8 +118,6 @@ def logout():
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def home():
-    #if 'email' not in session:
-    #    return redirect(url_for(index))
     # TEMP
     display_skills = True
     if display_skills:
@@ -131,8 +130,6 @@ def home():
         post_data = data.get_post_data(post_id)
         homepage_posts.append(post_data)
     homepage_posts.reverse()
-
-    # get updated posts ============================need to do
 
     # get unresolved posts
     unresolved_post_ids = data.get_all_unresolved()
@@ -150,8 +147,6 @@ def home():
         # get course data
         class_data = data.get_class_data(class_id)
         classes.append(class_data)
-
-        # get instructors posts ===========================need to do
         print("1")
         teacher_post_data = data.get_teacher_posts(class_id)
         print("2")
@@ -172,8 +167,8 @@ def home():
 @app.route('/skills', methods=['GET', 'POST'])
 @login_required
 def skills():
-    fields = ['entry','common_sense','reading_comp','hw','timeliness','participation','comms','hardware','terminal','racket','prefix_notation',
-              'logic','conditionals','variables','functions','return_types','recursion','loops','comments','turtles','patches','shapes','programs','interface','webpage']
+    skills = ['entry','common sense','reading comp','hw','timeliness','participation','comms','hardware','terminal','racket','prefix notation',
+              'logic','conditionals','variables','functions','return types','recursion','loops','comments','turtles','patches','shapes','programs','interface','webpage']
     entries = [['overall',3.57,3.14,3.00,2.57,3.29,4.00,3.00,3.20,3.00,4.00,3.86,3.40,'-','-','-','-','-','-','-','-','-','-','-','-'],
               ['10-19-26m',4,3,4,3,4,4,'-','-',4,'-',4,4,'-','-','-','-','-','-','-','-','-','-','-','-'],
               ['10-12-26m',4,3,2,1,4,4,'-',4,4,'-',4,4,'-','-','-','-','-','-','-','-','-','-','-','-'],
@@ -182,7 +177,7 @@ def skills():
               ['09-21-26m',3,4,4,3,4,4,4,3,2,4,4,2,'-','-','-','-','-','-','-','-','-','-','-','-','-'],
               ['09-14-26m',3,3,3,4,2,4,4,2,2,4,4,'-','-','-','-','-','-','-','-','-','-','-','-','-'],
               ['09-07-26m',3,3,4,4,2,4,1,'-','-','-',3,'-','-','-','-','-','-','-','-','-','-','-','-','-']]
-    return render_template('skills.html', name=session['user']['name'], fields=fields, entries=entries)
+    return render_template('skills.html', name=session['user']['name'], skills=skills, entries=entries)
 
 
 
