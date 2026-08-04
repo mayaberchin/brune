@@ -161,7 +161,7 @@ def home():
 
 # TEMP
 @app.route('/skills', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def skills():
     skills = ['common sense','reading comp','hw','timeliness','participation','comms','hardware','terminal','racket','prefix notation',
               'logic','conditionals','variables','functions','return types','recursion','loops','comments','turtles','patches','shapes','programs','interface','webpage']
@@ -173,11 +173,11 @@ def skills():
               ['09-21-26m',3,4,4,3,4,4,4,3,2,4,4,2,'-','-','-','-','-','-','-','-','-','-','-','-','-'],
               ['09-14-26m',3,3,3,4,2,4,4,2,2,4,4,'-','-','-','-','-','-','-','-','-','-','-','-','-'],
               ['09-07-26m',3,3,4,4,2,4,1,'-','-','-',3,'-','-','-','-','-','-','-','-','-','-','-','-','-']]
-    email = session['user']['email']
-    is_stuy = email[-8:] == 'stuy.edu'
-    is_whitelisted = email in WHITELIST
-    return render_template('skills.html', name=session['user']['name'], email=email, is_stuy=str(is_stuy), is_whitelisted=str(is_whitelisted), skills=skills, entries=entries)
-    #return render_template('skills.html', name='Maya', email='mayaberchin@gmail.com', is_stuy='False', is_whitelisted='True',  skills=skills, entries=entries)
+    #email = session['user']['email']
+    #is_stuy = email[-8:] == 'stuy.edu'
+    #is_whitelisted = email in WHITELIST
+    #return render_template('skills.html', name=session['user']['name'], email=email, is_stuy=str(is_stuy), is_whitelisted=str(is_whitelisted), skills=skills, entries=entries)
+    return render_template('skills.html', name='Maya', email='mayaberchin@gmail.com', is_stuy='False', is_whitelisted='True',  skills=skills, entries=entries)
 
 
 # ------------------ POST PAGES ------------------
