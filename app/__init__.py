@@ -78,7 +78,6 @@ def login_required(f):
 
 @app.route('/')
 def index():
-    # return 'Welcome to Flask Google OAuth2 Example! <a href="/login">Login with Google</a>'
     return render_template('login-new.html')
 
 @app.route('/login')
@@ -92,8 +91,8 @@ def authorized():
         token = google.authorize_access_token()
         user_info = google.get('userinfo').json()
         session['user'] = user_info
-        session['email'] = user_info['email']
-        if not data.user_exists(session['email']):
+        email = session['user']['email']
+        if not data.user_exists(email):
             return register_user()
         return redirect(url_for('home'))
     except Exception as e:
@@ -101,19 +100,18 @@ def authorized():
         return 'Authorization error. Please try again. <a href="/logout">Login with stuy.edu</a>'
 
 def register_user():
-    if session['email'][-8:] == 'stuy.edu' or session['email'] in WHITELIST:
+    email = session['user']['email']
+    if email[-8:] == 'stuy.edu' or email in WHITELIST:
         password = 'a' #CHANGE THIS when we delete passwd from database
-        email = session['email']
+        email = session['user']['email']
         name = session['user']['name']
         data.add_user(email, password, name)
         return redirect(url_for('home'))
-    session.pop('email', None)
     session.pop('user', None)
     return 'You are not signed in with a stuy.edu account, nor is your email on our whitelist. <a href="/index">Login</a>'
 
 @app.route('/logout')
 def logout():
-    session.pop('email', None)
     session.pop('user', None)
     return redirect(url_for('index'))
 
@@ -125,8 +123,9 @@ def home():
     display_skills = True
     if display_skills:
         return redirect(url_for('skills'))
+    email = session['user']['email']
     # get homepage posts
-    homepage_post_ids = data.get_homepage_posts(session['email'], 20)
+    homepage_post_ids = data.get_homepage_posts(email, 20)
     homepage_posts = []
     for post_id in homepage_post_ids["unread"]:
         post_data = data.get_post_data(post_id)
@@ -139,7 +138,7 @@ def home():
         post_data = data.get_post_data(post_id)
         unresolved_posts.append(post_data)
     unresolved_posts.reverse()
-    class_ids = data.get_user_classes(session['email'])
+    class_ids = data.get_user_classes(email)
     classes = []
     instructors_posts = []
     for class_id in class_ids:
@@ -243,13 +242,13 @@ def settings():
 
 @app.route("/api/classes")
 def api_classes():
+    email = session['user']['email']
     classes = []
-
-    for class_id in data.get_user_classes(session["email"]):
+    for class_id in data.get_user_classes(email):
         classes.append({
             "class_id": class_id,
             "name": data.get_class_name(class_id),
-            "is_teacher": data.is_class_teacher(class_id, session["email"]),
+            "is_teacher": data.is_class_teacher(class_id, email),
         })
 
     return jsonify({"classes": classes})
@@ -257,6 +256,7 @@ def api_classes():
 # loads posts
 @app.route("/api/posts")
 def api_posts():
+    email = session['user']['email']
     category = request.args.get("category", "")
     all_posts = data.get_all_posts()
     all_posts = data.sort_by_ctime(all_posts) # newest posts first
@@ -266,7 +266,7 @@ def api_posts():
         post = data.get_post_data(post_id)
         post = add_display_author(post)
 
-        if post["parent_id"] == "" and (category == "" or post["category"] == category) and ((data.is_dojo(session["email"]) and post["show_dojo"] == "yes") or post["class_id"] in data.get_user_classes(session["email"])):
+        if post["parent_id"] == "" and (category == "" or post["category"] == category) and ((data.is_dojo(email) and post["show_dojo"] == "yes") or post["class_id"] in data.get_user_classes(email)):
             posts.append(post)
 
     return jsonify({"posts": posts})
@@ -274,6 +274,8 @@ def api_posts():
 # ceates and saves a new post
 @app.route("/api/posts", methods=["POST"])
 def api_create_post():
+    email = session['user']['email']
+    
     if request.content_type and request.content_type.startswith("multipart/form-data"):
         post = request.form
     else:
@@ -303,7 +305,7 @@ def api_create_post():
         file.save(os.path.join(app.config["UPLOAD_FOLDER"], file_name))
         attachment = url_for("static", filename="uploads/" + file_name)
 
-    if category == "announcement" and not data.is_class_teacher(class_id, session["email"]):
+    if category == "announcement" and not data.is_class_teacher(class_id, email):
         return jsonify({"error": "Only teachers can post announcements"}), 403
 
     post_id = data.create_post( # returns new post_id
@@ -322,7 +324,8 @@ def api_create_post():
 
 @app.route("/api/posts/<post_id>/followups")
 def api_followups(post_id):
-    data.mark_read(session["email"], post_id)
+    email = session['user']['email']
+    data.mark_read(email, post_id)
     followup_ids = data.get_post_followups(post_id)
     if type(followup_ids) == list:
         followup_ids = {
@@ -360,42 +363,46 @@ def api_create_followup(post_id):
 
 @app.route("/api/posts/<post_id>/upvote", methods=["POST"])
 def api_toggle_upvote(post_id):
+    email = session['user']['email']
     try:
         post = data.get_post_data(post_id)
     except IndexError:
         return jsonify({"error": "Post not found"}), 404
 
-    if session["email"] in post["upvoters"]:
-        data.remove_post_upvoter(post_id, session["email"])
+    if email in post["upvoters"]:
+        data.remove_post_upvoter(post_id, email)
     else:
-        data.add_post_upvoter(post_id, session["email"])
+        data.add_post_upvoter(post_id, email)
 
     post = data.get_post_data(post_id)
     post = add_display_author(post)
     return jsonify({"post": post})
 
 def add_display_author(post):
+    email = session['user']['email']
     if post["is_anonymous"] == "yes":
         post["display_author"] = "Anonymous"
     else:
         post["display_author"] = data.get_user_name(post["author_email"])
-    post["has_upvoted"] = 'email' in session and session["email"] in post["upvoters"]
+    post["has_upvoted"] = 'email' in session and email in post["upvoters"]
     return post
 
 #join/create class:
 @app.route("/join_class", methods=["POST"])
 def join_a_class():
+    email = session['user']['email']
     code = request.form.get("class_code")
     if code not in data.get_all_classes():
         flash("Class not found. Ask your teacher for the code.")
         return redirect(url_for("home"))
-    data.add_class_member(code, session['email'])
+    data.add_class_member(code, email)
     return redirect(url_for("home"))
 
 @app.route("/create_class_",methods=["POST"])
 def create_a_class():
+    email = session['user']['email']
     class_name = request.form.get("class_name")
-    class_created = data.create_class(session['email'], class_name)
+    class_created = data.create_class(email, class_name)
     return redirect(url_for("home"))
 
 
