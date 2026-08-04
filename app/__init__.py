@@ -102,10 +102,9 @@ def authorized():
 def register_user():
     email = session['user']['email']
     if email[-8:] == 'stuy.edu' or email in WHITELIST:
-        password = 'a' #CHANGE THIS when we delete passwd from database
         email = session['user']['email']
         name = session['user']['name']
-        data.add_user(email, password, name)
+        data.add_user(email, name)
         return redirect(url_for('home'))
     session.pop('user', None)
     return 'You are not signed in with a stuy.edu account, nor is your email on our whitelist. <a href="/index">Login</a>'

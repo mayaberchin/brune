@@ -9,7 +9,7 @@ DB_FILE="data.db"
 
 #=============================[GLOBALS]=============================#
 
-USERS_COLS = ['email', 'github', 'name', 'password_hash', 'is_dojo', 'is_sensei', 'is_stuy_teacher', 'class_id', 'unread_posts', 'pinged_posts']
+USERS_COLS = ['email', 'github', 'name', 'is_dojo', 'is_sensei', 'is_stuy_teacher', 'class_id', 'unread_posts', 'pinged_posts']
 CLASSES_COLS = ['class_id', 'name', 'owner_email', 'teacher_email', 'member_email', 'banned_email', 'posts', 'is_archived']
 POSTS_COLS = ['post_id', 'author_email', 'class_id', 'parent_id', 'title', 'body', 'attachments', 'category', 'is_resolved', 'is_answer', 'created_at', 'updated_at', 'upvotes', 'upvoters', 'ping', 'show_dojo', 'is_anonymous']
 
@@ -24,7 +24,6 @@ def create_users_table():
                     email           TEXT        NOT NULL    PRIMARY KEY     UNIQUE,
                     github          TEXT,
                     name            TEXT        NOT NULL,
-                    password_hash   TEXT        NOT NULL,
                     is_dojo         TEXT        NOT NULL                                DEFAULT 'no',
                     is_sensei       TEXT        NOT NULL                                DEFAULT 'no',
                     is_stuy_teacher TEXT        NOT NULL                                DEFAULT 'no',
@@ -110,9 +109,6 @@ def get_user_name(email):
     if not email:
         return "Anonymous"
     return get_users_field(email, 'name')
-
-def get_user_password(email):
-    return get_users_field(email, 'password_hash')
 
 def get_user_github(email):
     get_users_field(email, 'github')
@@ -261,20 +257,16 @@ def is_stuy_teacher(email):
 #---------[modifiers]---------#
 
 # adds a new user's data to user table
-def add_user(email, password, name, github=''):
+def add_user(email, name, github=''):
     if user_exists(email):
         return 'There is already a user with this email'
-    if password == "":
-        return 'Password cannot be empty'
-    password = password.encode('utf-8')
-    password = str(hashlib.sha256(password).hexdigest())
     is_dojo = 'no'
     is_sensei = 'no'
     is_stuy_teacher = 'no'
     class_id = ''
     unread_posts = ''
     pinged_posts = ''
-    add_users_row([email, github, name, password, is_dojo, is_sensei, is_stuy_teacher, class_id, unread_posts, pinged_posts])
+    add_users_row([email, github, name, is_dojo, is_sensei, is_stuy_teacher, class_id, unread_posts, pinged_posts])
     return 'success'
 
 
@@ -312,16 +304,6 @@ def user_exists(email):
         if (user == email):
             return True
     return False
-
-# checks if provided password in login attempt matches user password
-def auth(email, password):
-    if not user_exists(email):
-        return False
-    real_pass = get_user_password(email)
-    password = password.encode('utf-8')
-    if real_pass != str(hashlib.sha256(password).hexdigest()):
-        return False
-    return True
 
 
 
