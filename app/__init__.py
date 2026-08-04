@@ -107,7 +107,7 @@ def register_user():
         data.add_user(email, name)
         return redirect(url_for('home'))
     session.pop('user', None)
-    return 'You are not signed in with a stuy.edu account, nor is your email on our whitelist. <a href="/index">Login</a>'
+    return 'You are not signed in with a stuy.edu account, nor is your email on our whitelist. <a href="/">Login</a>'
 
 @app.route('/logout')
 def logout():
