@@ -39,7 +39,7 @@ data.create_tables()
 
 ALLOWED_UPLOADS = {"png", "jpg", "jpeg", "gif", "pdf", "txt", "doc", "docx"}
 
-WHITELIST = ['tm@stuycs.org', 'mayaberchin@gmail.com']
+WHITELIST = ['tm@stuycs.org', 'mayaberchin@gmail.com', 'MeganKwok168@gmail.com']
 
 POST_PAGE_INFO = {
     "announcements": {
