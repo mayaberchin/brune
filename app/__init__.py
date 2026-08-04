@@ -173,9 +173,9 @@ def skills():
               ['09-21-26m',3,4,4,3,4,4,4,3,2,4,4,2,'-','-','-','-','-','-','-','-','-','-','-','-','-'],
               ['09-14-26m',3,3,3,4,2,4,4,2,2,4,4,'-','-','-','-','-','-','-','-','-','-','-','-','-'],
               ['09-07-26m',3,3,4,4,2,4,1,'-','-','-',3,'-','-','-','-','-','-','-','-','-','-','-','-','-']]
-    #email = session['user']['email']
-    #is_stuy = email[-8:] == 'stuy.edu'
-    #is_whitelisted = email in WHITELIST
+    email = session['user']['email']
+    is_stuy = email[-8:] == 'stuy.edu'
+    is_whitelisted = email in WHITELIST
     return render_template('skills.html', name=session['user']['name'], email=email, is_stuy=str(is_stuy), is_whitelisted=str(is_whitelisted), skills=skills, entries=entries)
     #return render_template('skills.html', name='Maya', email='mayaberchin@gmail.com', is_stuy='False', is_whitelisted='True',  skills=skills, entries=entries)
 
