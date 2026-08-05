@@ -29,7 +29,9 @@ google = oauth.register(
     api_base_url='https://www.googleapis.com/oauth2/v1/',
     client_kwargs={
         'scope': 'openid email profile',
-    },
+        'code_challenge_method': 'S256',
+                   },
+
     server_metadata_url= 'https://accounts.google.com/.well-known/openid-configuration'
 )
 
