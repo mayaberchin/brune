@@ -1,5 +1,6 @@
 import os
 import uuid
+import flask_login
 
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from authlib.integrations.flask_client import OAuth
@@ -70,6 +71,7 @@ POST_PAGE_INFO = {
     },
 }
 
+'''
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -77,6 +79,16 @@ def login_required(f):
             return redirect(url_for('index'))
         return f(*args, **kwargs)
     return decorated_function
+'''
+
+login_manager.login_view = url_for('index')
+
+@login_manager.user_loader
+def user_loader(id):
+    if data.user_exists(id):
+        return data.get_user_data(id)
+    else
+        return None
 
 @app.route('/')
 def index():
@@ -113,12 +125,12 @@ def register_user():
 
 @app.route('/logout')
 def logout():
-    session.pop('user', None)
+    flask_login.logout_user()
     return redirect(url_for('index'))
 
 #main
 @app.route('/home', methods=['GET', 'POST'])
-@login_required
+@flask_login.login_required
 def home():
     # TEMP
     display_skills = True
@@ -163,7 +175,7 @@ def home():
 
 # TEMP
 @app.route('/skills', methods=['GET', 'POST'])
-@login_required
+@flask_login.login_required
 def skills():
     skills = ['common sense','reading comp','hw','timeliness','participation','comms','hardware','terminal','racket','prefix notation',
               'logic','conditionals','variables','functions','return types','recursion','loops','comments','turtles','patches','shapes','programs','interface','webpage']
@@ -198,50 +210,51 @@ def render_post_page(page):
     )
 
 @app.route("/announcements")
-@login_required
+@flask_login.login_required
 def announcements():
     return render_post_page("announcements")
 
 
 
 @app.route("/pinned")
-@login_required
+@flask_login.login_required
 def pinned():
     return render_template("pinned.html")
     #return render_post_page("pinned")
 
 
 @app.route("/questions")
-@login_required
+@flask_login.login_required
 def questions():
     return render_post_page("questions")
 
 
 @app.route("/chat")
-@login_required
+@flask_login.login_required
 def chat():
     return render_post_page("chat")
 
 
 @app.route("/notes_resources")
-@login_required
+@flask_login.login_required
 def notes_rsrc():
     return render_post_page("notes_resources")
 
 
 @app.route("/account")
-@login_required
+@flask_login.login_required
 def account():
     return render_template("account.html")
 
 @app.route("/settings")
-@login_required
+@flask_login.login_required
 def settings():
     return render_template("settings.html")
 
 # ------------------ REACT POST API ROUTES ------------------
 
 @app.route("/api/classes")
+@flask_login.login_required
 def api_classes():
     email = session['user']['email']
     classes = []
@@ -256,6 +269,7 @@ def api_classes():
 
 # loads posts
 @app.route("/api/posts")
+@flask_login.login_required
 def api_posts():
     email = session['user']['email']
     category = request.args.get("category", "")
@@ -274,6 +288,7 @@ def api_posts():
 
 # ceates and saves a new post
 @app.route("/api/posts", methods=["POST"])
+@flask_login.login_required
 def api_create_post():
     email = session['user']['email']
     
@@ -324,6 +339,7 @@ def api_create_post():
     return jsonify({"post": saved_post})
 
 @app.route("/api/posts/<post_id>/followups")
+@flask_login.login_required
 def api_followups(post_id):
     email = session['user']['email']
     data.mark_read(email, post_id)
@@ -349,6 +365,7 @@ def api_followups(post_id):
     return jsonify({"followups": followups})
 
 @app.route("/api/posts/<post_id>/followups", methods=["POST"])
+@flask_login.login_required
 def api_create_followup(post_id):
     post = request.get_json() or {}
     body = post.get("body", "").strip()
@@ -363,6 +380,7 @@ def api_create_followup(post_id):
     return jsonify({"followup": followup})
 
 @app.route("/api/posts/<post_id>/upvote", methods=["POST"])
+@flask_login.login_required
 def api_toggle_upvote(post_id):
     email = session['user']['email']
     try:
@@ -390,6 +408,7 @@ def add_display_author(post):
 
 #join/create class:
 @app.route("/join_class", methods=["POST"])
+@flask_login.login_required
 def join_a_class():
     email = session['user']['email']
     code = request.form.get("class_code")
@@ -400,6 +419,7 @@ def join_a_class():
     return redirect(url_for("home"))
 
 @app.route("/create_class_",methods=["POST"])
+@flask_login.login_required
 def create_a_class():
     email = session['user']['email']
     class_name = request.form.get("class_name")
