@@ -120,7 +120,7 @@ def register_user():
         name = session['user']['name']
         data.add_user(email, name)
         return redirect(url_for('home'))
-    session.pop('user', None)
+    flask_login.logout_user()
     return 'You are not signed in with a stuy.edu account, nor is your email on our whitelist. <a href="/">Login</a>'
 
 @app.route('/logout')
