@@ -13,8 +13,9 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('APP_SECRET')
-app.config["MAX_CONTENT_LENGTH"] = 16 * 1000 * 1000
-app.config["UPLOAD_FOLDER"] = os.path.join(app.root_path, "static", "uploads")
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1000 * 1000
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path, 'static', 'uploads')
 
 oauth = OAuth(app)
 
@@ -256,6 +257,7 @@ def api_classes():
 
 # loads posts
 @app.route("/api/posts")
+@login_required
 def api_posts():
     email = session['user']['email']
     category = request.args.get("category", "")
@@ -274,6 +276,7 @@ def api_posts():
 
 # ceates and saves a new post
 @app.route("/api/posts", methods=["POST"])
+@login_required
 def api_create_post():
     email = session['user']['email']
     
@@ -324,6 +327,7 @@ def api_create_post():
     return jsonify({"post": saved_post})
 
 @app.route("/api/posts/<post_id>/followups")
+@login_required
 def api_followups(post_id):
     email = session['user']['email']
     data.mark_read(email, post_id)
@@ -349,6 +353,7 @@ def api_followups(post_id):
     return jsonify({"followups": followups})
 
 @app.route("/api/posts/<post_id>/followups", methods=["POST"])
+@login_required
 def api_create_followup(post_id):
     post = request.get_json() or {}
     body = post.get("body", "").strip()
@@ -363,6 +368,7 @@ def api_create_followup(post_id):
     return jsonify({"followup": followup})
 
 @app.route("/api/posts/<post_id>/upvote", methods=["POST"])
+@login_required
 def api_toggle_upvote(post_id):
     email = session['user']['email']
     try:
@@ -390,6 +396,7 @@ def add_display_author(post):
 
 #join/create class:
 @app.route("/join_class", methods=["POST"])
+@login_required
 def join_a_class():
     email = session['user']['email']
     code = request.form.get("class_code")
@@ -400,6 +407,7 @@ def join_a_class():
     return redirect(url_for("home"))
 
 @app.route("/create_class_",methods=["POST"])
+@login_required
 def create_a_class():
     email = session['user']['email']
     class_name = request.form.get("class_name")
@@ -408,5 +416,5 @@ def create_a_class():
 
 
 if __name__ == "__main__":
-  app.debug = True
+  #app.debug = True
   app.run()
